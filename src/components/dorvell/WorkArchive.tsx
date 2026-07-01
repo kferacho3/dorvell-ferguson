@@ -10,7 +10,7 @@ import { buildGalleryLanes, galleryLaneDefinitions, laneKeyForImage, type Galler
 import { ImageCard } from "./ImageCard";
 import { ImmersiveLightbox } from "./ImmersiveLightbox";
 
-const modes = ["grid", "contact", "carousel"] as const;
+const modes = ["grid", "focus", "contact", "carousel"] as const;
 const densityModes = [
   { key: "tight", label: "50%", detail: "dense scan" },
   { key: "editorial", label: "75%", detail: "balanced" },
@@ -36,6 +36,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
   const [mode, setMode] = useState<(typeof modes)[number]>("grid");
   const [density, setDensity] = useState<(typeof densityModes)[number]["key"]>("editorial");
   const [lightboxState, setLightboxState] = useState<LightboxState | null>(null);
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [pointerMap, setPointerMap] = useState<PointerMap | null>(null);
 
@@ -91,7 +92,8 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
       : archiveScopeLabel
         ? "Exhibit contact sheet."
         : "Full working archive.";
-  const activePreviewIndex = filtered.length > 0 ? Math.min(previewIndex ?? 0, filtered.length - 1) : 0;
+  const selectedFocusIndex = filtered.length > 0 ? Math.min(focusIndex ?? 0, filtered.length - 1) : 0;
+  const activePreviewIndex = filtered.length > 0 ? Math.min(previewIndex ?? focusIndex ?? 0, filtered.length - 1) : 0;
   const previewImage = filtered[activePreviewIndex];
   const previewProgress = filtered.length > 1 ? activePreviewIndex / (filtered.length - 1) : 0;
   const previewLaneKey = previewImage ? laneKeyForImage(previewImage) : null;
@@ -102,6 +104,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
 
   const selectFilter = (nextFilter: ArchiveFilter) => {
     setFilter(nextFilter);
+    setFocusIndex(null);
     setPreviewIndex(null);
     setLightboxState(null);
     setPointerMap(null);
@@ -109,6 +112,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
 
   const selectMode = (nextMode: (typeof modes)[number]) => {
     setMode(nextMode);
+    setFocusIndex(null);
     setPreviewIndex(null);
     setLightboxState(null);
     setPointerMap(null);
@@ -184,7 +188,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
         </div>
       </div>
 
-      {flowFrames.length > 0 ? (
+      {flowFrames.length > 0 && mode !== "focus" ? (
         <div className="archive-flow-register" key={`${filter}-${mode}-flow`} aria-hidden="true">
           {flowFrames.map((image, index) => {
             const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
@@ -214,7 +218,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
         </div>
       ) : null}
 
-      {previewImage ? (
+      {previewImage && mode !== "focus" ? (
         <div
           className="archive-instrument"
           data-cursor-active={pointerMap ? "true" : "false"}
@@ -293,24 +297,98 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
                   X{String(Math.round(cursorX * 100)).padStart(2, "0")} / Y{String(Math.round(cursorY * 100)).padStart(2, "0")}
                 </em>
               </span>
+              <span className="archive-hover-map__signal">{previewImage.projectTitle}</span>
             </div>
           </div>
         </div>
       ) : null}
 
-      <div className={cn("archive-grid", `archive-${mode}`, `archive-density-${density}`)} key={`${filter}-${mode}-${density}`}>
-        {filtered.map((image, index) => (
-          <ImageCard
-            key={image.id}
-            image={image}
-            index={index}
-            mode={mode}
-            onOpen={(origin) => setLightboxState({ index, origin })}
-            onPreview={setPreviewIndex}
-            onPointerMap={setPointerMap}
-          />
-        ))}
-      </div>
+      {mode === "focus" && previewImage ? (
+        <div
+          className="archive-focus-mode"
+          key={`${filter}-${mode}`}
+          style={{ "--lane-accent": previewLane?.accent ?? "#35e0bb" } as CSSProperties}
+        >
+          <div className="archive-focus-stage">
+            <button
+              aria-label={`Open focused ${previewLane?.label ?? previewImage.category} image`}
+              className="archive-focus-image"
+              onClick={(event) => setLightboxState({ index: activePreviewIndex, origin: originFromElement(event.currentTarget) })}
+              type="button"
+            >
+              <Image
+                key={previewImage.id}
+                src={previewImage.localOptimized.lg}
+                alt={imageAlt(previewImage)}
+                width={previewImage.width}
+                height={previewImage.height}
+                sizes="(max-width: 900px) 94vw, 68vw"
+                priority={activePreviewIndex < 2}
+                {...blurImageProps(previewImage)}
+              />
+              <span className="archive-focus-image__shade" />
+            </button>
+            <div className="archive-focus-caption">
+              <span>DF-{String(activePreviewIndex + 1).padStart(3, "0")}</span>
+              <strong>{previewLane?.label ?? previewImage.category}</strong>
+              <em>{previewImage.projectTitle}</em>
+            </div>
+          </div>
+          <div className="archive-focus-rail" aria-label="Focus gallery">
+            {filtered.map((image, index) => {
+              const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
+              const isSelected = index === selectedFocusIndex;
+              const isPreviewing = index === activePreviewIndex;
+              return (
+                <button
+                  aria-current={isSelected ? "true" : undefined}
+                  aria-label={`Focus ${lane?.label ?? image.category} image ${index + 1}`}
+                  className={cn("archive-focus-thumb", isSelected && "is-selected", isPreviewing && "is-previewing")}
+                  key={image.id}
+                  onBlur={() => setPreviewIndex(null)}
+                  onClick={() => {
+                    setFocusIndex(index);
+                    setPreviewIndex(index);
+                    setPointerMap(null);
+                  }}
+                  onFocus={() => setPreviewIndex(index)}
+                  onPointerEnter={() => setPreviewIndex(index)}
+                  onPointerLeave={() => setPreviewIndex(null)}
+                  style={{ "--lane-accent": lane?.accent ?? "#35e0bb" } as CSSProperties}
+                  type="button"
+                >
+                  <Image
+                    src={image.localOptimized.sm}
+                    alt=""
+                    width={image.width}
+                    height={image.height}
+                    sizes="(max-width: 900px) 34vw, 120px"
+                    {...blurImageProps(image)}
+                  />
+                  <span>
+                    <strong>{lane?.label ?? image.category}</strong>
+                    <em>DF-{String(index + 1).padStart(3, "0")}</em>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className={cn("archive-grid", `archive-${mode}`, `archive-density-${density}`)} key={`${filter}-${mode}-${density}`}>
+          {filtered.map((image, index) => (
+            <ImageCard
+              key={image.id}
+              image={image}
+              index={index}
+              mode={mode}
+              onOpen={(origin) => setLightboxState({ index, origin })}
+              onPreview={setPreviewIndex}
+              onPointerMap={setPointerMap}
+            />
+          ))}
+        </div>
+      )}
 
       {filtered.length === 0 ? (
         <p className="empty-state">No frames in this lane yet.</p>
