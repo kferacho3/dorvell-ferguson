@@ -5,6 +5,7 @@ import { getPortfolioData } from "@/lib/portfolio-data";
 
 const { generated, manual } = getPortfolioData();
 const ogImage = generated.images[0]?.localOptimized.lg || "/dorvell-ferguson-symbol-v2.png";
+const socialProfiles = [...manual.profile.instagram, manual.profile.tiktok];
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dorvellferguson.com"),
@@ -49,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       addressCountry: "US",
     },
     url: manual.profile.portfolio,
-    sameAs: manual.profile.instagram,
+    sameAs: socialProfiles,
   };
 
   const gallerySchema = {

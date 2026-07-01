@@ -11,6 +11,7 @@ import { MotionPathGalleryPortal } from "@/components/dorvell/MotionPathGalleryP
 import { PressFeatures } from "@/components/dorvell/PressFeatures";
 import { RunwayTimeline } from "@/components/dorvell/RunwayTimeline";
 import { ServicesBooking } from "@/components/dorvell/ServicesBooking";
+import { SocialMotionSpotlight } from "@/components/dorvell/SocialMotionSpotlight";
 import { StudioSignalController } from "@/components/dorvell/StudioSignalController";
 import { WorkArchive } from "@/components/dorvell/WorkArchive";
 import { getPortfolioData } from "@/lib/portfolio-data";
@@ -23,6 +24,7 @@ export default function Home() {
     <DorvellShell>
       <GalleryAtlasHero images={data.generated.images} summary={data.generated.scrapeSummary} />
       <FeaturedWorkStrip images={data.generated.images} />
+      <SocialMotionSpotlight images={data.generated.images} />
       <KineticGalleryDeck images={data.generated.images} />
       <LaneSequenceLab images={data.generated.images} />
       <MotionPathGalleryPortal images={data.generated.images} />

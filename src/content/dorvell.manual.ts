@@ -10,6 +10,7 @@ export const dorvellManual = {
     phone: "251-623-4376",
     portfolio: "https://dorvellferguson.myportfolio.com/home-2",
     instagram: ["https://www.instagram.com/2kferg/", "https://www.instagram.com/fergphotography/"],
+    tiktok: "https://www.tiktok.com/@2kferg",
     headline: "Photographer / Model / Multimedia Visual Storyteller",
     shortBio:
       "Tampa-based multimedia creative with a journalism-trained eye, a runway-aware sense of movement, and a photographer's patience for the exact frame.",

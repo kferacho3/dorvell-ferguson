@@ -7456,6 +7456,293 @@ section,
   color: var(--df-teal);
 }
 
+.social-motion {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(420px, 0.88fr);
+  gap: clamp(22px, 4vw, 58px);
+  overflow: hidden;
+  padding: clamp(78px, 9vw, 132px) clamp(18px, 4.8vw, 72px);
+  background:
+    linear-gradient(118deg, transparent 0 37%, rgba(240, 77, 94, 0.12) 37% 46%, transparent 46% 100%),
+    linear-gradient(64deg, rgba(53, 224, 187, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,0.018), transparent 46%);
+}
+
+.social-motion::before,
+.social-motion::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+}
+
+.social-motion::before {
+  opacity: 0.38;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px) 0 0 / 7.5rem 7.5rem,
+    linear-gradient(180deg, rgba(255,255,255,0.038) 1px, transparent 1px) 0 0 / 7.5rem 7.5rem;
+  mask-image: linear-gradient(90deg, #000, transparent 82%);
+}
+
+.social-motion::after {
+  background:
+    linear-gradient(90deg, transparent 0 12%, rgba(53, 224, 187, 0.16) 12% 12.3%, transparent 12.3%),
+    linear-gradient(90deg, transparent 0 76%, rgba(240, 179, 90, 0.12) 76% 76.25%, transparent 76.25%);
+  mix-blend-mode: screen;
+}
+
+.social-motion__copy {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  max-width: 670px;
+}
+
+.social-motion__copy h2 {
+  max-width: 780px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.7rem, 7.8vw, 8.9rem);
+  font-weight: 900;
+  line-height: 0.78;
+  text-transform: uppercase;
+}
+
+.social-motion__copy p:not(.eyebrow) {
+  max-width: 620px;
+  margin: 1.25rem 0 0;
+  color: var(--df-text-soft);
+  font-size: clamp(1rem, 1.18vw, 1.16rem);
+  line-height: 1.65;
+}
+
+.social-motion__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.social-motion__stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(210px, 0.62fr) minmax(288px, 0.88fr);
+  gap: clamp(14px, 2vw, 24px);
+  align-items: center;
+  min-height: 720px;
+}
+
+.social-motion__poster {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  width: min(360px, 100%);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--df-red) 42%, var(--df-line));
+  border-radius: 8px;
+  background: #050606;
+  box-shadow: 0 26px 80px rgba(0,0,0,0.42), 0 0 42px rgba(240,77,94,0.12);
+  transform: translateY(34px) rotate(-2.4deg);
+}
+
+.social-motion__poster::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 52%, rgba(0,0,0,0.74)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.055) 0 1px, transparent 1px 5px);
+  mix-blend-mode: screen;
+  opacity: 0.22;
+}
+
+.social-motion__poster img {
+  width: 100%;
+  height: min(620px, 54vw);
+  min-height: 520px;
+  object-fit: cover;
+  filter: saturate(1.1) contrast(1.06);
+}
+
+.social-motion__poster figcaption {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  z-index: 1;
+  display: grid;
+  gap: 3px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  background: rgba(6,8,7,0.72);
+  backdrop-filter: blur(12px);
+}
+
+.social-motion__poster figcaption span,
+.social-motion__phone-top em,
+.social-motion__phone-bottom span {
+  color: var(--df-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.social-motion__poster figcaption strong {
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.social-motion__phone {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: auto minmax(520px, 1fr) auto;
+  width: min(430px, 100%);
+  min-height: 660px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--df-teal) 28%, var(--df-line));
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(53,224,187,0.12), transparent 42%),
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    #060807;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.035),
+    0 34px 90px rgba(0,0,0,0.52),
+    0 0 46px rgba(53,224,187,0.12);
+}
+
+.social-motion__phone::before {
+  position: absolute;
+  inset: 10px;
+  z-index: 0;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  content: "";
+  pointer-events: none;
+}
+
+.social-motion__phone-top,
+.social-motion__phone-bottom {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 54px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--df-line);
+  background: rgba(0,0,0,0.26);
+}
+
+.social-motion__phone-top span {
+  width: 42px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+}
+
+.social-motion__phone-top strong {
+  color: var(--df-text);
+  font-size: 0.84rem;
+}
+
+.social-motion__phone-bottom {
+  border-top: 1px solid var(--df-line);
+  border-bottom: 0;
+}
+
+.social-motion__phone-bottom span {
+  color: var(--df-text-soft);
+}
+
+.social-motion__embed {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-items: stretch;
+  min-height: 520px;
+  padding: 12px;
+}
+
+.social-motion__embed::before {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  content: "";
+  pointer-events: none;
+}
+
+.social-motion__embed .tiktok-embed {
+  width: 100% !important;
+  min-height: 500px;
+  margin: 0 auto !important;
+  border-radius: 8px;
+  color: var(--df-text);
+  background: rgba(255,255,255,0.045);
+}
+
+.social-motion__embed .tiktok-embed section {
+  display: grid;
+  min-height: 500px;
+  place-items: center;
+}
+
+.social-motion__embed .tiktok-embed a {
+  color: var(--df-teal);
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.social-motion__strip {
+  position: absolute;
+  right: -18vw;
+  bottom: 26px;
+  z-index: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 88px;
+  gap: 10px;
+  width: 82vw;
+  opacity: 0.32;
+  pointer-events: none;
+  transform: rotate(7deg);
+  animation: social-motion-strip 30s linear infinite;
+}
+
+.social-motion__strip span {
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  background: #030403;
+}
+
+.social-motion__strip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.12) contrast(1.08);
+}
+
+@keyframes social-motion-strip {
+  from { transform: translateX(0) rotate(7deg); }
+  to { transform: translateX(-38%) rotate(7deg); }
+}
+
 @media (min-width: 1440px) and (max-width: 1779px) {
   .studio-signal {
     right: 10px;
@@ -7521,6 +7808,7 @@ section,
   }
 
   .atlas-hero,
+  .social-motion,
   .work-archive-hero,
   .about-dossier,
   .about-section,
@@ -7609,6 +7897,11 @@ section,
 
   .atlas-stage {
     min-height: 620px;
+  }
+
+  .social-motion__stage {
+    grid-template-columns: minmax(190px, 0.46fr) minmax(320px, 0.74fr);
+    min-height: 680px;
   }
 
   .atlas-galleries {
@@ -8001,6 +8294,47 @@ section,
 
   .atlas-gallery-card__copy strong {
     font-size: 2.2rem;
+  }
+
+  .social-motion {
+    display: block;
+    padding: 72px 14px;
+  }
+
+  .social-motion__copy h2 {
+    font-size: clamp(3.25rem, 15vw, 5rem);
+    line-height: 0.82;
+  }
+
+  .social-motion__stage {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    margin-top: 28px;
+  }
+
+  .social-motion__poster {
+    justify-self: end;
+    width: min(330px, 82vw);
+    transform: none;
+  }
+
+  .social-motion__poster img {
+    height: 420px;
+    min-height: 420px;
+  }
+
+  .social-motion__phone {
+    width: 100%;
+    min-height: 640px;
+    grid-template-rows: auto minmax(510px, 1fr) auto;
+  }
+
+  .social-motion__phone-top em {
+    display: none;
+  }
+
+  .social-motion__strip {
+    display: none;
   }
 
   .lens-field {
@@ -9017,6 +9351,7 @@ section,
   .project-flow-strip,
   .atlas-marquee,
   .sliced-title__shine,
+  .social-motion__strip,
   .featured-scanner__reel,
   .featured-deck__stage-inner > img,
   .kinetic-preview img,
@@ -9039,6 +9374,7 @@ section,
   .sliced-title,
   .sliced-title__row,
   .sliced-title__depth-layer,
+  .social-motion__poster,
   .featured-deck__stage-inner,
   .world-loop-field,
   .world-loop-frame,
