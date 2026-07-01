@@ -6,6 +6,7 @@ import { useMemo, useState, type CSSProperties } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { buildGalleryLanes, type GalleryLaneKey } from "@/lib/gallery-lanes";
 import { blurImageProps, imageAlt } from "@/lib/images";
+import { useImageWarmup } from "./useImageWarmup";
 
 const deckModes = [
   { key: "contact", label: "Contact", detail: "clean scan" },
@@ -21,9 +22,12 @@ export function KineticGalleryDeck({ images }: { images: DorvellImage[] }) {
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const [mode, setMode] = useState<DeckMode>("contact");
   const activeLane = lanes.find((lane) => lane.key === activeKey) ?? lanes[0];
-  const frames = activeLane?.images.slice(0, 16) ?? [];
+  const frames = useMemo(() => activeLane?.images.slice(0, 16) ?? [], [activeLane]);
   const resolvedFrameIndex = Math.min(activeFrameIndex, Math.max(frames.length - 1, 0));
   const activeFrame = frames[resolvedFrameIndex] ?? frames[0];
+  const framePreviewUrls = useMemo(() => frames.map((image) => image.localOptimized.md), [frames]);
+
+  useImageWarmup(framePreviewUrls, 16);
 
   const selectLane = (key: GalleryLaneKey) => {
     setActiveKey(key);
@@ -69,7 +73,7 @@ export function KineticGalleryDeck({ images }: { images: DorvellImage[] }) {
                 >
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   {lead ? (
-                    <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} {...blurImageProps(lead)} />
+                    <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} unoptimized {...blurImageProps(lead)} />
                   ) : null}
                   <strong>{lane.label}</strong>
                   <small>{lane.images.length} frames</small>
@@ -99,11 +103,12 @@ export function KineticGalleryDeck({ images }: { images: DorvellImage[] }) {
             <figure>
               <Image
                 key={activeFrame.id}
-                src={activeFrame.localOptimized.lg}
+                src={activeFrame.localOptimized.md}
                 alt={imageAlt(activeFrame)}
                 width={activeFrame.width}
                 height={activeFrame.height}
                 sizes="(max-width: 900px) 92vw, 42vw"
+                unoptimized
                 {...blurImageProps(activeFrame)}
               />
               <figcaption>
@@ -153,7 +158,7 @@ export function KineticGalleryDeck({ images }: { images: DorvellImage[] }) {
                   style={{ "--frame-index": index } as CSSProperties}
                   type="button"
                 >
-                  <Image src={image.localOptimized.md} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                  <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
                   <span>{String(index + 1).padStart(2, "0")}</span>
                 </button>
               );

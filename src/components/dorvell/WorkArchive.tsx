@@ -9,6 +9,7 @@ import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes, galleryLaneDefinitions, laneKeyForImage, type GalleryLaneKey } from "@/lib/gallery-lanes";
 import { ImageCard } from "./ImageCard";
 import { ImmersiveLightbox } from "./ImmersiveLightbox";
+import { useImageWarmup } from "./useImageWarmup";
 
 const modes = ["grid", "focus", "contact", "carousel"] as const;
 const densityModes = [
@@ -99,8 +100,11 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
   const previewLaneKey = previewImage ? laneKeyForImage(previewImage) : null;
   const previewLane = previewLaneKey ? galleryLaneDefinitions.find((definition) => definition.key === previewLaneKey) : null;
   const flowFrames = filtered.slice(0, 16);
+  const focusWarmupUrls = useMemo(() => filtered.slice(0, 18).map((image) => image.localOptimized.md), [filtered]);
   const cursorX = pointerMap?.x ?? 0.5;
   const cursorY = pointerMap?.y ?? 0.5;
+
+  useImageWarmup(focusWarmupUrls, mode === "focus" ? 18 : 8);
 
   const selectFilter = (nextFilter: ArchiveFilter) => {
     setFilter(nextFilter);
@@ -210,6 +214,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
                   alt=""
                   width={image.width}
                   height={image.height}
+                  unoptimized
                   {...blurImageProps(image)}
                 />
               </span>
@@ -239,6 +244,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
               alt={imageAlt(previewImage)}
               width={previewImage.width}
               height={previewImage.height}
+              unoptimized
               {...blurImageProps(previewImage)}
             />
             <figcaption>
@@ -287,6 +293,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
                   alt=""
                   width={previewImage.width}
                   height={previewImage.height}
+                  unoptimized
                   {...blurImageProps(previewImage)}
                 />
                 <span className="archive-hover-map__dot" />
@@ -318,12 +325,13 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
             >
               <Image
                 key={previewImage.id}
-                src={previewImage.localOptimized.lg}
+                src={previewImage.localOptimized.md}
                 alt={imageAlt(previewImage)}
                 width={previewImage.width}
                 height={previewImage.height}
                 sizes="(max-width: 900px) 94vw, 68vw"
                 priority={activePreviewIndex < 2}
+                unoptimized
                 {...blurImageProps(previewImage)}
               />
               <span className="archive-focus-image__shade" />
@@ -363,6 +371,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
                     width={image.width}
                     height={image.height}
                     sizes="(max-width: 900px) 34vw, 120px"
+                    unoptimized
                     {...blurImageProps(image)}
                   />
                   <span>

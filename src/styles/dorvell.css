@@ -110,6 +110,20 @@ section,
   scroll-margin-top: 112px;
 }
 
+.featured-strip,
+.kinetic-deck,
+.sequence-lab,
+.motion-path-portal,
+.gallery-world,
+.archive-section,
+.runway-catwalk,
+.graphic-design,
+.about-section,
+.booking-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
+}
+
 [data-studio-section] {
   --studio-local: 0;
   --studio-drift: 0px;

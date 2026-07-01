@@ -6,6 +6,7 @@ import { useMemo, useState, type CSSProperties } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { buildGalleryLanes, type GalleryLaneKey } from "@/lib/gallery-lanes";
 import { blurImageProps, imageAlt } from "@/lib/images";
+import { useImageWarmup } from "./useImageWarmup";
 
 type RouteStop = {
   key: GalleryLaneKey;
@@ -41,8 +42,17 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
   const activeLane = lanes.find((lane) => lane.key === activeKey) ?? lanes[0];
   const activeLaneIndex = Math.max(0, lanes.findIndex((lane) => lane.key === activeLane?.key));
   const activeStop = routeStopForKey(activeLane?.key ?? "portraits");
-  const activeFrames = activeLane?.images.slice(0, framePositions.length) ?? [];
+  const activeFrames = useMemo(() => activeLane?.images.slice(0, framePositions.length) ?? [], [activeLane]);
   const leadFrame = activeFrames[0] ?? activeLane?.images[0];
+  const routePreviewUrls = useMemo(
+    () => [
+      ...lanes.map((lane) => lane.images[0]?.localOptimized.md),
+      ...activeFrames.map((image) => image.localOptimized.md),
+    ],
+    [activeFrames, lanes],
+  );
+
+  useImageWarmup(routePreviewUrls, 12);
 
   if (!activeLane || !leadFrame) return null;
 
@@ -97,7 +107,7 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
                   } as CSSProperties
                 }
               >
-                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
                 <figcaption>{String(index + 1).padStart(2, "0")}</figcaption>
               </figure>
             );
@@ -111,6 +121,7 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
               width={leadFrame.width}
               height={leadFrame.height}
               sizes="(max-width: 760px) 44vw, 220px"
+              unoptimized
               {...blurImageProps(leadFrame)}
             />
             <figcaption>
@@ -146,7 +157,7 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
                 <span className="motion-path-node__index">{String(index + 1).padStart(2, "0")}</span>
                 {lead ? (
                   <span className="motion-path-node__thumb">
-                    <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} {...blurImageProps(lead)} />
+                    <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} unoptimized {...blurImageProps(lead)} />
                   </span>
                 ) : null}
                 <span className="motion-path-node__copy">
@@ -173,11 +184,12 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
           <figure className="motion-path-portal__lead">
             <Image
               key={`${leadFrame.id}-focus`}
-              src={leadFrame.localOptimized.lg}
+              src={leadFrame.localOptimized.md}
               alt={imageAlt(leadFrame)}
               width={leadFrame.width}
               height={leadFrame.height}
               sizes="(max-width: 1100px) 92vw, 360px"
+              unoptimized
               {...blurImageProps(leadFrame)}
             />
           </figure>
@@ -198,7 +210,7 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
           <div className="motion-path-portal__strip" aria-hidden="true">
             {activeFrames.slice(0, 4).map((image) => (
               <span key={`${image.id}-strip`}>
-                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
               </span>
             ))}
           </div>
@@ -249,7 +261,7 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
               >
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 {lead ? (
-                  <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} {...blurImageProps(lead)} />
+                  <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} unoptimized {...blurImageProps(lead)} />
                 ) : null}
                 <strong>{lane.label}</strong>
                 <small>{lane.images.length} frames</small>

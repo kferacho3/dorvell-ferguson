@@ -40,7 +40,7 @@ export function GalleryWorlds({ images }: { images: DorvellImage[] }) {
                     } as CSSProperties
                   }
                 >
-                  <Image src={image.localOptimized.md} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                  <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
                 </span>
               ))}
             </div>
@@ -58,11 +58,12 @@ export function GalleryWorlds({ images }: { images: DorvellImage[] }) {
               {lead ? (
                 <figure className="world-lead">
                   <Image
-                    src={lead.localOptimized.lg}
+                    src={lead.localOptimized.md}
                     alt={imageAlt(lead)}
                     width={lead.width}
                     height={lead.height}
                     sizes="(max-width: 900px) 92vw, 52vw"
+                    unoptimized
                     {...blurImageProps(lead)}
                   />
                   <figcaption>
@@ -77,7 +78,7 @@ export function GalleryWorlds({ images }: { images: DorvellImage[] }) {
                     key={image.id}
                     style={{ "--card-index": index, "--card-offset": `${(index % 3) * 16}px` } as CSSProperties}
                   >
-                    <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                    <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
                   </span>
                 ))}
               </div>
@@ -86,7 +87,7 @@ export function GalleryWorlds({ images }: { images: DorvellImage[] }) {
             <div className="world-strip" aria-hidden="true">
               {strip.map((image, index) => (
                 <span key={`${image.id}-${index}`}>
-                  <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} />
+                  <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized />
                 </span>
               ))}
             </div>

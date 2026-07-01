@@ -78,8 +78,9 @@ export function ImageCard({
         alt={imageAlt(image)}
         width={image.width}
         height={image.height}
-        loading={index < 12 ? "eager" : "lazy"}
+        loading={index < 6 ? "eager" : "lazy"}
         sizes="(max-width: 760px) 88vw, (max-width: 1200px) 42vw, 28vw"
+        unoptimized
         {...blurImageProps(image)}
       />
       <span className="contact-number">DF-{String(index + 1).padStart(3, "0")}</span>

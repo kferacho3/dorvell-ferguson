@@ -6,14 +6,18 @@ import { useMemo, useState, type CSSProperties } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes, type GalleryLaneKey } from "@/lib/gallery-lanes";
+import { useImageWarmup } from "./useImageWarmup";
 
 export function LaneSequenceLab({ images }: { images: DorvellImage[] }) {
   const lanes = useMemo(() => buildGalleryLanes(images), [images]);
   const [activeKey, setActiveKey] = useState<GalleryLaneKey>(lanes[0]?.key ?? "portraits");
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const activeLane = lanes.find((lane) => lane.key === activeKey) ?? lanes[0];
-  const activeSequence = activeLane?.images.slice(0, 10) ?? [];
+  const activeSequence = useMemo(() => activeLane?.images.slice(0, 10) ?? [], [activeLane]);
   const activeFrame = activeSequence[Math.min(activeFrameIndex, Math.max(activeSequence.length - 1, 0))] ?? activeSequence[0];
+  const sequencePreviewUrls = useMemo(() => activeSequence.map((image) => image.localOptimized.md), [activeSequence]);
+
+  useImageWarmup(sequencePreviewUrls, 10);
 
   const selectLane = (key: GalleryLaneKey) => {
     setActiveKey(key);
@@ -43,11 +47,12 @@ export function LaneSequenceLab({ images }: { images: DorvellImage[] }) {
         <figure className="sequence-lab__projector">
           <Image
             key={activeFrame.id}
-            src={activeFrame.localOptimized.lg}
+            src={activeFrame.localOptimized.md}
             alt={imageAlt(activeFrame)}
             width={activeFrame.width}
             height={activeFrame.height}
             sizes="(max-width: 900px) 92vw, 54vw"
+            unoptimized
             {...blurImageProps(activeFrame)}
           />
           <figcaption>
@@ -78,7 +83,7 @@ export function LaneSequenceLab({ images }: { images: DorvellImage[] }) {
                   <span className="sequence-lab__lane-number">{String(index + 1).padStart(2, "0")}</span>
                   <span className="sequence-lab__lane-thumb">
                     {lead ? (
-                      <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} {...blurImageProps(lead)} />
+                      <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} unoptimized {...blurImageProps(lead)} />
                     ) : null}
                   </span>
                   <span className="sequence-lab__lane-copy">
@@ -104,7 +109,7 @@ export function LaneSequenceLab({ images }: { images: DorvellImage[] }) {
                   onMouseEnter={() => setActiveFrameIndex(index)}
                   type="button"
                 >
-                  <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                  <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
                   <span>{String(index + 1).padStart(2, "0")}</span>
                 </button>
               );

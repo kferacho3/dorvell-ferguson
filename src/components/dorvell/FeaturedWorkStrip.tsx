@@ -6,6 +6,7 @@ import { useMemo, useState, type CSSProperties, type PointerEvent } from "react"
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes } from "@/lib/gallery-lanes";
+import { useImageWarmup } from "./useImageWarmup";
 
 export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
   const lanes = useMemo(() => buildGalleryLanes(images), [images]);
@@ -19,6 +20,9 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
   const scanFrames = useMemo(() => [...featured, ...featured], [featured]);
   const [activeIndex, setActiveIndex] = useState(0);
   const active = featured[activeIndex] ?? featured[0];
+  const featuredPreviewUrls = useMemo(() => featured.map(({ image }) => image.localOptimized.md), [featured]);
+
+  useImageWarmup(featuredPreviewUrls, 12);
 
   if (!active) return null;
 
@@ -97,12 +101,13 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
           >
             <Image
               key={active.image.id}
-              src={active.image.localOptimized.lg}
+              src={active.image.localOptimized.md}
               alt={imageAlt(active.image)}
               width={active.image.width}
               height={active.image.height}
               loading="eager"
               sizes="(max-width: 900px) 92vw, 48vw"
+              unoptimized
               {...blurImageProps(active.image)}
             />
             <span className="featured-stage__grid" aria-hidden="true" />
@@ -123,7 +128,7 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
           <div className="featured-scanner__reel featured-scanner__reel--a">
             {scanFrames.map(({ image, lane }, index) => (
               <figure key={`${image.id}-scan-a-${index}`} style={{ "--lane-accent": lane.accent } as CSSProperties}>
-                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
                 <figcaption>{String((index % featured.length) + 1).padStart(2, "0")}</figcaption>
               </figure>
             ))}
@@ -131,7 +136,7 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
           <div className="featured-scanner__reel featured-scanner__reel--b">
             {[...scanFrames].reverse().map(({ image, lane }, index) => (
               <figure key={`${image.id}-scan-b-${index}`} style={{ "--lane-accent": lane.accent } as CSSProperties}>
-                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} {...blurImageProps(image)} />
+                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
                 <figcaption>{lane.label}</figcaption>
               </figure>
             ))}
@@ -156,6 +161,7 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
                   alt={imageAlt(image)}
                   width={image.width}
                   height={image.height}
+                  unoptimized
                   {...blurImageProps(image)}
                 />
                 <span>{String(index + 1).padStart(2, "0")}</span>

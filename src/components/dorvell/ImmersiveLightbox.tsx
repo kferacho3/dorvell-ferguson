@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, type CSSProperties } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 import { galleryLaneDefinitions, laneKeyForImage } from "@/lib/gallery-lanes";
+import { useImageWarmup } from "./useImageWarmup";
 
 type LightboxOrigin = {
   x: number;
@@ -41,6 +42,9 @@ export function ImmersiveLightbox({
       return { image: images[nextIndex], index: nextIndex };
     });
   }, [images, index]);
+  const nearbyLargeUrls = useMemo(() => nearbyImages.map((item) => item.image.localOptimized.lg), [nearbyImages]);
+
+  useImageWarmup(nearbyLargeUrls, 9);
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -144,6 +148,8 @@ export function ImmersiveLightbox({
             width={image.width}
             height={image.height}
             priority
+            sizes="(max-width: 900px) 100vw, calc(100vw - 380px)"
+            unoptimized
             {...blurImageProps(image)}
           />
           <div className="lightbox-count" aria-live="polite">
@@ -197,6 +203,7 @@ export function ImmersiveLightbox({
                   alt=""
                   width={item.image.width}
                   height={item.image.height}
+                  unoptimized
                 />
               </button>
             ))}

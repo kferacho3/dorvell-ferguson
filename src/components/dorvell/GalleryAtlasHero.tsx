@@ -8,6 +8,7 @@ import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes, type GalleryLane } from "@/lib/gallery-lanes";
 import { AtlasOrbitField } from "./AtlasOrbitField";
 import { SlicedTitle } from "./SlicedTitle";
+import { useImageWarmup } from "./useImageWarmup";
 
 function laneLead(lane: GalleryLane) {
   return lane.images[0];
@@ -54,7 +55,10 @@ export function GalleryAtlasHero({
   const activeImage = activeLane ? laneLead(activeLane) : images[0];
   const loopImages = useMemo(() => railImages(images), [images]);
   const orbitImages = useMemo(() => loopImages.slice(0, 16), [loopImages]);
+  const lanePreviewUrls = useMemo(() => lanes.map((lane) => laneLead(lane)?.localOptimized.md), [lanes]);
   const heroRef = useRef<HTMLElement | null>(null);
+
+  useImageWarmup(lanePreviewUrls, 8);
 
   const updateHeroPointer = (event: PointerEvent<HTMLElement>) => {
     const hero = heroRef.current;
@@ -92,7 +96,7 @@ export function GalleryAtlasHero({
       <div className="atlas-marquee" aria-hidden="true">
         {loopImages.map((image, index) => (
           <span key={`${image.id}-${index}`}>
-            <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} />
+            <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized />
           </span>
         ))}
       </div>
@@ -120,7 +124,7 @@ export function GalleryAtlasHero({
                 <span className="atlas-lane-dial__number">{String(index + 1).padStart(2, "0")}</span>
                 <span className="atlas-lane-dial__thumb">
                   {lead ? (
-                    <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} {...blurImageProps(lead)} />
+                    <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} unoptimized {...blurImageProps(lead)} />
                   ) : null}
                 </span>
                 <span className="atlas-lane-dial__copy">
@@ -158,11 +162,13 @@ export function GalleryAtlasHero({
           <figure className="atlas-preview">
             <Image
               key={activeImage.id}
-              src={activeImage.localOptimized.lg}
+              src={activeImage.localOptimized.md}
               alt={imageAlt(activeImage)}
               width={activeImage.width}
               height={activeImage.height}
               priority
+              sizes="(max-width: 900px) 92vw, 46vw"
+              unoptimized
               {...blurImageProps(activeImage)}
             />
             <figcaption>
@@ -198,7 +204,7 @@ export function GalleryAtlasHero({
               <span className="atlas-gallery-card__number">{String(index + 1).padStart(2, "0")}</span>
               <span className="atlas-gallery-card__image">
                 {lead ? (
-                  <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} {...blurImageProps(lead)} />
+                  <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} unoptimized {...blurImageProps(lead)} />
                 ) : null}
               </span>
               <span className="atlas-gallery-card__copy">
