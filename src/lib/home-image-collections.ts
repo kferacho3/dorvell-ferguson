@@ -39,6 +39,10 @@ function isInstagramImage(image: DorvellImage) {
   return image.sourcePage.includes("instagram.com");
 }
 
+function isInstagramAccountImage(image: DorvellImage, account: string) {
+  return image.sourcePage.includes(`instagram.com/${account}/`);
+}
+
 function hasOptimizedImage(image: DorvellImage) {
   return Boolean(image.localOptimized.sm && image.localOptimized.md && image.localOptimized.lg);
 }
@@ -54,22 +58,29 @@ function sourcePostKey(image: DorvellImage) {
 }
 
 function orderedLaneImages(lane: GalleryLane, salt: number) {
+  const eligibleImages = lane.images.filter((image) => !isMisfiledFashionCreativeImage(image) && hasOptimizedImage(image));
   const portfolioImages = rotate(
-    lane.images.filter((image) => !isMisfiledFashionCreativeImage(image) && !isInstagramImage(image) && hasOptimizedImage(image)),
+    eligibleImages.filter((image) => !isInstagramImage(image)),
     salt,
   );
-  const instagramImages = rotate(
-    lane.images.filter((image) => !isMisfiledFashionCreativeImage(image) && isInstagramImage(image) && hasOptimizedImage(image)),
+  const personalImages = rotate(
+    eligibleImages.filter((image) => isInstagramAccountImage(image, "2kferg")),
+    salt * 5,
+  );
+  const photographyImages = rotate(
+    eligibleImages.filter((image) => isInstagramAccountImage(image, "fergphotography")),
     salt * 7,
   );
   const ordered: DorvellImage[] = [];
-  const maxLength = Math.max(portfolioImages.length, instagramImages.length);
+  const maxLength = Math.max(portfolioImages.length, personalImages.length, photographyImages.length);
 
   for (let index = 0; index < maxLength; index += 1) {
     const portfolioImage = portfolioImages[index];
-    const instagramImage = instagramImages[index];
+    const personalImage = personalImages[index];
+    const photographyImage = photographyImages[index];
     if (portfolioImage) ordered.push(portfolioImage);
-    if (instagramImage) ordered.push(instagramImage);
+    if (personalImage) ordered.push(personalImage);
+    if (photographyImage) ordered.push(photographyImage);
   }
 
   return ordered;
