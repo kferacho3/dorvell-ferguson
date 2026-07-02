@@ -23,7 +23,7 @@ export function AboutStory({
       <div className="about-image">
         {portrait ? (
           <Image
-            src={portrait.localOptimized.lg}
+            src={portrait.localOptimized.md}
             alt={imageAlt(portrait)}
             width={portrait.width}
             height={portrait.height}

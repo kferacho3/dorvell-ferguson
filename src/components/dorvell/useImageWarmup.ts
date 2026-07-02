@@ -9,6 +9,27 @@ type IdleWindow = typeof window & {
   cancelIdleCallback?: (handle: number) => void;
 };
 
+type NavigatorWithConnection = Navigator & {
+  connection?: {
+    saveData?: boolean;
+    effectiveType?: string;
+  };
+  deviceMemory?: number;
+};
+
+function canWarmImages() {
+  const compactViewport = window.matchMedia("(max-width: 760px)").matches;
+  const navigatorInfo = window.navigator as NavigatorWithConnection;
+  const connection = navigatorInfo.connection;
+  const lowDataConnection =
+    connection?.saveData ||
+    connection?.effectiveType === "slow-2g" ||
+    connection?.effectiveType === "2g";
+  const constrainedMemory = Boolean(navigatorInfo.deviceMemory && navigatorInfo.deviceMemory <= 4 && window.innerWidth < 1100);
+
+  return !compactViewport && !lowDataConnection && !constrainedMemory;
+}
+
 function warmImage(src: string) {
   if (!src || warmedImages.has(src)) return;
   warmedImages.add(src);
@@ -24,6 +45,7 @@ export function useImageWarmup(urls: Array<string | undefined | null>, limit = 1
 
   useEffect(() => {
     if (!signature) return;
+    if (!canWarmImages()) return;
 
     const idleWindow = window as IdleWindow;
     const candidates = signature
@@ -33,16 +55,29 @@ export function useImageWarmup(urls: Array<string | undefined | null>, limit = 1
 
     if (candidates.length === 0) return;
 
+    const timers = new Set<number>();
     const run = () => {
-      candidates.forEach(warmImage);
+      candidates.forEach((src, index) => {
+        const timer = window.setTimeout(() => {
+          timers.delete(timer);
+          warmImage(src);
+        }, index * 90);
+        timers.add(timer);
+      });
     };
 
     if (idleWindow.requestIdleCallback) {
-      const handle = idleWindow.requestIdleCallback(run, { timeout: 900 });
-      return () => idleWindow.cancelIdleCallback?.(handle);
+      const handle = idleWindow.requestIdleCallback(run, { timeout: 1400 });
+      return () => {
+        idleWindow.cancelIdleCallback?.(handle);
+        timers.forEach((timer) => window.clearTimeout(timer));
+      };
     }
 
-    const timeout = window.setTimeout(run, 160);
-    return () => window.clearTimeout(timeout);
+    const timeout = window.setTimeout(run, 320);
+    return () => {
+      window.clearTimeout(timeout);
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
   }, [limit, signature]);
 }

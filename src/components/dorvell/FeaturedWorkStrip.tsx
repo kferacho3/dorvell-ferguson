@@ -105,7 +105,6 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
               alt={imageAlt(active.image)}
               width={active.image.width}
               height={active.image.height}
-              loading="eager"
               sizes="(max-width: 900px) 92vw, 48vw"
               unoptimized
               {...blurImageProps(active.image)}

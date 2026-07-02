@@ -14,6 +14,27 @@ type OrbitCard = {
   speed: number;
 };
 
+type NavigatorWithPerformanceSignals = Navigator & {
+  connection?: {
+    saveData?: boolean;
+    effectiveType?: string;
+  };
+  deviceMemory?: number;
+};
+
+function canRunOrbitField() {
+  const compactViewport = window.matchMedia("(max-width: 900px)").matches;
+  const navigatorInfo = window.navigator as NavigatorWithPerformanceSignals;
+  const connection = navigatorInfo.connection;
+  const lowDataConnection =
+    connection?.saveData ||
+    connection?.effectiveType === "slow-2g" ||
+    connection?.effectiveType === "2g";
+  const constrainedMemory = Boolean(navigatorInfo.deviceMemory && navigatorInfo.deviceMemory <= 4);
+
+  return !compactViewport && !lowDataConnection && !constrainedMemory;
+}
+
 function disposeMaterial(material: Material | Material[]) {
   const materials = Array.isArray(material) ? material : [material];
   materials.forEach((item) => {
@@ -37,6 +58,7 @@ export function AtlasOrbitField({ images }: { images: DorvellImage[] }) {
 
   useEffect(() => {
     if (reducedMotion || !mountRef.current) return;
+    if (!canRunOrbitField()) return;
 
     let cleanup = () => {};
     let cancelled = false;
@@ -49,7 +71,12 @@ export function AtlasOrbitField({ images }: { images: DorvellImage[] }) {
       const width = Math.max(mount.clientWidth, 1);
       const height = Math.max(mount.clientHeight, 1);
       const compact = width < 760;
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
+      const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: false,
+        powerPreference: "low-power",
+        preserveDrawingBuffer: false,
+      });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 1.15 : 1.55));
       renderer.setSize(width, height);
       renderer.domElement.setAttribute("aria-hidden", "true");

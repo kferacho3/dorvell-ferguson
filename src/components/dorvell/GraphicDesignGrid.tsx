@@ -96,7 +96,7 @@ export function GraphicDesignGrid({ tools, images, manual }: { tools: string[]; 
           {heroFrame ? (
             <figure className="design-monitor">
               <Image
-                src={heroFrame.localOptimized.lg}
+                src={heroFrame.localOptimized.md}
                 alt={imageAlt(heroFrame)}
                 width={heroFrame.width}
                 height={heroFrame.height}

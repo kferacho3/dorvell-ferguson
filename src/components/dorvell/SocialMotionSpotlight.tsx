@@ -39,7 +39,7 @@ export function SocialMotionSpotlight({ images }: { images: DorvellImage[] }) {
         {lead ? (
           <figure className="social-motion__poster">
             <Image
-              src={lead.localOptimized.lg}
+              src={lead.localOptimized.md}
               alt={imageAlt(lead)}
               width={lead.width}
               height={lead.height}
