@@ -12,11 +12,19 @@ const rootDir = path.resolve(__dirname, "..");
 const publicDir = path.join(rootDir, "public");
 const originalsDir = path.join(publicDir, "dorvell", "originals");
 const manifestPath = path.join(rootDir, "src", "content", "dorvell.generated.json");
-const profileUrl = "https://www.instagram.com/fergphotography/";
+const instagramUsername = "fergphotography";
+const instagramUserId = process.env.DORVELL_INSTAGRAM_USER_ID ?? "7363334431";
+const profileUrl = `https://www.instagram.com/${instagramUsername}/`;
+const timelineDocId = "7950326061742207";
 const userAgent =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const minimumImageEdge = Number(process.env.DORVELL_INSTAGRAM_MIN_EDGE ?? 900);
+const postLimit = Number(process.env.DORVELL_INSTAGRAM_POST_LIMIT ?? 360);
+const imageLimit = Number(process.env.DORVELL_INSTAGRAM_IMAGE_LIMIT ?? 2200);
+const graphqlPageLimit = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_LIMIT ?? 40);
+const detailPostLimit = Number(process.env.DORVELL_INSTAGRAM_DETAIL_POST_LIMIT ?? 24);
+const timelinePageSize = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_SIZE ?? 12);
 
 type InstagramCandidate = {
   url: string;
@@ -78,6 +86,21 @@ type InstagramProfileApiResponse = {
   };
 };
 
+type InstagramCollectionResult = {
+  postUrls: string[];
+  candidates: InstagramCandidate[];
+  hasNextPage: boolean;
+  totalPosts: number;
+  userId?: string;
+  pagesScanned?: number;
+  limitedByPostLimit?: boolean;
+  limitedByPageLimit?: boolean;
+};
+
+function emptyCollectionResult(): InstagramCollectionResult {
+  return { postUrls: [], candidates: [], hasNextPage: false, totalPosts: 0 };
+}
+
 function normalizeText(value: string) {
   return value.replace(/\s+/g, " ").trim();
 }
@@ -87,9 +110,26 @@ function postCodeFromUrl(url: string) {
   return match?.[1] ?? createHash("sha1").update(url).digest("hex").slice(0, 10);
 }
 
+function instagramPostUrl(shortcode: string) {
+  return `https://www.instagram.com/${instagramUsername}/p/${shortcode}/`;
+}
+
+function normalizeInstagramPostUrl(url: string) {
+  const match = url.match(/instagram\.com\/(?:[^/]+\/)?(?:p|reel)\/([^/?#]+)/);
+  return match?.[1] ? instagramPostUrl(match[1]) : url;
+}
+
 function instagramImageKey(url: string) {
   const filename = url.split("?")[0]?.split("/").pop();
   return filename || createHash("sha1").update(url).digest("hex");
+}
+
+function isInstagramPhotoCdnUrl(url: string) {
+  return (
+    /scontent|cdninstagram|fbcdn/.test(url) &&
+    /\/v\/t(?:39|51)\.[^/]+\/[^/?]+\.(?:jpe?g|webp)/i.test(url) &&
+    !/s150x150|profile_pic/i.test(url)
+  );
 }
 
 function categoryForCaption(caption: string, postUrl: string): DorvellCategory {
@@ -158,7 +198,7 @@ function addApiCandidate(
   if (node.__typename === "GraphVideo") return;
 
   const resource = bestApiImageResource(node);
-  if (!resource.url || !/scontent|cdninstagram|fbcdn/.test(resource.url) || !/t51\.82787-15/.test(resource.url)) return;
+  if (!resource.url || !isInstagramPhotoCdnUrl(resource.url)) return;
 
   const alt = normalizeText(node.accessibility_caption ?? "") || `Dorvell Ferguson Jr. image from @fergphotography`;
   const category = categoryForCaption(`${caption} ${alt}`, postUrl);
@@ -180,8 +220,23 @@ function addApiCandidate(
   if (!current || candidate.width * candidate.height > current.width * current.height) candidates.set(key, candidate);
 }
 
-async function collectProfileApiCandidates() {
-  const response = await fetch("https://www.instagram.com/api/v1/users/web_profile_info/?username=fergphotography", {
+function addApiPostCandidates(candidates: Map<string, InstagramCandidate>, post: InstagramApiMediaNode) {
+  if (!post.shortcode) return;
+  const postUrl = instagramPostUrl(post.shortcode);
+  const caption = captionForApiNode(post);
+
+  if (post.__typename === "GraphSidecar") {
+    for (const childEdge of post.edge_sidecar_to_children?.edges ?? []) {
+      if (childEdge.node) addApiCandidate(candidates, childEdge.node, postUrl, caption);
+    }
+    return;
+  }
+
+  addApiCandidate(candidates, post, postUrl, caption);
+}
+
+async function collectProfileApiCandidates(): Promise<InstagramCollectionResult> {
+  const response = await fetch(`https://www.instagram.com/api/v1/users/web_profile_info/?username=${instagramUsername}`, {
     headers: instagramRequestHeaders(),
   });
   if (!response.ok) {
@@ -189,25 +244,17 @@ async function collectProfileApiCandidates() {
   }
 
   const payload = (await response.json()) as InstagramProfileApiResponse;
-  const media = payload.data?.user?.edge_owner_to_timeline_media;
+  const user = payload.data?.user;
+  const media = user?.edge_owner_to_timeline_media;
   const postUrls: string[] = [];
   const candidates = new Map<string, InstagramCandidate>();
 
   for (const edge of media?.edges ?? []) {
     const post = edge.node;
     if (!post?.shortcode) continue;
-    const postUrl = `https://www.instagram.com/fergphotography/p/${post.shortcode}/`;
-    const caption = captionForApiNode(post);
+    const postUrl = instagramPostUrl(post.shortcode);
     postUrls.push(postUrl);
-
-    if (post.__typename === "GraphSidecar") {
-      for (const childEdge of post.edge_sidecar_to_children?.edges ?? []) {
-        if (childEdge.node) addApiCandidate(candidates, childEdge.node, postUrl, caption);
-      }
-      continue;
-    }
-
-    addApiCandidate(candidates, post, postUrl, caption);
+    addApiPostCandidates(candidates, post);
   }
 
   return {
@@ -215,6 +262,70 @@ async function collectProfileApiCandidates() {
     candidates: Array.from(candidates.values()),
     hasNextPage: media?.page_info?.has_next_page ?? false,
     totalPosts: media?.count ?? postUrls.length,
+    userId: user?.id,
+  };
+}
+
+async function fetchTimelinePage(userId: string, after?: string) {
+  const variables: Record<string, string | number | boolean> = {
+    id: userId,
+    include_clips_attribution_info: false,
+    first: timelinePageSize,
+  };
+  if (after) variables.after = after;
+
+  const query = new URLSearchParams({
+    doc_id: timelineDocId,
+    variables: JSON.stringify(variables),
+  });
+  const response = await fetch(`https://www.instagram.com/graphql/query/?${query.toString()}`, {
+    headers: instagramRequestHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error(`Instagram GraphQL timeline failed: ${response.status} ${response.statusText}`);
+  }
+  return (await response.json()) as InstagramProfileApiResponse;
+}
+
+async function collectTimelineGraphqlCandidates(userId?: string): Promise<InstagramCollectionResult> {
+  if (!userId) {
+    return { postUrls: [], candidates: [], hasNextPage: false, totalPosts: 0 };
+  }
+
+  const postUrlSet = new Set<string>();
+  const candidates = new Map<string, InstagramCandidate>();
+  let after: string | undefined;
+  let totalPosts = 0;
+  let hasNextPage = false;
+  let pagesScanned = 0;
+
+  for (let pageIndex = 0; pageIndex < graphqlPageLimit && postUrlSet.size < postLimit; pageIndex += 1) {
+    const payload = await fetchTimelinePage(userId, after);
+    const media = payload.data?.user?.edge_owner_to_timeline_media;
+    if (!media) throw new Error("Instagram GraphQL timeline response did not include media edges.");
+
+    totalPosts = media.count ?? totalPosts;
+    pagesScanned += 1;
+    for (const edge of media.edges ?? []) {
+      const post = edge.node;
+      if (!post?.shortcode || postUrlSet.size >= postLimit) continue;
+      postUrlSet.add(instagramPostUrl(post.shortcode));
+      addApiPostCandidates(candidates, post);
+    }
+
+    hasNextPage = media.page_info?.has_next_page ?? false;
+    after = media.page_info?.end_cursor;
+    if (!hasNextPage || !after) break;
+  }
+
+  return {
+    postUrls: Array.from(postUrlSet),
+    candidates: Array.from(candidates.values()),
+    hasNextPage,
+    totalPosts,
+    pagesScanned,
+    limitedByPostLimit: totalPosts > 0 && postUrlSet.size < totalPosts && postUrlSet.size >= postLimit,
+    limitedByPageLimit: hasNextPage && pagesScanned >= graphqlPageLimit,
   };
 }
 
@@ -247,7 +358,7 @@ async function collectProfilePosts(page: Page) {
       .filter((href) => /instagram\.com\/fergphotography\/(?:p|reel)\//.test(href)),
   );
 
-  return Array.from(new Set(posts)).slice(0, Number(process.env.DORVELL_INSTAGRAM_POST_LIMIT ?? 18));
+  return Array.from(new Set(posts.map(normalizeInstagramPostUrl))).slice(0, postLimit);
 }
 
 async function collectPostCandidates(page: Page, postUrl: string) {
@@ -255,7 +366,7 @@ async function collectPostCandidates(page: Page, postUrl: string) {
   const onResponse = (response: { url: () => string; headers: () => Record<string, string> }) => {
     const url = response.url();
     const contentType = response.headers()["content-type"] || "";
-    if (contentType.startsWith("image/") && /scontent|cdninstagram|fbcdn/.test(url) && /t51\.82787-15/.test(url)) {
+    if (contentType.startsWith("image/") && isInstagramPhotoCdnUrl(url)) {
       networkUrls.add(url);
     }
   };
@@ -290,8 +401,7 @@ async function collectPostCandidates(page: Page, postUrl: string) {
 
     const candidates = new Map<string, InstagramCandidate>();
     const add = (url: string, width = 640, height = 640, alt = "", caption = "") => {
-      if (!/scontent|cdninstagram|fbcdn/.test(url) || !/t51\.82787-15/.test(url)) return;
-      if (/s150x150|profile_pic/.test(url)) return;
+      if (!isInstagramPhotoCdnUrl(url)) return;
       const category = categoryForCaption(`${caption} ${alt}`, postUrl);
       const lane = laneForCategory(category);
       const candidate: InstagramCandidate = {
@@ -352,59 +462,103 @@ async function main() {
   await mkdir(originalsDir, { recursive: true });
 
   const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as DorvellSiteContent;
-  const startingImageCount = manifest.images.length;
   const existingHashes = new Set(manifest.images.map((image) => image.hash));
+  const existingSourceKeys = new Set(manifest.images.map((image) => instagramImageKey(image.sourceUrl)));
+  const existingInstagramPostUrls = [
+    ...manifest.images
+      .map((image) => image.sourcePage)
+      .filter((sourcePage) => sourcePage.includes("instagram.com")),
+    ...(manifest.pages.find((pageRecord) => pageRecord.url === profileUrl)?.links.map((link) => link.href) ?? []),
+  ].map(normalizeInstagramPostUrl);
   const warnings = (manifest.scrapeSummary?.warnings ?? []).filter(
     (warning) =>
       !warning.startsWith("Instagram image download failed") &&
       !warning.startsWith("Instagram scrape failed") &&
-      !warning.startsWith("Instagram public profile API exposed"),
+      !warning.startsWith("Instagram public profile API exposed") &&
+      !warning.startsWith("Instagram GraphQL") &&
+      !warning.includes("Instagram GraphQL timeline failed"),
   );
-  const apiResult = await collectProfileApiCandidates().catch((error) => {
+  const apiResult: InstagramCollectionResult = await collectProfileApiCandidates().catch((error) => {
     warnings.push(String(error));
-    return { postUrls: [], candidates: [], hasNextPage: false, totalPosts: 0 };
+    return emptyCollectionResult();
   });
-  if (apiResult.hasNextPage) {
+
+  const timelineResult: InstagramCollectionResult = await collectTimelineGraphqlCandidates(apiResult.userId ?? instagramUserId).catch((error) => {
+    warnings.push(String(error));
+    return emptyCollectionResult();
+  });
+  if (timelineResult.limitedByPostLimit) {
     warnings.push(
-      `Instagram public profile API exposed ${apiResult.postUrls.length} of ${apiResult.totalPosts} posts. Older-page pagination currently requires login/session access.`,
+      `Instagram GraphQL pagination stopped at DORVELL_INSTAGRAM_POST_LIMIT=${postLimit} of ${timelineResult.totalPosts} posts.`,
+    );
+  } else if (timelineResult.limitedByPageLimit) {
+    warnings.push(
+      `Instagram GraphQL pagination stopped at DORVELL_INSTAGRAM_GRAPHQL_PAGE_LIMIT=${graphqlPageLimit} after ${timelineResult.postUrls.length} of ${timelineResult.totalPosts} posts.`,
+    );
+  } else if (apiResult.hasNextPage && timelineResult.postUrls.length <= apiResult.postUrls.length) {
+    warnings.push(
+      `Instagram public profile API exposed ${apiResult.postUrls.length} of ${apiResult.totalPosts} posts and GraphQL pagination did not return older pages.`,
     );
   }
+
   const browserOptions = existsSync(chromePath)
     ? { headless: true, executablePath: chromePath, args: ["--disable-gpu", "--no-sandbox"] }
     : { headless: true };
 
-  const { chromium } = await import("playwright");
-  const browser: Browser = await chromium.launch(browserOptions);
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1100 }, userAgent });
+  const allCandidates: InstagramCandidate[] = [...timelineResult.candidates, ...apiResult.candidates];
+  let browserPostUrls: string[] = [];
+  let detailPostUrls: string[] = [];
 
-  const postUrls = Array.from(new Set([...apiResult.postUrls, ...(await collectProfilePosts(page))])).slice(
-    0,
-    Number(process.env.DORVELL_INSTAGRAM_POST_LIMIT ?? 24),
-  );
-  const allCandidates: InstagramCandidate[] = [...apiResult.candidates];
-  for (const postUrl of postUrls) {
+  try {
+    const { chromium } = await import("playwright");
+    const browser: Browser = await chromium.launch(browserOptions);
+    const page = await browser.newPage({ viewport: { width: 1440, height: 1100 }, userAgent });
+
     try {
-      const candidates = await collectPostCandidates(page, postUrl);
-      allCandidates.push(...candidates);
-    } catch (error) {
-      warnings.push(`Instagram scrape failed for ${postUrl}: ${String(error)}`);
+      browserPostUrls = await collectProfilePosts(page);
+      detailPostUrls = Array.from(new Set([...timelineResult.postUrls, ...apiResult.postUrls, ...browserPostUrls, ...existingInstagramPostUrls]))
+        .slice(0, postLimit)
+        .slice(0, detailPostLimit);
+
+      for (const postUrl of detailPostUrls) {
+        try {
+          const candidates = await collectPostCandidates(page, postUrl);
+          allCandidates.push(...candidates);
+        } catch (error) {
+          warnings.push(`Instagram scrape failed for ${postUrl}: ${String(error)}`);
+        }
+      }
+    } finally {
+      await browser.close();
     }
+  } catch (error) {
+    warnings.push(`Instagram browser scrape failed: ${String(error)}`);
   }
-  await browser.close();
+
+  const postUrls = Array.from(new Set([...timelineResult.postUrls, ...apiResult.postUrls, ...browserPostUrls, ...existingInstagramPostUrls])).slice(
+    0,
+    postLimit,
+  );
 
   const candidateMap = allCandidates.reduce((map, candidate) => {
-      const key = instagramImageKey(candidate.url);
-      const current = map.get(key);
-      if (!current || candidate.width * candidate.height > current.width * current.height) map.set(key, candidate);
-      return map;
-    }, new Map<string, InstagramCandidate>());
-  const uniqueCandidates = Array.from(candidateMap.values()).slice(0, Number(process.env.DORVELL_INSTAGRAM_IMAGE_LIMIT ?? 120));
+    const key = instagramImageKey(candidate.url);
+    const current = map.get(key);
+    if (!current || candidate.width * candidate.height > current.width * current.height) map.set(key, candidate);
+    return map;
+  }, new Map<string, InstagramCandidate>());
+  const uniqueCandidates = Array.from(candidateMap.values()).slice(0, imageLimit);
 
   let downloaded = 0;
   let duplicates = 0;
+  let alreadyKnown = 0;
   let skippedSmall = 0;
   for (const candidate of uniqueCandidates) {
     try {
+      const sourceKey = instagramImageKey(candidate.url);
+      if (existingSourceKeys.has(sourceKey)) {
+        alreadyKnown += 1;
+        continue;
+      }
       const result = await downloadCandidate(candidate);
       if (!result) {
         skippedSmall += 1;
@@ -415,6 +569,7 @@ async function main() {
         continue;
       }
       existingHashes.add(result.hash);
+      existingSourceKeys.add(sourceKey);
       const id = `ig-${result.hash.slice(0, 12)}`;
       manifest.images.push({
         id,
@@ -454,7 +609,7 @@ async function main() {
   manifest.contacts.instagram = Array.from(new Set([...(manifest.contacts.instagram ?? []), profileUrl]));
   manifest.scrapeSummary = {
     pagesScraped: manifest.pages.length,
-    imagesFound: startingImageCount + uniqueCandidates.length,
+    imagesFound: manifest.images.length + skippedSmall,
     imagesDownloaded: manifest.images.length,
     duplicatesRemoved: (manifest.scrapeSummary?.duplicatesRemoved ?? 0) + duplicates,
     missingAltText: manifest.images.filter((image) => image.needsAltReview).length,
@@ -467,9 +622,12 @@ async function main() {
     JSON.stringify(
       {
         profileUrl,
-        postsVisited: postUrls.length,
+        postsFound: postUrls.length,
+        postsVisitedForDetail: detailPostUrls.length,
+        graphQlPagesScanned: timelineResult.pagesScanned ?? 0,
         candidatesFound: uniqueCandidates.length,
         imagesAdded: downloaded,
+        alreadyKnown,
         duplicates,
         skippedSmall,
         totalImages: manifest.images.length,
