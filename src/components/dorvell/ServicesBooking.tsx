@@ -11,6 +11,15 @@ type Service = {
   category: DorvellCategory;
 };
 
+const categoryAccents: Partial<Record<DorvellCategory, string>> = {
+  Portraits: "#f0b35a",
+  Fashion: "#35e0bb",
+  Music: "#f04d5e",
+  Athletics: "#48c7ff",
+  "Behind The Scenes": "#f0b35a",
+  Runway: "#35e0bb",
+};
+
 export function ServicesBooking({
   services,
   email,
@@ -31,6 +40,14 @@ export function ServicesBooking({
       })),
     )
     .slice(0, 10);
+  const fallbackLane = lanes[0];
+  const serviceCards = services.map((service, index) => ({
+    service,
+    image:
+      images.find((image) => image.category === service.category) ??
+      fallbackLane?.images[index % Math.max(fallbackLane.images.length, 1)] ??
+      images[index % Math.max(images.length, 1)],
+  }));
 
   return (
     <section
@@ -57,7 +74,7 @@ export function ServicesBooking({
           <div className="booking-router" aria-label="Booking inquiry selector">
             <div className="booking-router__copy">
               <p className="eyebrow">Inquiry lanes</p>
-              <h3>Choose the image world, then send the ask.</h3>
+              <h3>Start with the image world.</h3>
               <p>
                 Start with the kind of shoot you need. The email opens with the right subject line so the conversation
                 can get straight to dates, location, usage, and direction.
@@ -111,13 +128,31 @@ export function ServicesBooking({
           </div>
         ) : null}
         <div className="service-grid" aria-label="Booking options">
-          {services.map((service) => (
-            <article key={service.title} className="service-card">
-              <span>{service.category}</span>
+          {serviceCards.map(({ service, image }) => (
+            <article
+              key={service.title}
+              className="service-card"
+              style={{ "--lane-accent": categoryAccents[service.category] ?? "#35e0bb" } as CSSProperties}
+            >
+              {image ? (
+                <span className="service-card__thumb">
+                  <Image
+                    src={image.localOptimized.sm}
+                    alt=""
+                    width={image.width}
+                    height={image.height}
+                    unoptimized
+                    {...blurImageProps(image)}
+                  />
+                </span>
+              ) : null}
+              <span className="service-card__category">{service.category}</span>
               <h3>{service.title}</h3>
               <p>{service.bestFor}</p>
               <small>{service.deliverables}</small>
-              <a href={`mailto:${email}?subject=${encodeURIComponent(`${service.title} inquiry`)}`}>Inquire</a>
+              <a className="service-card__link" href={`mailto:${email}?subject=${encodeURIComponent(`${service.title} inquiry`)}`}>
+                Inquire
+              </a>
             </article>
           ))}
         </div>

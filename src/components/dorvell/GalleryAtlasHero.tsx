@@ -15,6 +15,11 @@ function laneLead(lane: GalleryLane) {
   return lane.images[0];
 }
 
+function lanePreview(lane: GalleryLane, offset = 1) {
+  if (lane.images.length === 0) return undefined;
+  return lane.images[offset % lane.images.length] ?? laneLead(lane);
+}
+
 function railImages(images: DorvellImage[]) {
   const first = images.slice(0, 18);
   return [...first, ...first.slice(0, 10)];
@@ -66,8 +71,9 @@ export function GalleryAtlasHero({
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const activeLaneIndex = Math.max(0, lanes.findIndex((lane) => lane.key === activeKey));
   const activeLane = lanes[activeLaneIndex] ?? lanes[0];
-  const activeFrames = activeLane?.images.slice(0, 14) ?? [];
+  const activeFrames = activeLane?.images.slice(0, 24) ?? [];
   const activeImage = activeFrames[activeFrameIndex % Math.max(activeFrames.length, 1)] ?? laneLead(activeLane) ?? images[0];
+  const nextLane = lanes[nextIndex(activeLaneIndex, 1, lanes.length)] ?? activeLane;
   const loopImages = useMemo(() => railImages(images), [images]);
   const orbitImages = useMemo(() => loopImages.slice(0, 16), [loopImages]);
   const lanePreviewUrls = useMemo(
@@ -83,15 +89,11 @@ export function GalleryAtlasHero({
     setActiveFrameIndex(0);
   };
 
-  const shiftLane = (direction: number) => {
+  const advanceHeroCarousel = () => {
     if (lanes.length === 0) return;
-    const lane = lanes[nextIndex(activeLaneIndex, direction, lanes.length)];
+    const lane = lanes[nextIndex(activeLaneIndex, 1, lanes.length)];
     setActiveKey(lane.key);
-    setActiveFrameIndex(0);
-  };
-
-  const shiftFrame = (direction: number) => {
-    setActiveFrameIndex((index) => nextIndex(index, direction, activeFrames.length));
+    setActiveFrameIndex((index) => nextIndex(index, 1, lane.images.slice(0, 24).length));
   };
 
   const updateHeroPointer = (event: PointerEvent<HTMLElement>) => {
@@ -144,7 +146,7 @@ export function GalleryAtlasHero({
         </p>
         <nav className="atlas-lane-dial" aria-label="Jump to portfolio lanes">
           {lanes.map((lane, index) => {
-            const lead = laneLead(lane);
+            const lead = lanePreview(lane, index + 1);
             return (
               <a
                 aria-current={lane.key === activeKey ? "true" : undefined}
@@ -195,6 +197,7 @@ export function GalleryAtlasHero({
         {activeImage ? (
           <figure className="atlas-preview">
             <Image
+              key={activeImage.id}
               src={activeImage.localOptimized.md}
               alt={imageAlt(activeImage)}
               width={activeImage.width}
@@ -214,18 +217,20 @@ export function GalleryAtlasHero({
           </figure>
         ) : null}
         <div className="atlas-slide-carousel" aria-label="Featured image carousel">
-          <button type="button" aria-label="Previous portfolio lane" onClick={() => shiftLane(-1)}>
-            <span aria-hidden="true">&lt;</span>
-          </button>
-          <button type="button" className="atlas-slide-carousel__active" onClick={() => shiftFrame(1)}>
-            <span>
-              {String(activeLaneIndex + 1).padStart(2, "0")} / {String(lanes.length || 1).padStart(2, "0")}
-            </span>
+          <button
+            type="button"
+            className="atlas-slide-carousel__active"
+            onClick={advanceHeroCarousel}
+            aria-label={`Show next portfolio lane: ${nextLane?.label ?? "next lane"}`}
+          >
+            <span>{activeLane?.eyebrow}</span>
             <strong>{activeLane?.label}</strong>
-            <small>Next frame</small>
-          </button>
-          <button type="button" aria-label="Next portfolio lane" onClick={() => shiftLane(1)}>
-            <span aria-hidden="true">&gt;</span>
+            <small>Next: {nextLane?.label ?? "frame"}</small>
+            <span className="atlas-slide-carousel__ticks" aria-hidden="true">
+              {lanes.map((lane) => (
+                <i key={lane.key} className={lane.key === activeKey ? "is-active" : ""} />
+              ))}
+            </span>
           </button>
         </div>
         <div className="atlas-minimap" aria-hidden="true">
@@ -239,34 +244,6 @@ export function GalleryAtlasHero({
         </div>
       </div>
 
-      <nav className="atlas-galleries" aria-label="Featured galleries">
-        {lanes.map((lane, index) => {
-          const lead = laneLead(lane);
-          return (
-            <a
-              className={lane.key === activeKey ? "atlas-gallery-card is-active" : "atlas-gallery-card"}
-              href={lane.href}
-              key={lane.key}
-              aria-label={`${lane.label}. ${laneFrameTotal(lane, laneTotals)} frames. ${lane.description}`}
-              onFocus={() => selectLane(lane.key)}
-              onMouseEnter={() => selectLane(lane.key)}
-              style={{ "--lane-accent": lane.accent, "--lane-soft": lane.accentSoft } as CSSProperties}
-            >
-              <span className="atlas-gallery-card__number">{String(index + 1).padStart(2, "0")}</span>
-              <span className="atlas-gallery-card__image">
-                {lead ? (
-                  <Image src={lead.localOptimized.sm} alt="" width={lead.width} height={lead.height} unoptimized {...blurImageProps(lead)} />
-                ) : null}
-              </span>
-              <span className="atlas-gallery-card__copy">
-                <em>{lane.eyebrow}</em>
-                <strong>{lane.label}</strong>
-                <small>{laneFrameTotal(lane, laneTotals)} frames</small>
-              </span>
-            </a>
-          );
-        })}
-      </nav>
     </section>
   );
 }

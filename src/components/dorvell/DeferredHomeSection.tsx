@@ -26,7 +26,7 @@ export function DeferredHomeSection({
         setShouldRender(true);
         observer.disconnect();
       },
-      { rootMargin: compactViewport ? "0px 0px" : rootMargin },
+      { rootMargin: compactViewport ? "420px 0px" : rootMargin },
     );
 
     observer.observe(marker);
