@@ -25,6 +25,24 @@ function railImages(images: DorvellImage[]) {
   return [...first, ...first.slice(0, 10)];
 }
 
+const heroLaneOffsets: Partial<Record<GalleryLane["key"], number>> = {
+  portraits: 2,
+  "music-live": 1,
+  "sports-athletics": 1,
+  "fashion-creative": 2,
+};
+
+function rotateImages(images: DorvellImage[], offset: number) {
+  if (images.length === 0) return images;
+  const start = offset % images.length;
+  return [...images.slice(start), ...images.slice(0, start)];
+}
+
+function heroLaneFrames(lane?: GalleryLane) {
+  if (!lane) return [];
+  return rotateImages(lane.images, heroLaneOffsets[lane.key] ?? 0).slice(0, 24);
+}
+
 const heroProofs = [
   {
     value: "7+ yrs",
@@ -71,7 +89,7 @@ export function GalleryAtlasHero({
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const activeLaneIndex = Math.max(0, lanes.findIndex((lane) => lane.key === activeKey));
   const activeLane = lanes[activeLaneIndex] ?? lanes[0];
-  const activeFrames = activeLane?.images.slice(0, 24) ?? [];
+  const activeFrames = heroLaneFrames(activeLane);
   const activeImage = activeFrames[activeFrameIndex % Math.max(activeFrames.length, 1)] ?? laneLead(activeLane) ?? images[0];
   const nextLane = lanes[nextIndex(activeLaneIndex, 1, lanes.length)] ?? activeLane;
   const loopImages = useMemo(() => railImages(images), [images]);
@@ -93,7 +111,7 @@ export function GalleryAtlasHero({
     if (lanes.length === 0) return;
     const lane = lanes[nextIndex(activeLaneIndex, 1, lanes.length)];
     setActiveKey(lane.key);
-    setActiveFrameIndex((index) => nextIndex(index, 1, lane.images.slice(0, 24).length));
+    setActiveFrameIndex((index) => nextIndex(index, 1, heroLaneFrames(lane).length));
   };
 
   const updateHeroPointer = (event: PointerEvent<HTMLElement>) => {
