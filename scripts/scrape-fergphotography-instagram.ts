@@ -19,7 +19,7 @@ const timelineDocId = "7950326061742207";
 const userAgent =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const minimumImageEdge = Number(process.env.DORVELL_INSTAGRAM_MIN_EDGE ?? 480);
+const minimumImageEdge = Number(process.env.DORVELL_INSTAGRAM_MIN_EDGE ?? 1);
 const postLimit = Number(process.env.DORVELL_INSTAGRAM_POST_LIMIT ?? 360);
 const imageLimit = Number(process.env.DORVELL_INSTAGRAM_IMAGE_LIMIT ?? 2200);
 const graphqlPageLimit = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_LIMIT ?? 40);
@@ -139,9 +139,21 @@ function isInstagramPhotoCdnUrl(url: string) {
 
 function categoryForCaption(caption: string, postUrl: string): DorvellCategory {
   const text = `${caption} ${postUrl}`.toLowerCase();
-  if (/(concert|live|music|artist|swae|waka|trippie|ye|kanye|rolling loud|cuban club|wallstreet)/.test(text)) return "Music";
-  if (/(nike|hibbett|athlete|athletic|sports|basketball|march madness|team|youth|game)/.test(text)) return "Athletics";
-  if (/(fashion|style|fits|runway|model|garden|presence|coffee shop|portrait|bookings|collaborations)/.test(text)) return "Fashion";
+  if (
+    /(concert|performance|performing|performer|stage|live|music|artist|rapper|dj|song|album|festival|rolling\s*loud|tampa\s*bay\s*live|cuban\s*club|wallstreet|rebelwrld|trippie|swae|waka|kanye|\bye\b|jodyhighroller|riff\s*raff|smokepurpp|domusquintus)/.test(text)
+  ) {
+    return "Music";
+  }
+  if (
+    /(nike|hibbett|athlete|athletic|sports|basketball|football|soccer|volleyball|march\s*madness|team|youth|game|tournament|training|coach|high\s*school|gt\s*cut|drenchman|kingbb|lions|clinic|camp|court|league)/.test(text)
+  ) {
+    return "Athletics";
+  }
+  if (
+    /(fashion|style|fits?\b|runway|model|modeling|designer|lookbook|editorial|collection|styled|styling|vintage\s*market|thetampavintagemarket|lillilyresale|bellateebagy|balenciaga|clothing|wardrobe|outfit|garment|fit\s*check|bookings|collaborations)/.test(text)
+  ) {
+    return "Fashion";
+  }
   return "Portraits";
 }
 
@@ -161,12 +173,21 @@ function laneForCategory(category: DorvellCategory) {
 function tagsForCandidate(category: DorvellCategory, caption: string) {
   const tags = new Set<string>([category, "Instagram", "Ferg Photography"]);
   const text = caption.toLowerCase();
-  if (text.includes("concert")) tags.add("Concerts");
-  if (text.includes("fashion") || text.includes("style") || text.includes("fits")) tags.add("Fashion");
-  if (text.includes("model")) tags.add("Modeling");
-  if (text.includes("nike") || text.includes("athlete")) tags.add("Sports");
+  if (/concert|performance|stage|live|festival|artist|music/.test(text)) tags.add("Concerts");
+  if (/fashion|style|fits?\b|runway|lookbook|editorial|vintage\s*market|outfit/.test(text)) tags.add("Fashion");
+  if (/model|modeling|runway/.test(text)) tags.add("Modeling");
+  if (/nike|athlete|sports|basketball|football|team|court|training/.test(text)) tags.add("Sports");
   if (text.includes("booking")) tags.add("Booking");
   return Array.from(tags);
+}
+
+function applyCandidateMetadata(image: DorvellImage, candidate: InstagramCandidate) {
+  image.category = candidate.category;
+  image.tags = candidate.tags;
+  image.projectSlug = candidate.projectSlug;
+  image.projectTitle = candidate.projectTitle;
+  if (candidate.caption) image.caption = candidate.caption;
+  if (candidate.alt) image.alt = candidate.alt;
 }
 
 function instagramRequestHeaders() {
@@ -468,8 +489,10 @@ async function main() {
   await mkdir(originalsDir, { recursive: true });
 
   const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as DorvellSiteContent;
+  const previousScrapeSummary = manifest.scrapeSummary;
   const existingHashes = new Set(manifest.images.map((image) => image.hash));
   const existingSourceKeys = new Set(manifest.images.map((image) => instagramImageKey(image.sourceUrl)));
+  const existingBySourceKey = new Map(manifest.images.map((image) => [instagramImageKey(image.sourceUrl), image]));
   const existingInstagramPostUrls = [
     ...manifest.images
       .map((image) => image.sourcePage)
@@ -484,13 +507,17 @@ async function main() {
       !warning.startsWith("Instagram GraphQL") &&
       !warning.includes("Instagram GraphQL timeline failed"),
   );
+  let apiWarning: string | undefined;
+  let timelineWarning: string | undefined;
   const apiResult: InstagramCollectionResult = await collectProfileApiCandidates().catch((error) => {
-    warnings.push(String(error));
+    apiWarning = String(error);
+    warnings.push(apiWarning);
     return emptyCollectionResult();
   });
 
   const timelineResult: InstagramCollectionResult = await collectTimelineGraphqlCandidates(apiResult.userId ?? instagramUserId).catch((error) => {
-    warnings.push(String(error));
+    timelineWarning = String(error);
+    warnings.push(timelineWarning);
     return emptyCollectionResult();
   });
   if (timelineResult.limitedByPostLimit) {
@@ -501,7 +528,7 @@ async function main() {
     warnings.push(
       `Instagram GraphQL pagination stopped at DORVELL_INSTAGRAM_GRAPHQL_PAGE_LIMIT=${graphqlPageLimit} after ${timelineResult.postUrls.length} of ${timelineResult.totalPosts} posts.`,
     );
-  } else if (apiResult.hasNextPage && timelineResult.postUrls.length <= apiResult.postUrls.length) {
+  } else if (!timelineWarning && apiResult.hasNextPage && timelineResult.postUrls.length <= apiResult.postUrls.length) {
     warnings.push(
       `Instagram public profile API exposed ${apiResult.postUrls.length} of ${apiResult.totalPosts} posts and GraphQL pagination did not return older pages.`,
     );
@@ -557,11 +584,17 @@ async function main() {
   let downloaded = 0;
   let duplicates = 0;
   let alreadyKnown = 0;
+  let metadataRefreshed = 0;
   let skippedSmall = 0;
   for (const candidate of uniqueCandidates) {
     try {
       const sourceKey = instagramImageKey(candidate.url);
       if (existingSourceKeys.has(sourceKey)) {
+        const existingImage = existingBySourceKey.get(sourceKey);
+        if (existingImage) {
+          applyCandidateMetadata(existingImage, candidate);
+          metadataRefreshed += 1;
+        }
         alreadyKnown += 1;
         continue;
       }
@@ -577,7 +610,7 @@ async function main() {
       existingHashes.add(result.hash);
       existingSourceKeys.add(sourceKey);
       const id = `ig-${result.hash.slice(0, 12)}`;
-      manifest.images.push({
+      const imageRecord: DorvellImage = {
         id,
         sourceUrl: candidate.url,
         sourcePage: candidate.postUrl,
@@ -596,7 +629,9 @@ async function main() {
         needsCreditReview: true,
         projectSlug: candidate.projectSlug,
         projectTitle: candidate.projectTitle,
-      });
+      };
+      existingBySourceKey.set(sourceKey, imageRecord);
+      manifest.images.push(imageRecord);
       downloaded += 1;
     } catch (error) {
       warnings.push(`Instagram image download failed for ${candidate.postUrl}: ${String(error)}`);
@@ -613,6 +648,13 @@ async function main() {
   manifest.pages = [...manifest.pages.filter((pageRecord) => pageRecord.url !== profileUrl), instagramPage];
   manifest.scrapedAt = new Date().toISOString();
   manifest.contacts.instagram = Array.from(new Set([...(manifest.contacts.instagram ?? []), profileUrl]));
+  const preservePreviousWarnings =
+    (apiWarning || timelineWarning) &&
+    downloaded === 0 &&
+    metadataRefreshed === 0 &&
+    previousScrapeSummary?.warnings &&
+    previousScrapeSummary.warnings.length > 0;
+
   manifest.scrapeSummary = {
     pagesScraped: manifest.pages.length,
     imagesFound: manifest.images.length + skippedSmall,
@@ -620,7 +662,7 @@ async function main() {
     duplicatesRemoved: (manifest.scrapeSummary?.duplicatesRemoved ?? 0) + duplicates,
     missingAltText: manifest.images.filter((image) => image.needsAltReview).length,
     categories: categoryCounts(manifest.images),
-    warnings,
+    warnings: preservePreviousWarnings ? previousScrapeSummary.warnings : warnings,
   };
 
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
@@ -634,6 +676,7 @@ async function main() {
         candidatesFound: uniqueCandidates.length,
         imagesAdded: downloaded,
         alreadyKnown,
+        metadataRefreshed,
         duplicates,
         skippedSmall,
         totalImages: manifest.images.length,
