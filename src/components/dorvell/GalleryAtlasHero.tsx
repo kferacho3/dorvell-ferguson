@@ -26,7 +26,7 @@ function railImages(images: DorvellImage[]) {
 }
 
 const heroLaneOffsets: Partial<Record<GalleryLane["key"], number>> = {
-  portraits: 2,
+  portraits: 4,
   "music-live": 1,
   "sports-athletics": 1,
   "fashion-creative": 2,
@@ -100,7 +100,7 @@ export function GalleryAtlasHero({
   );
   const heroRef = useRef<HTMLElement | null>(null);
 
-  useImageWarmup(lanePreviewUrls, 16);
+  useImageWarmup(lanePreviewUrls, 8);
 
   const selectLane = (key: GalleryLane["key"]) => {
     setActiveKey(key);
@@ -241,9 +241,9 @@ export function GalleryAtlasHero({
             onClick={advanceHeroCarousel}
             aria-label={`Show next portfolio lane: ${nextLane?.label ?? "next lane"}`}
           >
-            <span>{activeLane?.eyebrow}</span>
+            <span>Next frame</span>
             <strong>{activeLane?.label}</strong>
-            <small>Next: {nextLane?.label ?? "frame"}</small>
+            <small>{nextLane?.label ?? "frame"} queued</small>
             <span className="atlas-slide-carousel__ticks" aria-hidden="true">
               {lanes.map((lane) => (
                 <i key={lane.key} className={lane.key === activeKey ? "is-active" : ""} />

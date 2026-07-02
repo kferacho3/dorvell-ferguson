@@ -21,19 +21,19 @@ export type HomeImageCollections = {
 };
 
 const sectionPlan = [
-  ["featuredImages", 8],
-  ["socialImages", 9],
-  ["kineticImages", 18],
-  ["sequenceImages", 12],
-  ["motionPathImages", 10],
-  ["flightImages", 7],
-  ["worldsImages", 16],
+  ["featuredImages", 6],
+  ["socialImages", 7],
+  ["kineticImages", 12],
+  ["sequenceImages", 8],
+  ["motionPathImages", 8],
+  ["flightImages", 6],
+  ["worldsImages", 12],
   ["archiveImages", 8],
   ["studioImages", 6],
-  ["runwayImages", 10],
-  ["designImages", 8],
+  ["runwayImages", 8],
+  ["designImages", 6],
   ["aboutImages", 4],
-  ["bookingImages", 8],
+  ["bookingImages", 6],
 ] as const;
 
 function isInstagramImage(image: DorvellImage) {

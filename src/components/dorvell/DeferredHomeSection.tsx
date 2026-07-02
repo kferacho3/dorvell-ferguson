@@ -20,16 +20,44 @@ export function DeferredHomeSection({
     if (!marker) return;
 
     const compactViewport = window.matchMedia("(max-width: 760px)").matches;
+    const effectiveRootMargin = compactViewport ? "420px 0px" : rootMargin;
+    const rootMarginPixels = Number.parseFloat(effectiveRootMargin) || 0;
+    let isActive = true;
+
+    const renderNow = () => {
+      if (!isActive) return true;
+      const rect = marker.getBoundingClientRect();
+      if (rect.top > window.innerHeight + rootMarginPixels) return false;
+      setShouldRender(true);
+      return true;
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         setShouldRender(true);
         observer.disconnect();
       },
-      { rootMargin: compactViewport ? "420px 0px" : rootMargin },
+      { rootMargin: effectiveRootMargin },
     );
 
     observer.observe(marker);
+    if (renderNow()) {
+      observer.disconnect();
+      return () => {
+        isActive = false;
+      };
+    }
+
+    const onScroll = () => {
+      if (!renderNow()) return;
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
 
     const desktopFallback = compactViewport
       ? undefined
@@ -39,7 +67,10 @@ export function DeferredHomeSection({
         }, 1800);
 
     return () => {
+      isActive = false;
       observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       if (desktopFallback) window.clearTimeout(desktopFallback);
     };
   }, [rootMargin, shouldRender]);
