@@ -5,6 +5,12 @@ import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes } from "@/lib/gallery-lanes";
 
+function worldTitleParts(label: string) {
+  const parts = label.split(" / ");
+  if (parts.length === 1) return [label];
+  return [`${parts[0]} /`, parts.slice(1).join(" / ")];
+}
+
 export function GalleryWorlds({ images }: { images: DorvellImage[] }) {
   const lanes = buildGalleryLanes(images);
 
@@ -46,7 +52,11 @@ export function GalleryWorlds({ images }: { images: DorvellImage[] }) {
             </div>
             <div className="world-copy">
               <p className="atlas-kicker">{lane.eyebrow}</p>
-              <h2>{lane.label}</h2>
+              <h2>
+                {worldTitleParts(lane.label).map((part) => (
+                  <span key={part}>{part}</span>
+                ))}
+              </h2>
               <p>{lane.description}</p>
               <div className="world-actions">
                 <Link href={`/work#${lane.slug}`}>View gallery</Link>

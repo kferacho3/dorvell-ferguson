@@ -1,8 +1,38 @@
 import generated from "@/content/dorvell.generated.json";
 import { dorvellManual } from "@/content/dorvell.manual";
-import { dorvellSiteContentSchema, type DorvellCategory, type DorvellImage } from "@/content/dorvell.schema";
+import { dorvellSiteContentSchema, type DorvellCategory, type DorvellImage, type DorvellSiteContent } from "@/content/dorvell.schema";
+import { readPhotoCategorizationLedgerSync } from "@/lib/dorvell-photo-categorization-ledger";
 
-export function getPortfolioData() {
+function buildPortfolioData(images: DorvellImage[], generatedData: DorvellSiteContent) {
+  const projects = Array.from(
+    images.reduce((map, image) => {
+      const slug = image.projectSlug ?? "archive";
+      const current = map.get(slug) ?? {
+        slug,
+        title: image.projectTitle ?? "Archive",
+        category: image.category,
+        images: [] as DorvellImage[],
+      };
+      current.images.push(image);
+      map.set(slug, current);
+      return map;
+    }, new Map<string, { slug: string; title: string; category: DorvellCategory; images: DorvellImage[] }>()),
+  ).map(([, project]) => project);
+
+  const categories = Array.from(new Set(images.map((image) => image.category)));
+
+  return {
+    generated: {
+      ...generatedData,
+      images,
+    },
+    manual: dorvellManual,
+    projects,
+    categories,
+  };
+}
+
+export function getRawPortfolioData() {
   const parsed = dorvellSiteContentSchema.safeParse(generated);
 
   if (!parsed.success) {
@@ -18,29 +48,20 @@ export function getPortfolioData() {
     };
   }
 
-  const projects = Array.from(
-    parsed.data.images.reduce((map, image) => {
-      const slug = image.projectSlug ?? "archive";
-      const current = map.get(slug) ?? {
-        slug,
-        title: image.projectTitle ?? "Archive",
-        category: image.category,
-        images: [] as DorvellImage[],
-      };
-      current.images.push(image);
-      map.set(slug, current);
-      return map;
-    }, new Map<string, { slug: string; title: string; category: DorvellCategory; images: DorvellImage[] }>()),
-  ).map(([, project]) => project);
+  return buildPortfolioData(parsed.data.images, parsed.data);
+}
 
-  const categories = Array.from(new Set(parsed.data.images.map((image) => image.category)));
+export function getPortfolioData() {
+  const rawData = getRawPortfolioData();
+  const { scrapDecisions } = readPhotoCategorizationLedgerSync();
+  const siteScrappedIds = new Set(
+    Object.entries(scrapDecisions)
+      .filter(([, decision]) => decision === "site")
+      .map(([imageId]) => imageId),
+  );
+  const publicImages = rawData.generated.images.filter((image) => !siteScrappedIds.has(image.id));
 
-  return {
-    generated: parsed.data,
-    manual: dorvellManual,
-    projects,
-    categories,
-  };
+  return buildPortfolioData(publicImages, rawData.generated);
 }
 
 export function getProject(slug: string) {

@@ -67,18 +67,116 @@ export const galleryLaneDefinitions: Omit<GalleryLane, "images">[] = [
   },
 ];
 
+const fashionCreativeProjectSlugs = new Set(["fashioncreative-direction-coming-soon", "home-2", "about", "work"]);
+const musicLiveProjectSlugs = new Set(["concerts-musical-artist"]);
+
+const fashionCreativeSignals = [
+  "#model",
+  "agency:",
+  "collection",
+  "designer",
+  "fashion director",
+  "fashion week",
+  "fit ",
+  "fit.",
+  "fmensfw",
+  "lookbook",
+  "look for",
+  "miami swim",
+  "model //",
+  "model:",
+  "model coach",
+  "nyfw",
+  "pacsun",
+  "runway",
+  "streetwear",
+  "styleoftheday",
+  "themixsonmethod",
+  "theofficialjus10h",
+  "walk for",
+  "walked",
+  "willychavarria",
+];
+
+const personalModelSignals = [
+  "2kferg",
+  "from @2kferg",
+  "instagram.com/2kferg",
+];
+
+const modelShootSignals = [
+  "#model",
+  "lookbook",
+  "model //",
+  "model:",
+  "outfitoftheday",
+  "streetwear",
+  "styleoftheday",
+];
+
+const musicLiveSignals = [
+  "artist",
+  "concert",
+  "crowd",
+  "live",
+  "miguelmorales",
+  "music",
+  "performance",
+  "rollingloud",
+  "stage",
+  "swaelee",
+  "trippie",
+];
+
+function imageSearchText(image: DorvellImage) {
+  return [
+    image.projectSlug,
+    image.projectTitle,
+    image.category,
+    image.sourcePage,
+    image.alt,
+    image.caption,
+    ...image.tags,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function hasAnySignal(text: string, signals: string[]) {
+  return signals.some((signal) => text.includes(signal));
+}
+
+export function isMisfiledFashionCreativeImage(image: DorvellImage) {
+  if (!musicLiveProjectSlugs.has(image.projectSlug ?? "")) return false;
+
+  const text = imageSearchText(image);
+  const hasFashionCreativeSignal = hasAnySignal(text, fashionCreativeSignals);
+  if (!hasFashionCreativeSignal) return false;
+
+  const isPersonalModelPost = hasAnySignal(text, personalModelSignals);
+  const isModelShoot = hasAnySignal(text, modelShootSignals);
+  const isClearlyMusicLive = hasAnySignal(text, musicLiveSignals);
+
+  return isPersonalModelPost || isModelShoot || !isClearlyMusicLive;
+}
+
 export function laneKeyForImage(image: DorvellImage): GalleryLaneKey {
   const projectSlug = image.projectSlug ?? "";
+  if (isMisfiledFashionCreativeImage(image)) return "fashion-creative";
+  if (fashionCreativeProjectSlugs.has(projectSlug) || image.category === "Modeling" || image.category === "Runway") {
+    return "fashion-creative";
+  }
   const lane = galleryLaneDefinitions.find((definition) => definition.projectSlugs.includes(projectSlug));
   return lane?.key ?? "fashion-creative";
 }
 
 export function buildGalleryLanes(images: DorvellImage[]): GalleryLane[] {
   return galleryLaneDefinitions.map((definition) => {
-    const laneImages = images.filter((image) => definition.projectSlugs.includes(image.projectSlug ?? ""));
+    const laneImages = images.filter((image) => laneKeyForImage(image) === definition.key);
     return {
       ...definition,
-      images: laneImages.length > 0 ? laneImages : images.filter((image) => laneKeyForImage(image) === definition.key),
+      images: laneImages,
     };
   });
 }

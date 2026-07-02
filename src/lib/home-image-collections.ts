@@ -1,4 +1,5 @@
 import type { DorvellImage } from "@/content/dorvell.schema";
+import { readPhotoCategorizationLedgerSync } from "@/lib/dorvell-photo-categorization-ledger";
 import { isMisfiledFashionCreativeImage, type GalleryLane } from "@/lib/gallery-lanes";
 
 export type HomeImageCollections = {
@@ -132,12 +133,22 @@ function imagePool(lanes: GalleryLane[], countPerLane: number, usedIds: Set<stri
 export function buildHomeImageCollections(lanes: GalleryLane[]): HomeImageCollections {
   const usedIds = new Set<string>();
   const usedPosts = new Set<string>();
-  const heroImages = imagePool(lanes, 14, usedIds, usedPosts, 0);
-  const entryImages = imagePool(lanes, 1, usedIds, usedPosts, 83);
+  const { scrapDecisions } = readPhotoCategorizationLedgerSync();
+  const homeScrappedIds = new Set(
+    Object.entries(scrapDecisions)
+      .filter(([, decision]) => decision === "landing" || decision === "site")
+      .map(([imageId]) => imageId),
+  );
+  const homeLanes = lanes.map((lane) => ({
+    ...lane,
+    images: lane.images.filter((image) => !homeScrappedIds.has(image.id)),
+  }));
+  const heroImages = imagePool(homeLanes, 14, usedIds, usedPosts, 0);
+  const entryImages = imagePool(homeLanes, 1, usedIds, usedPosts, 83);
   const collections = { entryImages, heroImages } as HomeImageCollections;
 
   sectionPlan.forEach(([key, countPerLane], sectionIndex) => {
-    collections[key] = imagePool(lanes, countPerLane, usedIds, usedPosts, 11 + sectionIndex * 17);
+    collections[key] = imagePool(homeLanes, countPerLane, usedIds, usedPosts, 11 + sectionIndex * 17);
   });
 
   return collections;
