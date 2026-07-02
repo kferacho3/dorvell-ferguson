@@ -58,15 +58,13 @@ export function ServicesBooking({
       <div className="booking-intro">
         <div>
           <p className="eyebrow">Booking</p>
-          <h2 id="booking-title">Choose the lane. Leave with a polished set.</h2>
+          <h2 id="booking-title">Choose the lane. Keep the frame clean.</h2>
           <p>
-            Portraits, fashion/editorial, concerts, athletics, social content, creative direction, and modeling availability.
+            Portraits, fashion/editorial, concerts, athletics, creative direction, and modeling availability without the intake page getting louder than the photos.
           </p>
         </div>
         <div className="booking-intro__tags" aria-label="Booking strengths">
-          <span>Directed shoots</span>
-          <span>Live coverage</span>
-          <span>Social-ready edits</span>
+          <span>Directed shoots / live coverage / social-ready edits</span>
         </div>
       </div>
       <div className="booking-desk">
@@ -74,10 +72,9 @@ export function ServicesBooking({
           <div className="booking-router" aria-label="Booking inquiry selector">
             <div className="booking-router__copy">
               <p className="eyebrow">Inquiry lanes</p>
-              <h3>Start with the image world.</h3>
+              <h3>Start with the frame.</h3>
               <p>
-                Start with the kind of shoot you need. The email opens with the right subject line so the conversation
-                can get straight to dates, location, usage, and direction.
+                Pick the closest world and the email opens ready for dates, location, usage, and direction.
               </p>
               <a
                 className="button-secondary"
@@ -149,7 +146,6 @@ export function ServicesBooking({
               <span className="service-card__category">{service.category}</span>
               <h3>{service.title}</h3>
               <p>{service.bestFor}</p>
-              <small>{service.deliverables}</small>
               <a className="service-card__link" href={`mailto:${email}?subject=${encodeURIComponent(`${service.title} inquiry`)}`}>
                 Inquire
               </a>

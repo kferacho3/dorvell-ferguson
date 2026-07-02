@@ -49,6 +49,12 @@ body {
   text-rendering: geometricPrecision;
 }
 
+html.entry-gate-lock,
+body.entry-gate-lock,
+body:has(.entry-gate) {
+  overflow: hidden;
+}
+
 body::before {
   position: fixed;
   inset: 0;
@@ -309,14 +315,16 @@ section,
 }
 
 .entry-gate {
-  position: relative;
+  position: fixed;
+  inset: 0;
+  z-index: 70;
   isolation: isolate;
   display: grid;
+  height: 100svh;
   min-height: 100svh;
-  align-content: end;
-  gap: clamp(34px, 5vw, 72px);
+  place-items: center;
   overflow: hidden;
-  padding: clamp(118px, 16vh, 170px) clamp(18px, 3.6vw, 64px) clamp(26px, 4vw, 56px);
+  padding: clamp(112px, 15svh, 162px) clamp(18px, 3.6vw, 64px) clamp(22px, 3.4svh, 42px);
   background: #070807;
 }
 
@@ -332,10 +340,15 @@ section,
 }
 
 .entry-gate__copy {
+  position: relative;
+  z-index: 2;
   display: grid;
   justify-items: center;
   gap: 18px;
+  width: min(960px, 100%);
+  margin-inline: auto;
   text-align: center;
+  transform: translateY(clamp(-74px, -8svh, -34px));
 }
 
 .entry-gate__copy p,
@@ -359,6 +372,7 @@ section,
   text-transform: uppercase;
 }
 
+.entry-gate__copy button,
 .entry-gate__copy a {
   display: inline-flex;
   min-height: 48px;
@@ -375,6 +389,8 @@ section,
   transition: transform var(--df-fast), background var(--df-fast), border-color var(--df-fast);
 }
 
+.entry-gate__copy button:hover,
+.entry-gate__copy button:focus-visible,
 .entry-gate__copy a:hover,
 .entry-gate__copy a:focus-visible {
   border-color: var(--df-gold);
@@ -383,15 +399,25 @@ section,
 }
 
 .entry-gate__preview {
+  position: absolute;
+  right: clamp(18px, 3.6vw, 64px);
+  bottom: clamp(18px, 3.2svh, 40px);
+  left: clamp(18px, 3.6vw, 64px);
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(10px, 1.35vw, 18px);
   align-items: end;
+  height: min(30svh, 340px);
+  opacity: 0.48;
+  pointer-events: none;
+  mask-image: linear-gradient(180deg, transparent 0, #000 18%, #000 100%);
 }
 
 .entry-gate__frame {
   position: relative;
-  min-height: clamp(360px, 43vh, 590px);
+  height: 100%;
+  min-height: 0;
   margin: 0;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.08);
@@ -400,11 +426,11 @@ section,
 }
 
 .entry-gate__frame:nth-child(2) {
-  min-height: clamp(420px, 51vh, 680px);
+  transform: translateY(8%);
 }
 
 .entry-gate__frame:nth-child(3) {
-  min-height: clamp(390px, 47vh, 630px);
+  transform: translateY(-7%);
 }
 
 .entry-gate__frame img {
@@ -6222,20 +6248,12 @@ section,
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(circle at 16% 12%, rgba(240, 179, 90, 0.05), transparent 28%),
-    linear-gradient(180deg, var(--df-bg), var(--df-panel-2));
+    radial-gradient(circle at 82% 8%, rgba(240, 179, 90, 0.045), transparent 26%),
+    linear-gradient(180deg, var(--df-bg), rgba(9, 11, 10, 0.92));
 }
 
 .booking-section::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-  opacity: 0.08;
-  background:
-    linear-gradient(180deg, transparent, rgba(53,224,187,0.07));
-  mask-image: linear-gradient(180deg, transparent, #000 14%, #000 84%, transparent);
+  display: none;
 }
 
 .runway-section,
@@ -6332,45 +6350,44 @@ section,
 
 .booking-intro {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(220px, 0.3fr);
-  gap: 20px;
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(12px, 2vw, 24px);
+  align-items: start;
   width: min(1240px, calc(100% - 36px));
-  margin: 0 auto 22px;
+  margin: 0 auto 16px;
 }
 
 .booking-section .booking-intro h2 {
-  max-width: 720px;
-  font-size: clamp(2.15rem, 4.4vw, 4.2rem);
-  line-height: 0.94;
+  max-width: 780px;
+  font-size: clamp(2rem, 3.6vw, 3.55rem);
+  line-height: 0.92;
 }
 
 .booking-intro p {
-  max-width: 760px;
+  max-width: 700px;
+  margin-top: 8px;
 }
 
 .booking-intro__tags {
-  display: grid;
-  gap: 6px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
 }
 
 .booking-intro__tags span {
-  display: flex;
-  min-height: 36px;
-  align-items: center;
-  border: 1px solid var(--df-line);
-  border-radius: 8px;
-  padding: 0 14px;
-  color: var(--df-text);
-  background: rgba(255,255,255,0.045);
-  font-size: 0.78rem;
+  display: block;
+  max-width: 280px;
+  color: var(--df-gold);
+  font-size: 0.7rem;
   font-weight: 800;
+  line-height: 1.35;
+  text-align: right;
   text-transform: uppercase;
 }
 
 .booking-desk {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   width: min(1240px, calc(100% - 36px));
   margin: 0 auto;
 }
@@ -6378,17 +6395,17 @@ section,
 .booking-router {
   position: relative;
   display: grid;
-  min-height: auto;
-  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 0.9fr) minmax(180px, 0.34fr);
-  gap: 10px;
+  grid-template-columns: minmax(220px, 0.34fr) minmax(0, 0.72fr) minmax(180px, 0.3fr);
+  gap: 8px;
+  align-items: center;
   overflow: hidden;
-  padding: 10px;
-  border: 1px solid color-mix(in srgb, var(--df-red) 26%, var(--df-line));
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--df-red) 18%, var(--df-line));
   border-radius: 8px;
   background:
-    linear-gradient(120deg, rgba(240,77,94,0.08), transparent 42%),
-    rgba(255,255,255,0.034);
-  box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    linear-gradient(120deg, rgba(240,77,94,0.045), transparent 38%),
+    rgba(255,255,255,0.022);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.12);
 }
 
 .booking-router::before {
@@ -6399,33 +6416,29 @@ section,
   display: grid;
   align-content: center;
   justify-items: start;
-  gap: 10px;
-  min-height: 178px;
-  padding: 12px;
-  border: 1px solid var(--df-line);
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.055), transparent 64%),
-    rgba(7,9,8,0.46);
+  gap: 8px;
+  min-height: 136px;
+  padding: 10px;
+  border-right: 1px solid var(--df-line);
 }
 
 .booking-router__copy h3 {
-  max-width: 300px;
+  max-width: 260px;
   margin: 0;
   color: var(--df-text);
   font-family: var(--font-display);
-  font-size: clamp(1.45rem, 2.2vw, 2.35rem);
+  font-size: clamp(1.25rem, 1.75vw, 1.95rem);
   font-weight: 900;
   line-height: 0.92;
   text-transform: uppercase;
 }
 
 .booking-router__copy p:not(.eyebrow) {
-  max-width: 360px;
+  max-width: 300px;
   margin: 0;
   color: var(--df-text-soft);
-  font-size: 0.84rem;
-  line-height: 1.46;
+  font-size: 0.76rem;
+  line-height: 1.42;
 }
 
 .booking-router__routes {
@@ -6433,26 +6446,28 @@ section,
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  align-content: stretch;
+  grid-auto-rows: minmax(62px, auto);
+  gap: 5px;
+  align-content: center;
+  align-self: center;
 }
 
 .booking-router__routes a {
   --lane-accent: var(--df-teal);
   position: relative;
   display: grid;
-  min-height: 78px;
-  grid-template-columns: 26px 46px minmax(0, 1fr);
-  gap: 7px;
+  min-height: 62px;
+  grid-template-columns: 23px 38px minmax(0, 1fr);
+  gap: 6px;
   align-items: center;
   overflow: hidden;
-  padding: 7px;
-  border: 1px solid color-mix(in srgb, var(--lane-accent) 34%, var(--df-line));
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--lane-accent) 24%, var(--df-line));
   border-radius: 8px;
   color: var(--df-text);
   background:
-    linear-gradient(130deg, color-mix(in srgb, var(--lane-accent) 13%, transparent), transparent 52%),
-    rgba(0,0,0,0.24);
+    linear-gradient(130deg, color-mix(in srgb, var(--lane-accent) 8%, transparent), transparent 52%),
+    rgba(0,0,0,0.18);
   transition: transform var(--df-fast), border-color var(--df-fast), background var(--df-fast);
 }
 
@@ -6460,22 +6475,22 @@ section,
 .booking-router__routes a:focus-visible {
   border-color: var(--lane-accent);
   background:
-    linear-gradient(130deg, color-mix(in srgb, var(--lane-accent) 21%, transparent), transparent 58%),
-    rgba(255,255,255,0.044);
-  transform: translateY(-4px);
+    linear-gradient(130deg, color-mix(in srgb, var(--lane-accent) 15%, transparent), transparent 58%),
+    rgba(255,255,255,0.034);
+  transform: translateY(-2px);
 }
 
 .booking-router__routes span {
   color: var(--lane-accent);
   font-family: var(--font-display);
-  font-size: 1.08rem;
+  font-size: 0.94rem;
   font-weight: 900;
   line-height: 0.8;
 }
 
 .booking-router__routes img {
-  width: 46px;
-  height: 58px;
+  width: 38px;
+  height: 48px;
   border: 1px solid var(--df-line);
   border-radius: 6px;
   object-fit: cover;
@@ -6493,30 +6508,28 @@ section,
 .booking-router__routes strong {
   color: var(--df-text);
   font-family: var(--font-display);
-  font-size: clamp(0.82rem, 1.02vw, 1.05rem);
+  font-size: clamp(0.72rem, 0.86vw, 0.92rem);
   font-weight: 900;
   line-height: 0.96;
 }
 
 .booking-router__routes em {
-  margin-top: 4px;
-  color: var(--lane-accent);
-  font-size: 0.56rem;
-  font-weight: 900;
+  display: none;
 }
 
 .booking-router__proof {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: minmax(58px, 1fr);
-  gap: 6px;
+  grid-auto-rows: 54px;
+  gap: 5px;
+  align-self: center;
 }
 
 .booking-router__proof span {
   --lane-accent: var(--df-teal);
   position: relative;
   display: block;
-  min-height: 72px;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--lane-accent) 38%, var(--df-line));
   border-radius: 8px;
@@ -6669,8 +6682,8 @@ section,
 
 .service-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .service-card {
@@ -6680,19 +6693,18 @@ section,
   grid-template-areas:
     "thumb category link"
     "thumb title link"
-    "thumb copy link"
-    "thumb detail link";
-  grid-template-columns: 82px minmax(0, 1fr) auto;
+    "thumb copy link";
+  grid-template-columns: 54px minmax(0, 1fr) auto;
   align-items: center;
-  min-height: 112px;
-  gap: 5px 12px;
+  min-height: 78px;
+  gap: 3px 8px;
   overflow: hidden;
-  padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--lane-accent) 22%, var(--df-line));
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--lane-accent) 16%, var(--df-line));
   border-radius: 8px;
   background:
-    linear-gradient(116deg, color-mix(in srgb, var(--lane-accent) 8%, transparent), transparent 58%),
-    rgba(255,255,255,0.028);
+    linear-gradient(116deg, color-mix(in srgb, var(--lane-accent) 5%, transparent), transparent 58%),
+    rgba(255,255,255,0.018);
 }
 
 .service-card:nth-child(-n + 2) {
@@ -6700,19 +6712,14 @@ section,
 }
 
 .service-card::before {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  content: "";
-  background: linear-gradient(180deg, var(--lane-accent), transparent);
-  opacity: 0.55;
+  display: none;
 }
 
 .service-card__thumb {
   grid-area: thumb;
   display: block;
-  width: 82px;
-  height: 92px;
+  width: 54px;
+  height: 62px;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--lane-accent) 28%, var(--df-line));
   border-radius: 7px;
@@ -6728,7 +6735,7 @@ section,
 
 .service-card__category {
   grid-area: category;
-  font-size: 0.58rem;
+  font-size: 0.5rem;
 }
 
 .service-card h3,
@@ -6747,8 +6754,8 @@ section,
 .service-card small {
   margin: 0;
   color: var(--df-text-soft);
-  font-size: 0.76rem;
-  line-height: 1.34;
+  font-size: 0.64rem;
+  line-height: 1.24;
 }
 
 .service-card h3 {
@@ -6759,24 +6766,19 @@ section,
   grid-area: copy;
 }
 
-.service-card small {
-  grid-area: detail;
-  color: var(--df-muted);
-}
-
 .service-card__link {
   grid-area: link;
   align-self: center;
   justify-self: end;
   display: inline-flex;
-  min-height: 34px;
+  min-height: 30px;
   align-items: center;
-  padding: 0 12px;
-  border: 1px solid color-mix(in srgb, var(--lane-accent) 34%, var(--df-line));
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--lane-accent) 26%, var(--df-line));
   border-radius: 999px;
   color: var(--df-text);
-  background: rgba(255,255,255,0.035);
-  font-size: 0.66rem;
+  background: rgba(255,255,255,0.024);
+  font-size: 0.56rem;
   font-weight: 900;
   text-transform: uppercase;
   transition: transform var(--df-fast), border-color var(--df-fast), background var(--df-fast);
@@ -9080,10 +9082,10 @@ section,
   }
 
   .entry-gate {
+    height: 100svh;
     min-height: 100svh;
-    align-content: end;
-    gap: 24px;
-    padding: max(92px, calc(env(safe-area-inset-top) + 76px)) 12px 18px;
+    place-items: center;
+    padding: max(92px, calc(env(safe-area-inset-top) + 76px)) 12px max(14px, env(safe-area-inset-bottom));
   }
 
   .entry-gate__copy {
@@ -9091,6 +9093,7 @@ section,
     gap: 12px;
     padding-inline: 4px;
     text-align: left;
+    transform: translateY(-4svh);
   }
 
   .entry-gate__copy p,
@@ -9106,25 +9109,35 @@ section,
     line-height: 0.78;
   }
 
+  .entry-gate__copy button,
   .entry-gate__copy a {
     min-height: 44px;
     padding-inline: 24px;
   }
 
   .entry-gate__preview {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(220px, 72vw);
-    grid-template-columns: none;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scroll-snap-type: x mandatory;
+    height: min(34svh, 260px);
+    overflow: hidden;
+    padding-bottom: 0;
+    opacity: 0.34;
+    scroll-snap-type: none;
   }
 
   .entry-gate__frame,
   .entry-gate__frame:nth-child(n) {
-    min-height: min(46svh, 420px);
-    scroll-snap-align: start;
+    height: 100%;
+    min-height: 0;
+    transform: none;
+    scroll-snap-align: unset;
+  }
+
+  .entry-gate__frame:nth-child(n + 3) {
+    display: none;
   }
 
   .entry-gate__frame figcaption {
@@ -10326,7 +10339,7 @@ section,
 
   .booking-router {
     min-height: auto;
-    padding: 10px;
+    padding: 8px;
   }
 
   .booking-router__reel {
@@ -10334,16 +10347,19 @@ section,
   }
 
   .booking-router__copy {
-    padding: 14px;
+    min-height: auto;
+    padding: 8px 8px 10px;
+    border-right: 0;
+    border-bottom: 1px solid var(--df-line);
   }
 
   .booking-router__copy h3 {
-    font-size: clamp(1.65rem, 8vw, 2.3rem);
+    font-size: clamp(1.35rem, 6.8vw, 1.9rem);
   }
 
   .booking-section .booking-intro h2 {
-    font-size: clamp(1.75rem, 8.4vw, 2.45rem);
-    line-height: 0.95;
+    font-size: clamp(1.58rem, 7.2vw, 2.1rem);
+    line-height: 0.94;
   }
 
   .booking-intro p {
@@ -10352,26 +10368,38 @@ section,
   }
 
   .booking-router__routes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(154px, 42vw);
+    grid-template-columns: none;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scroll-snap-type: x mandatory;
   }
 
   .booking-router__routes a {
-    min-height: 72px;
-    grid-template-columns: 24px 42px minmax(0, 1fr);
-    gap: 6px;
+    min-height: 58px;
+    max-height: 64px;
+    grid-template-columns: 22px 34px minmax(0, 1fr);
+    gap: 5px;
+    scroll-snap-align: start;
   }
 
   .booking-router__routes img {
-    width: 42px;
-    height: 54px;
+    width: 34px;
+    height: 44px;
   }
 
   .booking-router__routes span {
-    font-size: 1rem;
+    font-size: 0.88rem;
   }
 
   .booking-router__routes strong {
-    font-size: 0.82rem;
+    font-size: 0.7rem;
+  }
+
+  .booking-router__routes em {
+    display: none;
   }
 
   .booking-router__proof {
@@ -10393,17 +10421,16 @@ section,
     grid-template-areas:
       "thumb category link"
       "thumb title title"
-      "thumb copy copy"
-      "thumb detail detail";
-    grid-template-columns: 66px minmax(0, 1fr) auto;
-    min-height: 96px;
-    gap: 4px 10px;
-    padding: 9px 10px;
+      "thumb copy copy";
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    min-height: 68px;
+    gap: 2px 8px;
+    padding: 7px 8px;
   }
 
   .service-card__thumb {
-    width: 66px;
-    height: 78px;
+    width: 48px;
+    height: 54px;
   }
 
   .service-card__category {
@@ -10411,19 +10438,19 @@ section,
   }
 
   .service-card h3 {
-    font-size: 0.94rem;
+    font-size: 0.82rem;
   }
 
   .service-card p,
   .service-card small {
-    font-size: 0.7rem;
-    line-height: 1.28;
+    font-size: 0.62rem;
+    line-height: 1.2;
   }
 
   .service-card__link {
-    min-height: 30px;
-    padding-inline: 10px;
-    font-size: 0.58rem;
+    min-height: 28px;
+    padding-inline: 8px;
+    font-size: 0.52rem;
   }
 
   .booking-lanes,

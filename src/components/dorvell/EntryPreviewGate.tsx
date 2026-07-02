@@ -1,9 +1,34 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 
 export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage[]; totalFrames: number }) {
+  const [entered, setEntered] = useState(false);
   const previewImages = images.slice(0, 4);
+
+  useEffect(() => {
+    if (entered) return;
+
+    document.documentElement.classList.add("entry-gate-lock");
+    document.body.classList.add("entry-gate-lock");
+
+    return () => {
+      document.documentElement.classList.remove("entry-gate-lock");
+      document.body.classList.remove("entry-gate-lock");
+    };
+  }, [entered]);
+
+  function enterPortfolio() {
+    document.documentElement.classList.remove("entry-gate-lock");
+    document.body.classList.remove("entry-gate-lock");
+    window.scrollTo({ top: 0, behavior: "auto" });
+    setEntered(true);
+  }
+
+  if (entered) return null;
 
   return (
     <section className="entry-gate" aria-labelledby="entry-title">
@@ -11,7 +36,9 @@ export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage
         <p>Dorvell Ferguson Jr. / Tampa</p>
         <h1 id="entry-title">Enter the archive.</h1>
         <span>{totalFrames} frames across portraits, music, sports, and fashion.</span>
-        <a href="#portfolio">Enter</a>
+        <button type="button" onClick={enterPortfolio}>
+          Enter
+        </button>
       </div>
       <div className="entry-gate__preview" aria-label="Portfolio preview">
         {previewImages.map((image, index) => (
