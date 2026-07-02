@@ -83,7 +83,7 @@ export function DorvellFooter() {
       <div className="footer-signal-board" aria-label="Closing contact board">
         <div>
           <p className="eyebrow">Next Frame</p>
-          <strong>Brief in. Plan tight. Images with somewhere to go.</strong>
+          <strong>Clear direction, clean edits, and frames ready for where they need to live.</strong>
         </div>
         <div className="footer-signal-board__stats">
           <span>

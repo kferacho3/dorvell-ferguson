@@ -25,12 +25,12 @@ export function ServicesBooking({
   const lanes = buildGalleryLanes(images);
   const routerFrames = lanes
     .flatMap((lane) =>
-      lane.images.slice(0, 2).map((image) => ({
+      lane.images.slice(0, 3).map((image) => ({
         image,
         lane,
       })),
     )
-    .slice(0, 8);
+    .slice(0, 10);
 
   return (
     <section
@@ -41,7 +41,7 @@ export function ServicesBooking({
       <div className="booking-intro">
         <div>
           <p className="eyebrow">Booking</p>
-          <h2 id="booking-title">Bring the concept. Leave with images that know where they are going.</h2>
+          <h2 id="booking-title">Choose the lane. Leave with a polished set.</h2>
           <p>
             Portraits, fashion/editorial, concerts, athletics, social content, creative direction, and modeling availability.
           </p>
@@ -54,13 +54,13 @@ export function ServicesBooking({
       </div>
       <div className="booking-desk">
         {lanes.length > 0 ? (
-          <div className="booking-router" aria-label="Booking route board">
+          <div className="booking-router" aria-label="Booking inquiry selector">
             <div className="booking-router__copy">
-              <p className="eyebrow">Brief Router</p>
-              <h3>Pick the lane. Send the pulse.</h3>
+              <p className="eyebrow">Inquiry lanes</p>
+              <h3>Choose the image world, then send the ask.</h3>
               <p>
-                Every inquiry opens with a useful subject line, because the first frame should not have to do
-                administrative cardio.
+                Start with the kind of shoot you need. The email opens with the right subject line so the conversation
+                can get straight to dates, location, usage, and direction.
               </p>
               <a
                 className="button-secondary"
@@ -94,48 +94,23 @@ export function ServicesBooking({
               })}
             </div>
             {routerFrames.length > 0 ? (
-              <div className="booking-router__reel" aria-hidden="true">
-                {routerFrames.concat(routerFrames.slice(0, 4)).map(({ image, lane }, index) => (
+              <div className="booking-router__proof" aria-label="Recent portfolio samples">
+                {routerFrames.map(({ image, lane }, index) => (
                   <span key={`${image.id}-${index}`} style={{ "--lane-accent": lane.accent } as CSSProperties}>
-                    <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} />
+                    <Image
+                      src={image.localOptimized.sm}
+                      alt={imageAlt(image)}
+                      width={image.width}
+                      height={image.height}
+                      {...blurImageProps(image)}
+                    />
                   </span>
                 ))}
               </div>
             ) : null}
           </div>
         ) : null}
-        {lanes.length > 0 ? (
-          <div className="booking-lanes" aria-label="Portfolio booking lanes">
-            {lanes.map((lane, index) => {
-              const preview = lane.images[index % Math.max(lane.images.length, 1)];
-              return (
-                <a
-                  key={lane.key}
-                  className="booking-lane"
-                  href={`mailto:${email}?subject=${encodeURIComponent(`${lane.label} booking inquiry`)}`}
-                  style={{ "--lane-accent": lane.accent } as CSSProperties}
-                >
-                  <span className="booking-lane__eyebrow">{lane.eyebrow}</span>
-                  <div className="booking-lane__image">
-                    {preview ? (
-                      <Image
-                        src={preview.localOptimized.md}
-                        alt={imageAlt(preview)}
-                        width={preview.width}
-                        height={preview.height}
-                        {...blurImageProps(preview)}
-                      />
-                    ) : null}
-                  </div>
-                  <strong>{lane.label}</strong>
-                  <p>{lane.description}</p>
-                  <em>{lane.deckLabel}</em>
-                </a>
-              );
-            })}
-          </div>
-        ) : null}
-        <div className="service-grid">
+        <div className="service-grid" aria-label="Booking options">
           {services.map((service) => (
             <article key={service.title} className="service-card">
               <span>{service.category}</span>
