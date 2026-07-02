@@ -12,8 +12,8 @@ const rootDir = path.resolve(__dirname, "..");
 const publicDir = path.join(rootDir, "public");
 const originalsDir = path.join(publicDir, "dorvell", "originals");
 const manifestPath = path.join(rootDir, "src", "content", "dorvell.generated.json");
-const instagramUsername = "fergphotography";
-const instagramUserId = process.env.DORVELL_INSTAGRAM_USER_ID ?? "7363334431";
+const instagramUsername = process.env.DORVELL_INSTAGRAM_USERNAME ?? "fergphotography";
+const instagramUserId = process.env.DORVELL_INSTAGRAM_USER_ID ?? (instagramUsername === "fergphotography" ? "7363334431" : undefined);
 const profileUrl = `https://www.instagram.com/${instagramUsername}/`;
 const timelineDocId = "7950326061742207";
 const userAgent =
@@ -111,17 +111,32 @@ function wait(ms: number) {
 }
 
 function postCodeFromUrl(url: string) {
-  const match = url.match(/instagram\.com\/(?:[^/]+\/)?(?:p|reel)\/([^/?#]+)/);
-  return match?.[1] ?? createHash("sha1").update(url).digest("hex").slice(0, 10);
+  const parts = instagramPathParts(url);
+  return parts?.shortcode ?? createHash("sha1").update(url).digest("hex").slice(0, 10);
 }
 
-function instagramPostUrl(shortcode: string) {
-  return `https://www.instagram.com/${instagramUsername}/p/${shortcode}/`;
+function instagramPathParts(url: string) {
+  try {
+    const parts = new URL(url).pathname.split("/").filter(Boolean);
+    if ((parts[0] === "p" || parts[0] === "reel") && parts[1]) {
+      return { username: instagramUsername, shortcode: parts[1] };
+    }
+    if (parts[0] && (parts[1] === "p" || parts[1] === "reel") && parts[2]) {
+      return { username: parts[0], shortcode: parts[2] };
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
+
+function instagramPostUrl(shortcode: string, username = instagramUsername) {
+  return `https://www.instagram.com/${username}/p/${shortcode}/`;
 }
 
 function normalizeInstagramPostUrl(url: string) {
-  const match = url.match(/instagram\.com\/(?:[^/]+\/)?(?:p|reel)\/([^/?#]+)/);
-  return match?.[1] ? instagramPostUrl(match[1]) : url;
+  const parts = instagramPathParts(url);
+  return parts ? instagramPostUrl(parts.shortcode, parts.username) : url;
 }
 
 function instagramImageKey(url: string) {
@@ -158,20 +173,21 @@ function categoryForCaption(caption: string, postUrl: string): DorvellCategory {
 }
 
 function laneForCategory(category: DorvellCategory) {
+  const sourceLabel = instagramUsername === "fergphotography" ? "Ferg Photography" : `@${instagramUsername}`;
   if (category === "Music") {
-    return { projectSlug: "concerts-musical-artist", projectTitle: "Ferg Photography / Music & Live" };
+    return { projectSlug: "concerts-musical-artist", projectTitle: `${sourceLabel} / Music & Live` };
   }
   if (category === "Athletics") {
-    return { projectSlug: "sports", projectTitle: "Ferg Photography / Sports & Athletics" };
+    return { projectSlug: "sports", projectTitle: `${sourceLabel} / Sports & Athletics` };
   }
   if (category === "Fashion") {
-    return { projectSlug: "fashioncreative-direction-coming-soon", projectTitle: "Ferg Photography / Fashion & Creative Direction" };
+    return { projectSlug: "fashioncreative-direction-coming-soon", projectTitle: `${sourceLabel} / Fashion & Creative Direction` };
   }
-  return { projectSlug: "fashion-shoots-2023", projectTitle: "Ferg Photography / Portraits" };
+  return { projectSlug: "fashion-shoots-2023", projectTitle: `${sourceLabel} / Portraits` };
 }
 
 function tagsForCandidate(category: DorvellCategory, caption: string) {
-  const tags = new Set<string>([category, "Instagram", "Ferg Photography"]);
+  const tags = new Set<string>([category, "Instagram", instagramUsername === "fergphotography" ? "Ferg Photography" : `@${instagramUsername}`]);
   const text = caption.toLowerCase();
   if (/concert|performance|stage|live|festival|artist|music/.test(text)) tags.add("Concerts");
   if (/fashion|style|fits?\b|runway|lookbook|editorial|vintage\s*market|outfit/.test(text)) tags.add("Fashion");
@@ -226,7 +242,7 @@ function addApiCandidate(
   const resource = bestApiImageResource(node);
   if (!resource.url || !isInstagramPhotoCdnUrl(resource.url)) return;
 
-  const alt = normalizeText(node.accessibility_caption ?? "") || `Dorvell Ferguson Jr. image from @fergphotography`;
+  const alt = normalizeText(node.accessibility_caption ?? "") || `Dorvell Ferguson Jr. image from @${instagramUsername}`;
   const category = categoryForCaption(`${caption} ${alt}`, postUrl);
   const lane = laneForCategory(category);
   const candidate: InstagramCandidate = {
@@ -365,12 +381,13 @@ async function collectProfilePosts(page: Page) {
 
   for (let index = 0; index < maxScrollPasses; index += 1) {
     const count = await page.evaluate(
-      () =>
+      (username) =>
         new Set(
           Array.from(document.querySelectorAll<HTMLAnchorElement>("a[href]"))
             .map((anchor) => anchor.href)
-            .filter((href) => /instagram\.com\/fergphotography\/(?:p|reel)\//.test(href)),
+            .filter((href) => href.includes(`instagram.com/${username}/p/`) || href.includes(`instagram.com/${username}/reel/`)),
         ).size,
+      instagramUsername,
     );
     stablePasses = count === lastCount ? stablePasses + 1 : 0;
     lastCount = count;
@@ -379,10 +396,12 @@ async function collectProfilePosts(page: Page) {
     await page.waitForTimeout(750);
   }
 
-  const posts = await page.evaluate(() =>
-    Array.from(document.querySelectorAll<HTMLAnchorElement>("a[href]"))
-      .map((anchor) => anchor.href)
-      .filter((href) => /instagram\.com\/fergphotography\/(?:p|reel)\//.test(href)),
+  const posts = await page.evaluate(
+    (username) =>
+      Array.from(document.querySelectorAll<HTMLAnchorElement>("a[href]"))
+        .map((anchor) => anchor.href)
+        .filter((href) => href.includes(`instagram.com/${username}/p/`) || href.includes(`instagram.com/${username}/reel/`)),
+    instagramUsername,
   );
 
   return Array.from(new Set(posts.map(normalizeInstagramPostUrl))).slice(0, postLimit);
@@ -435,7 +454,7 @@ async function collectPostCandidates(page: Page, postUrl: string) {
         url,
         postUrl,
         caption: normalizeText(caption).slice(0, 600),
-        alt: normalizeText(alt) || `Dorvell Ferguson Jr. ${category.toLowerCase()} image from @fergphotography`,
+        alt: normalizeText(alt) || `Dorvell Ferguson Jr. ${category.toLowerCase()} image from @${instagramUsername}`,
         width,
         height,
         category,
@@ -640,7 +659,7 @@ async function main() {
 
   const instagramPage = {
     url: profileUrl,
-    title: "Tampa-Based Photographer (@fergphotography)",
+    title: `Tampa-Based Photographer (@${instagramUsername})`,
     headings: ["Portraits", "Music", "Fashion", "Tampa, FL"],
     paragraphs: ["Public Instagram scrape source for additional Dorvell Ferguson Jr. photography frames."],
     links: postUrls.map((href) => ({ text: postCodeFromUrl(href), href })),
