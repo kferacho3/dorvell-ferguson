@@ -19,12 +19,13 @@ const timelineDocId = "7950326061742207";
 const userAgent =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const minimumImageEdge = Number(process.env.DORVELL_INSTAGRAM_MIN_EDGE ?? 900);
+const minimumImageEdge = Number(process.env.DORVELL_INSTAGRAM_MIN_EDGE ?? 480);
 const postLimit = Number(process.env.DORVELL_INSTAGRAM_POST_LIMIT ?? 360);
 const imageLimit = Number(process.env.DORVELL_INSTAGRAM_IMAGE_LIMIT ?? 2200);
 const graphqlPageLimit = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_LIMIT ?? 40);
 const detailPostLimit = Number(process.env.DORVELL_INSTAGRAM_DETAIL_POST_LIMIT ?? 24);
 const timelinePageSize = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_SIZE ?? 12);
+const timelinePageDelayMs = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_DELAY_MS ?? 450);
 
 type InstagramCandidate = {
   url: string;
@@ -103,6 +104,10 @@ function emptyCollectionResult(): InstagramCollectionResult {
 
 function normalizeText(value: string) {
   return value.replace(/\s+/g, " ").trim();
+}
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function postCodeFromUrl(url: string) {
@@ -316,6 +321,7 @@ async function collectTimelineGraphqlCandidates(userId?: string): Promise<Instag
     hasNextPage = media.page_info?.has_next_page ?? false;
     after = media.page_info?.end_cursor;
     if (!hasNextPage || !after) break;
+    if (timelinePageDelayMs > 0) await wait(timelinePageDelayMs);
   }
 
   return {

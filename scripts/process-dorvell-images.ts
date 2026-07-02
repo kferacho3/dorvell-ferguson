@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +11,10 @@ const publicDir = path.join(rootDir, "public");
 const optimizedDir = path.join(publicDir, "dorvell", "optimized");
 const blurDir = path.join(publicDir, "dorvell", "blur");
 const manifestPath = path.join(rootDir, "src", "content", "dorvell.generated.json");
+
+function publicFileExists(publicPath: string) {
+  return existsSync(path.join(publicDir, publicPath.replace(/^\//, "")));
+}
 
 async function main() {
   await mkdir(optimizedDir, { recursive: true });
@@ -27,7 +32,21 @@ async function main() {
     throw new Error("No images found in manifest. Run npm run scrape:portfolio first.");
   }
 
+  let processed = 0;
+  let skipped = 0;
   for (const image of manifest.images) {
+    const optimizedReady =
+      image.localOptimized.sm &&
+      image.localOptimized.md &&
+      image.localOptimized.lg &&
+      publicFileExists(image.localOptimized.sm) &&
+      publicFileExists(image.localOptimized.md) &&
+      publicFileExists(image.localOptimized.lg);
+    if (optimizedReady && image.blur) {
+      skipped += 1;
+      continue;
+    }
+
     const originalPath = path.join(publicDir, image.localOriginal.replace(/^\//, ""));
     const pipeline = sharp(originalPath).rotate();
     const metadata = await pipeline.metadata();
@@ -63,13 +82,16 @@ async function main() {
     image.width = width;
     image.height = height;
     image.aspectRatio = width / height;
+    processed += 1;
   }
 
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   console.log(
     JSON.stringify(
       {
-        imagesProcessed: manifest.images.length,
+        imagesProcessed: processed,
+        imagesSkipped: skipped,
+        imagesTotal: manifest.images.length,
         optimizedDir: "/public/dorvell/optimized",
         blurDir: "/public/dorvell/blur",
       },
