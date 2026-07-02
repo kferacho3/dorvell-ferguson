@@ -514,6 +514,14 @@ function categoryCounts(images: DorvellImage[]) {
   }, {});
 }
 
+function accountCountsForPostUrls(postUrls: string[]) {
+  return postUrls.reduce<Record<string, number>>((counts, postUrl) => {
+    const username = instagramPathParts(postUrl)?.username ?? "unknown";
+    counts[username] = (counts[username] ?? 0) + 1;
+    return counts;
+  }, {});
+}
+
 async function main() {
   await mkdir(originalsDir, { recursive: true });
 
@@ -526,7 +534,10 @@ async function main() {
     ...manifest.images
       .map((image) => image.sourcePage)
       .filter((sourcePage) => instagramPathParts(sourcePage)?.username === instagramUsername),
-    ...(manifest.pages.find((pageRecord) => pageRecord.url === profileUrl)?.links.map((link) => link.href) ?? []),
+    ...(manifest.pages
+      .find((pageRecord) => pageRecord.url === profileUrl)
+      ?.links.map((link) => link.href)
+      .filter((href) => instagramPathParts(href)?.username === instagramUsername) ?? []),
   ].map(normalizeInstagramPostUrl);
   const warnings = (manifest.scrapeSummary?.warnings ?? []).filter(
     (warning) =>
@@ -674,7 +685,12 @@ async function main() {
     paragraphs: ["Public Instagram scrape source for additional Dorvell Ferguson Jr. photography frames."],
     links: postUrls.map((href) => ({ text: postCodeFromUrl(href), href })),
   };
-  manifest.pages = [...manifest.pages.filter((pageRecord) => pageRecord.url !== profileUrl), instagramPage];
+  const profilePageIndex = manifest.pages.findIndex((pageRecord) => pageRecord.url === profileUrl);
+  if (profilePageIndex >= 0) {
+    manifest.pages[profilePageIndex] = instagramPage;
+  } else {
+    manifest.pages.push(instagramPage);
+  }
   manifest.scrapedAt = new Date().toISOString();
   manifest.contacts.instagram = Array.from(new Set([...(manifest.contacts.instagram ?? []), profileUrl]));
   const preservePreviousWarnings =
@@ -700,6 +716,11 @@ async function main() {
       {
         profileUrl,
         postsFound: postUrls.length,
+        postsFoundByAccount: accountCountsForPostUrls(postUrls),
+        profilePostsFound: browserPostUrls.length,
+        apiPostsFound: apiResult.postUrls.length,
+        graphQlPostsFound: timelineResult.postUrls.length,
+        existingAccountPostsCarried: existingInstagramPostUrls.length,
         postsVisitedForDetail: detailPostUrls.length,
         graphQlPagesScanned: timelineResult.pagesScanned ?? 0,
         candidatesFound: uniqueCandidates.length,
