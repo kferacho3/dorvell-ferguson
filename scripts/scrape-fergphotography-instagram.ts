@@ -252,7 +252,7 @@ function addApiCandidate(
   const resource = bestApiImageResource(node);
   if (!resource.url || !isInstagramPhotoCdnUrl(resource.url)) return;
 
-  const alt = normalizeText(node.accessibility_caption ?? "") || `Dorvell Ferguson Jr. image from @${instagramUsername}`;
+  const alt = normalizeText(node.accessibility_caption ?? "") || `Dorvell Ferguson Jr. image from @${usernameFromPostUrl(postUrl)}`;
   const category = categoryForCaption(`${caption} ${alt}`, postUrl);
   const lane = laneForCategory(category, postUrl);
   const candidate: InstagramCandidate = {
@@ -464,7 +464,7 @@ async function collectPostCandidates(page: Page, postUrl: string) {
         url,
         postUrl,
         caption: normalizeText(caption).slice(0, 600),
-        alt: normalizeText(alt) || `Dorvell Ferguson Jr. ${category.toLowerCase()} image from @${instagramUsername}`,
+        alt: normalizeText(alt) || `Dorvell Ferguson Jr. ${category.toLowerCase()} image from @${usernameFromPostUrl(postUrl)}`,
         width,
         height,
         category,
@@ -525,7 +525,7 @@ async function main() {
   const existingInstagramPostUrls = [
     ...manifest.images
       .map((image) => image.sourcePage)
-      .filter((sourcePage) => sourcePage.includes("instagram.com")),
+      .filter((sourcePage) => instagramPathParts(sourcePage)?.username === instagramUsername),
     ...(manifest.pages.find((pageRecord) => pageRecord.url === profileUrl)?.links.map((link) => link.href) ?? []),
   ].map(normalizeInstagramPostUrl);
   const warnings = (manifest.scrapeSummary?.warnings ?? []).filter(
