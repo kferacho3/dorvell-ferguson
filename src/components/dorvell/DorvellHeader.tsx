@@ -16,6 +16,7 @@ const navItems = [
 export function DorvellHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const navClassName = ["site-nav", scrolled ? "is-scrolled" : "", open ? "is-open" : ""].filter(Boolean).join(" ");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -25,7 +26,7 @@ export function DorvellHeader() {
   }, []);
 
   return (
-    <header className={scrolled ? "site-nav is-scrolled" : "site-nav"}>
+    <header className={navClassName}>
       <Link className="brand-mark" href="/" aria-label="Dorvell Ferguson Jr. home">
         <Image src="/dorvell-ferguson-symbol-v2.png" alt="" width={44} height={44} priority />
         <span>Dorvell Ferguson Jr.</span>
@@ -33,6 +34,7 @@ export function DorvellHeader() {
       <button
         className="nav-toggle"
         type="button"
+        aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
         aria-controls="primary-navigation"
         onClick={() => setOpen((value) => !value)}

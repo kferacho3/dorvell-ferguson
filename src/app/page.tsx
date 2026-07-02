@@ -16,24 +16,8 @@ import { SocialMotionSpotlight } from "@/components/dorvell/SocialMotionSpotligh
 import { StudioSignalController } from "@/components/dorvell/StudioSignalController";
 import { WorkArchive } from "@/components/dorvell/WorkArchive";
 import { buildGalleryLanes, type GalleryLane } from "@/lib/gallery-lanes";
+import { buildHomeImageCollections } from "@/lib/home-image-collections";
 import { getPortfolioData } from "@/lib/portfolio-data";
-
-function selectLaneImages(lane: GalleryLane, count: number) {
-  const portfolioImages = lane.images.filter((image) => !image.sourcePage.includes("instagram.com"));
-  const instagramImages = lane.images.filter((image) => image.sourcePage.includes("instagram.com"));
-  const ordered = [
-    ...portfolioImages.slice(0, Math.ceil(count * 0.5)),
-    ...instagramImages.slice(0, Math.ceil(count * 0.55)),
-    ...portfolioImages.slice(Math.ceil(count * 0.5)),
-    ...instagramImages.slice(Math.ceil(count * 0.55)),
-  ];
-  const unique = new Map(ordered.map((image) => [image.id, image]));
-  return Array.from(unique.values()).slice(0, count);
-}
-
-function imagePool(lanes: GalleryLane[], countPerLane: number) {
-  return lanes.flatMap((lane) => selectLaneImages(lane, countPerLane));
-}
 
 export default function Home() {
   const data = getPortfolioData();
@@ -41,11 +25,22 @@ export default function Home() {
   const laneTotals: Partial<Record<GalleryLane["key"], number>> = Object.fromEntries(
     lanes.map((lane) => [lane.key, lane.images.length]),
   );
-  const heroImages = imagePool(lanes, 14);
-  const featuredImages = imagePool(lanes, 8);
-  const sectionImages = imagePool(lanes, 10);
-  const compactImages = imagePool(lanes, 6);
-  const previewImages = imagePool(lanes, 8).slice(0, 32);
+  const {
+    heroImages,
+    featuredImages,
+    socialImages,
+    kineticImages,
+    sequenceImages,
+    motionPathImages,
+    flightImages,
+    worldsImages,
+    archiveImages,
+    studioImages,
+    runwayImages,
+    designImages,
+    aboutImages,
+    bookingImages,
+  } = buildHomeImageCollections(lanes);
 
   return (
     <DorvellShell>
@@ -54,26 +49,26 @@ export default function Home() {
         <FeaturedWorkStrip images={featuredImages} />
       </DeferredHomeSection>
       <DeferredHomeSection minHeight={920}>
-        <SocialMotionSpotlight images={featuredImages} />
+        <SocialMotionSpotlight images={socialImages} />
       </DeferredHomeSection>
       <DeferredHomeSection minHeight={2300}>
-        <KineticGalleryDeck images={sectionImages} />
-        <LaneSequenceLab images={sectionImages} />
-        <MotionPathGalleryPortal images={sectionImages} />
+        <KineticGalleryDeck images={kineticImages} />
+        <LaneSequenceLab images={sequenceImages} />
+        <MotionPathGalleryPortal images={motionPathImages} />
       </DeferredHomeSection>
       <DeferredHomeSection minHeight={3000}>
-        <GalleryFlightController images={compactImages} />
-        <GalleryWorlds images={sectionImages} />
+        <GalleryFlightController images={flightImages} />
+        <GalleryWorlds images={worldsImages} />
       </DeferredHomeSection>
       <DeferredHomeSection minHeight={980}>
-        <WorkArchive images={previewImages} variant="preview" />
+        <WorkArchive images={archiveImages} variant="preview" />
       </DeferredHomeSection>
       <DeferredHomeSection minHeight={3300}>
-        <StudioSignalController images={compactImages} email={data.manual.profile.email} />
-        <RunwayTimeline images={sectionImages} entries={data.manual.runwayPress} />
-        <GraphicDesignGrid tools={data.manual.tools} images={sectionImages} manual={data.manual} />
-        <AboutStory manual={data.manual} images={sectionImages} />
-        <ServicesBooking services={data.manual.services} email={data.manual.profile.email} images={compactImages} />
+        <StudioSignalController images={studioImages} email={data.manual.profile.email} />
+        <RunwayTimeline images={runwayImages} entries={data.manual.runwayPress} />
+        <GraphicDesignGrid tools={data.manual.tools} images={designImages} manual={data.manual} />
+        <AboutStory manual={data.manual} images={aboutImages} />
+        <ServicesBooking services={data.manual.services} email={data.manual.profile.email} images={bookingImages} />
         <PressFeatures entries={data.manual.runwayPress} />
       </DeferredHomeSection>
     </DorvellShell>
