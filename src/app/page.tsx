@@ -1,6 +1,7 @@
 import { AboutStory } from "@/components/dorvell/AboutStory";
 import { DeferredHomeSection } from "@/components/dorvell/DeferredHomeSection";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
+import { EntryPreviewGate } from "@/components/dorvell/EntryPreviewGate";
 import { FeaturedWorkStrip } from "@/components/dorvell/FeaturedWorkStrip";
 import { GalleryAtlasHero } from "@/components/dorvell/GalleryAtlasHero";
 import { GalleryFlightController } from "@/components/dorvell/GalleryFlightController";
@@ -26,6 +27,7 @@ export default function Home() {
     lanes.map((lane) => [lane.key, lane.images.length]),
   );
   const {
+    entryImages,
     heroImages,
     featuredImages,
     socialImages,
@@ -44,7 +46,10 @@ export default function Home() {
 
   return (
     <DorvellShell>
-      <GalleryAtlasHero images={heroImages} summary={data.generated.scrapeSummary} laneTotals={laneTotals} />
+      <EntryPreviewGate images={entryImages} totalFrames={data.generated.scrapeSummary?.imagesDownloaded ?? data.generated.images.length} />
+      <div id="portfolio" className="portfolio-entry-target">
+        <GalleryAtlasHero images={heroImages} summary={data.generated.scrapeSummary} laneTotals={laneTotals} />
+      </div>
       <DeferredHomeSection minHeight={950}>
         <FeaturedWorkStrip images={featuredImages} />
       </DeferredHomeSection>

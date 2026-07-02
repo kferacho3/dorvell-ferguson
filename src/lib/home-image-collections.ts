@@ -1,7 +1,8 @@
 import type { DorvellImage } from "@/content/dorvell.schema";
-import type { GalleryLane } from "@/lib/gallery-lanes";
+import { isMisfiledFashionCreativeImage, type GalleryLane } from "@/lib/gallery-lanes";
 
 export type HomeImageCollections = {
+  entryImages: DorvellImage[];
   heroImages: DorvellImage[];
   featuredImages: DorvellImage[];
   socialImages: DorvellImage[];
@@ -54,11 +55,11 @@ function sourcePostKey(image: DorvellImage) {
 
 function orderedLaneImages(lane: GalleryLane, salt: number) {
   const portfolioImages = rotate(
-    lane.images.filter((image) => !isInstagramImage(image) && hasOptimizedImage(image)),
+    lane.images.filter((image) => !isMisfiledFashionCreativeImage(image) && !isInstagramImage(image) && hasOptimizedImage(image)),
     salt,
   );
   const instagramImages = rotate(
-    lane.images.filter((image) => isInstagramImage(image) && hasOptimizedImage(image)),
+    lane.images.filter((image) => !isMisfiledFashionCreativeImage(image) && isInstagramImage(image) && hasOptimizedImage(image)),
     salt * 7,
   );
   const ordered: DorvellImage[] = [];
@@ -121,7 +122,8 @@ export function buildHomeImageCollections(lanes: GalleryLane[]): HomeImageCollec
   const usedIds = new Set<string>();
   const usedPosts = new Set<string>();
   const heroImages = imagePool(lanes, 14, usedIds, usedPosts, 0);
-  const collections = { heroImages } as HomeImageCollections;
+  const entryImages = imagePool(lanes, 1, usedIds, usedPosts, 83);
+  const collections = { entryImages, heroImages } as HomeImageCollections;
 
   sectionPlan.forEach(([key, countPerLane], sectionIndex) => {
     collections[key] = imagePool(lanes, countPerLane, usedIds, usedPosts, 11 + sectionIndex * 17);
