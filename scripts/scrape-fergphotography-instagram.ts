@@ -172,8 +172,16 @@ function categoryForCaption(caption: string, postUrl: string): DorvellCategory {
   return "Portraits";
 }
 
-function laneForCategory(category: DorvellCategory) {
-  const sourceLabel = instagramUsername === "fergphotography" ? "Ferg Photography" : `@${instagramUsername}`;
+function usernameFromPostUrl(postUrl: string) {
+  return instagramPathParts(postUrl)?.username ?? instagramUsername;
+}
+
+function sourceLabelForUsername(username: string) {
+  return username === "fergphotography" ? "Ferg Photography" : `@${username}`;
+}
+
+function laneForCategory(category: DorvellCategory, postUrl = profileUrl) {
+  const sourceLabel = sourceLabelForUsername(usernameFromPostUrl(postUrl));
   if (category === "Music") {
     return { projectSlug: "concerts-musical-artist", projectTitle: `${sourceLabel} / Music & Live` };
   }
@@ -186,8 +194,8 @@ function laneForCategory(category: DorvellCategory) {
   return { projectSlug: "fashion-shoots-2023", projectTitle: `${sourceLabel} / Portraits` };
 }
 
-function tagsForCandidate(category: DorvellCategory, caption: string) {
-  const tags = new Set<string>([category, "Instagram", instagramUsername === "fergphotography" ? "Ferg Photography" : `@${instagramUsername}`]);
+function tagsForCandidate(category: DorvellCategory, caption: string, postUrl = profileUrl) {
+  const tags = new Set<string>([category, "Instagram", sourceLabelForUsername(usernameFromPostUrl(postUrl))]);
   const text = caption.toLowerCase();
   if (/concert|performance|stage|live|festival|artist|music/.test(text)) tags.add("Concerts");
   if (/fashion|style|fits?\b|runway|lookbook|editorial|vintage\s*market|outfit/.test(text)) tags.add("Fashion");
@@ -198,10 +206,12 @@ function tagsForCandidate(category: DorvellCategory, caption: string) {
 }
 
 function applyCandidateMetadata(image: DorvellImage, candidate: InstagramCandidate) {
+  const sourcePostUrl = image.sourcePage || candidate.postUrl;
+  const lane = laneForCategory(candidate.category, sourcePostUrl);
   image.category = candidate.category;
-  image.tags = candidate.tags;
-  image.projectSlug = candidate.projectSlug;
-  image.projectTitle = candidate.projectTitle;
+  image.tags = tagsForCandidate(candidate.category, `${candidate.caption} ${candidate.alt}`, sourcePostUrl);
+  image.projectSlug = lane.projectSlug;
+  image.projectTitle = lane.projectTitle;
   if (candidate.caption) image.caption = candidate.caption;
   if (candidate.alt) image.alt = candidate.alt;
 }
@@ -244,7 +254,7 @@ function addApiCandidate(
 
   const alt = normalizeText(node.accessibility_caption ?? "") || `Dorvell Ferguson Jr. image from @${instagramUsername}`;
   const category = categoryForCaption(`${caption} ${alt}`, postUrl);
-  const lane = laneForCategory(category);
+  const lane = laneForCategory(category, postUrl);
   const candidate: InstagramCandidate = {
     url: resource.url,
     postUrl,
@@ -255,7 +265,7 @@ function addApiCandidate(
     category,
     projectSlug: lane.projectSlug,
     projectTitle: lane.projectTitle,
-    tags: tagsForCandidate(category, `${caption} ${alt}`),
+    tags: tagsForCandidate(category, `${caption} ${alt}`, postUrl),
   };
   const key = instagramImageKey(resource.url);
   const current = candidates.get(key);
@@ -449,7 +459,7 @@ async function collectPostCandidates(page: Page, postUrl: string) {
     const add = (url: string, width = 640, height = 640, alt = "", caption = "") => {
       if (!isInstagramPhotoCdnUrl(url)) return;
       const category = categoryForCaption(`${caption} ${alt}`, postUrl);
-      const lane = laneForCategory(category);
+      const lane = laneForCategory(category, postUrl);
       const candidate: InstagramCandidate = {
         url,
         postUrl,
@@ -460,7 +470,7 @@ async function collectPostCandidates(page: Page, postUrl: string) {
         category,
         projectSlug: lane.projectSlug,
         projectTitle: lane.projectTitle,
-        tags: tagsForCandidate(category, `${caption} ${alt}`),
+        tags: tagsForCandidate(category, `${caption} ${alt}`, postUrl),
       };
       const key = instagramImageKey(url);
       const current = candidates.get(key);
