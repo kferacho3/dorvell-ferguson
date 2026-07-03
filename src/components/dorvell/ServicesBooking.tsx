@@ -146,8 +146,12 @@ export function ServicesBooking({
               <span className="service-card__category">{service.category}</span>
               <h3>{service.title}</h3>
               <p>{service.bestFor}</p>
-              <a className="service-card__link" href={`mailto:${email}?subject=${encodeURIComponent(`${service.title} inquiry`)}`}>
-                Inquire
+              <a
+                aria-label={`Start ${service.title} inquiry`}
+                className="service-card__link"
+                href={`mailto:${email}?subject=${encodeURIComponent(`${service.title} inquiry`)}`}
+              >
+                <span aria-hidden="true">+</span>
               </a>
             </article>
           ))}

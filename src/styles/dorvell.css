@@ -6809,15 +6809,18 @@ section,
   align-self: center;
   justify-self: end;
   display: inline-flex;
+  width: 30px;
   min-height: 28px;
   align-items: center;
+  justify-content: center;
   padding: 0 9px;
   border: 1px solid color-mix(in srgb, var(--lane-accent) 26%, var(--df-line));
   border-radius: 999px;
   color: var(--df-text);
   background: transparent;
-  font-size: 0.54rem;
+  font-size: 0.86rem;
   font-weight: 900;
+  line-height: 1;
   text-transform: uppercase;
   transition: transform var(--df-fast), border-color var(--df-fast), background var(--df-fast);
 }
@@ -10503,8 +10506,9 @@ section,
 
   .service-card__link {
     min-height: 28px;
+    width: 30px;
     padding-inline: 8px;
-    font-size: 0.52rem;
+    font-size: 0.82rem;
   }
 
   .booking-lanes,
