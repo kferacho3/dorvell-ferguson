@@ -27,6 +27,7 @@ const detailPostLimit = Number(process.env.DORVELL_INSTAGRAM_DETAIL_POST_LIMIT ?
 const timelinePageSize = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_SIZE ?? 12);
 const timelinePageDelayMs = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_DELAY_MS ?? 450);
 const refreshKnownMetadata = process.env.DORVELL_INSTAGRAM_REFRESH_METADATA === "1";
+const progressEvery = Number(process.env.DORVELL_INSTAGRAM_PROGRESS_EVERY ?? 25);
 
 type InstagramCandidate = {
   url: string;
@@ -531,7 +532,7 @@ async function main() {
   const existingHashes = new Set(manifest.images.map((image) => image.hash));
   const existingSourceKeys = new Set(manifest.images.map((image) => instagramImageKey(image.sourceUrl)));
   const existingBySourceKey = new Map(manifest.images.map((image) => [instagramImageKey(image.sourceUrl), image]));
-  const existingInstagramPostUrls = [
+  const rawExistingInstagramPostUrls = [
     ...manifest.images
       .map((image) => image.sourcePage)
       .filter((sourcePage) => instagramPathParts(sourcePage)?.username === instagramUsername),
@@ -540,6 +541,7 @@ async function main() {
       ?.links.map((link) => link.href)
       .filter((href) => instagramPathParts(href)?.username === instagramUsername) ?? []),
   ].map(normalizeInstagramPostUrl);
+  const existingInstagramPostUrls = Array.from(new Set(rawExistingInstagramPostUrls));
   const warnings = (manifest.scrapeSummary?.warnings ?? []).filter(
     (warning) =>
       !warning.startsWith("Instagram image download failed") &&
@@ -594,7 +596,14 @@ async function main() {
         .slice(0, postLimit)
         .slice(0, detailPostLimit);
 
-      for (const postUrl of detailPostUrls) {
+      if (detailPostUrls.length > 0 && progressEvery > 0) {
+        console.error(`[instagram:${instagramUsername}] scraping ${detailPostUrls.length} detail posts`);
+      }
+
+      for (const [index, postUrl] of detailPostUrls.entries()) {
+        if (progressEvery > 0 && (index === 0 || (index + 1) % progressEvery === 0 || index + 1 === detailPostUrls.length)) {
+          console.error(`[instagram:${instagramUsername}] detail ${index + 1}/${detailPostUrls.length} ${postCodeFromUrl(postUrl)}`);
+        }
         try {
           const candidates = await collectPostCandidates(page, postUrl);
           allCandidates.push(...candidates);
@@ -721,10 +730,12 @@ async function main() {
         profilePostsFound: browserPostUrls.length,
         apiPostsFound: apiResult.postUrls.length,
         graphQlPostsFound: timelineResult.postUrls.length,
+        existingAccountPostLinksSeen: rawExistingInstagramPostUrls.length,
         existingAccountPostsCarried: existingInstagramPostUrls.length,
         postsVisitedForDetail: detailPostUrls.length,
         graphQlPagesScanned: timelineResult.pagesScanned ?? 0,
         refreshKnownMetadata,
+        progressEvery,
         candidatesFound: uniqueCandidates.length,
         imagesAdded: downloaded,
         alreadyKnown,
