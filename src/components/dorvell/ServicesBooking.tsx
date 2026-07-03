@@ -68,7 +68,7 @@ export function ServicesBooking({
         </div>
       </div>
       <div className="booking-desk">
-        {lanes.length > 0 ? (
+        {lanes.length > 0 && !compact ? (
           <div className="booking-router" aria-label="Booking inquiry selector">
             <div className="booking-router__copy">
               <p className="eyebrow">Inquiry lanes</p>

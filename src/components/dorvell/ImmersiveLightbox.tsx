@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 import { galleryLaneDefinitions, laneKeyForImage } from "@/lib/gallery-lanes";
@@ -32,6 +33,7 @@ export function ImmersiveLightbox({
   const panelRef = useRef<HTMLDivElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const touchStartX = useRef<number | null>(null);
+  const portalElement = typeof document === "undefined" ? null : document.body;
   const lane = image ? galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image)) : null;
   const titleId = "lightbox-title";
   const descriptionId = "lightbox-description";
@@ -47,13 +49,14 @@ export function ImmersiveLightbox({
   useImageWarmup(nearbyLargeUrls, 9);
 
   useEffect(() => {
+    if (!portalElement) return undefined;
     previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     closeRef.current?.focus();
 
     return () => {
       previousFocusRef.current?.focus();
     };
-  }, []);
+  }, [portalElement]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -95,7 +98,7 @@ export function ImmersiveLightbox({
     };
   }, [image, images.length, index, onClose, onNavigate]);
 
-  if (!image) return null;
+  if (!image || !portalElement) return null;
 
   const viewportWidth = typeof window === "undefined" ? 0 : window.innerWidth;
   const viewportHeight = typeof window === "undefined" ? 0 : window.innerHeight;
@@ -116,7 +119,7 @@ export function ImmersiveLightbox({
     onNavigate(delta < 0 ? (index + 1) % images.length : (index - 1 + images.length) % images.length);
   };
 
-  return (
+  return createPortal(
     <div
       className="lightbox"
       role="dialog"
@@ -218,6 +221,7 @@ export function ImmersiveLightbox({
           </div>
         </aside>
       </div>
-    </div>
+    </div>,
+    portalElement,
   );
 }

@@ -4,17 +4,7 @@ import { DorvellShell } from "@/components/dorvell/DorvellShell";
 import { EntryPreviewGate } from "@/components/dorvell/EntryPreviewGate";
 import { FeaturedWorkStrip } from "@/components/dorvell/FeaturedWorkStrip";
 import { GalleryAtlasHero } from "@/components/dorvell/GalleryAtlasHero";
-import { GalleryFlightController } from "@/components/dorvell/GalleryFlightController";
-import { GalleryWorlds } from "@/components/dorvell/GalleryWorlds";
-import { GraphicDesignGrid } from "@/components/dorvell/GraphicDesignGrid";
-import { KineticGalleryDeck } from "@/components/dorvell/KineticGalleryDeck";
-import { LaneSequenceLab } from "@/components/dorvell/LaneSequenceLab";
-import { MotionPathGalleryPortal } from "@/components/dorvell/MotionPathGalleryPortal";
-import { PressFeatures } from "@/components/dorvell/PressFeatures";
-import { RunwayTimeline } from "@/components/dorvell/RunwayTimeline";
 import { ServicesBooking } from "@/components/dorvell/ServicesBooking";
-import { SocialMotionSpotlight } from "@/components/dorvell/SocialMotionSpotlight";
-import { StudioSignalController } from "@/components/dorvell/StudioSignalController";
 import { WorkArchive } from "@/components/dorvell/WorkArchive";
 import { buildGalleryLanes, type GalleryLane } from "@/lib/gallery-lanes";
 import { buildHomeImageCollections } from "@/lib/home-image-collections";
@@ -30,16 +20,7 @@ export default function Home() {
     entryImages,
     heroImages,
     featuredImages,
-    socialImages,
-    kineticImages,
-    sequenceImages,
-    motionPathImages,
-    flightImages,
-    worldsImages,
     archiveImages,
-    studioImages,
-    runwayImages,
-    designImages,
     aboutImages,
     bookingImages,
   } = buildHomeImageCollections(lanes);
@@ -50,31 +31,15 @@ export default function Home() {
       <div id="portfolio" className="portfolio-entry-target">
         <GalleryAtlasHero images={heroImages} summary={data.generated.scrapeSummary} laneTotals={laneTotals} />
       </div>
-      <DeferredHomeSection minHeight={950}>
+      <DeferredHomeSection minHeight={860}>
         <FeaturedWorkStrip images={featuredImages} />
       </DeferredHomeSection>
-      <DeferredHomeSection minHeight={920}>
-        <SocialMotionSpotlight images={socialImages} />
-      </DeferredHomeSection>
-      <DeferredHomeSection minHeight={2300}>
-        <KineticGalleryDeck images={kineticImages} />
-        <LaneSequenceLab images={sequenceImages} />
-        <MotionPathGalleryPortal images={motionPathImages} />
-      </DeferredHomeSection>
-      <DeferredHomeSection minHeight={3000}>
-        <GalleryFlightController images={flightImages} />
-        <GalleryWorlds images={worldsImages} />
-      </DeferredHomeSection>
-      <DeferredHomeSection minHeight={980}>
+      <DeferredHomeSection minHeight={760}>
         <WorkArchive images={archiveImages} variant="preview" />
       </DeferredHomeSection>
-      <DeferredHomeSection minHeight={3300}>
-        <StudioSignalController images={studioImages} email={data.manual.profile.email} />
-        <RunwayTimeline images={runwayImages} entries={data.manual.runwayPress} />
-        <GraphicDesignGrid tools={data.manual.tools} images={designImages} manual={data.manual} />
+      <DeferredHomeSection minHeight={1450}>
         <AboutStory manual={data.manual} images={aboutImages} />
-        <ServicesBooking services={data.manual.services} email={data.manual.profile.email} images={bookingImages} />
-        <PressFeatures entries={data.manual.runwayPress} />
+        <ServicesBooking compact services={data.manual.services} email={data.manual.profile.email} images={bookingImages} />
       </DeferredHomeSection>
     </DorvellShell>
   );

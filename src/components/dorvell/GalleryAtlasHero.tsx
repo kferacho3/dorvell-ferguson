@@ -26,10 +26,14 @@ function railImages(images: DorvellImage[]) {
 }
 
 const heroLaneOffsets: Partial<Record<GalleryLane["key"], number>> = {
-  portraits: 4,
+  portraits: 0,
   "music-live": 1,
   "sports-athletics": 1,
   "fashion-creative": 2,
+};
+
+const pinnedHeroImageIds: Partial<Record<GalleryLane["key"], string>> = {
+  portraits: "df-4cdbbe8250a8",
 };
 
 function rotateImages(images: DorvellImage[], offset: number) {
@@ -40,7 +44,11 @@ function rotateImages(images: DorvellImage[], offset: number) {
 
 function heroLaneFrames(lane?: GalleryLane) {
   if (!lane) return [];
-  return rotateImages(lane.images, heroLaneOffsets[lane.key] ?? 0).slice(0, 24);
+  const frames = rotateImages(lane.images, heroLaneOffsets[lane.key] ?? 0);
+  const pinnedId = pinnedHeroImageIds[lane.key];
+  const pinnedFrame = pinnedId ? lane.images.find((image) => image.id === pinnedId) : undefined;
+  const orderedFrames = pinnedFrame ? [pinnedFrame, ...frames.filter((image) => image.id !== pinnedFrame.id)] : frames;
+  return orderedFrames.slice(0, 24);
 }
 
 const heroProofs = [

@@ -100,6 +100,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
   const previewLaneKey = previewImage ? laneKeyForImage(previewImage) : null;
   const previewLane = previewLaneKey ? galleryLaneDefinitions.find((definition) => definition.key === previewLaneKey) : null;
   const flowFrames = filtered.slice(0, 16);
+  const calmPreviewFrames = filtered.slice(0, 6);
   const focusWarmupUrls = useMemo(() => filtered.slice(0, 18).map((image) => image.localOptimized.md), [filtered]);
   const cursorX = pointerMap?.x ?? 0.5;
   const cursorY = pointerMap?.y ?? 0.5;
@@ -122,15 +123,69 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
     setPointerMap(null);
   };
 
-  return (
-    <section className={cn("archive-section", variant === "preview" && "archive-preview")} aria-labelledby="archive-title" id="archive">
-      {variant === "full" ? (
-        <div className="archive-hash-anchors" aria-hidden="true">
-          {galleryLaneDefinitions.map((lane) => (
-            <span id={lane.slug} key={lane.key} />
-          ))}
+  if (variant === "preview") {
+    return (
+      <section className="archive-section archive-preview archive-preview--calm" aria-labelledby="archive-title" id="archive">
+        <div className="section-heading archive-heading archive-heading--calm">
+          <div>
+            <p className="eyebrow">Selected Work</p>
+            <h2 id="archive-title">Less interface. More photograph.</h2>
+            <p>{filtered.length} selected frames held back for a quieter first pass.</p>
+          </div>
+          <Link href="/work">Open full archive</Link>
         </div>
-      ) : null}
+
+        <div className="archive-preview-gallery" aria-label="Selected portfolio frames">
+          {calmPreviewFrames.map((image, index) => {
+            const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
+            return (
+              <button
+                aria-label={`Open ${lane?.label ?? image.category} selected image ${index + 1}`}
+                className="archive-preview-card"
+                key={image.id}
+                onClick={(event) => setLightboxState({ index, origin: originFromElement(event.currentTarget) })}
+                style={{ "--lane-accent": lane?.accent ?? "#35e0bb", "--card-index": index } as CSSProperties}
+                type="button"
+              >
+                <Image
+                  src={image.localOptimized.md}
+                  alt={imageAlt(image)}
+                  width={image.width}
+                  height={image.height}
+                  sizes="(max-width: 760px) 88vw, (max-width: 1100px) 44vw, 28vw"
+                  loading={index < 3 ? "eager" : "lazy"}
+                  unoptimized
+                  {...blurImageProps(image)}
+                />
+                <span>
+                  <strong>{lane?.label ?? image.category}</strong>
+                  <em>DF-{String(index + 1).padStart(3, "0")}</em>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {lightboxState !== null ? (
+          <ImmersiveLightbox
+            images={filtered}
+            index={lightboxState.index}
+            origin={lightboxState.origin}
+            onClose={() => setLightboxState(null)}
+            onNavigate={(index) => setLightboxState((current) => (current ? { ...current, index } : { index }))}
+          />
+        ) : null}
+      </section>
+    );
+  }
+
+  return (
+    <section className="archive-section" aria-labelledby="archive-title" id="archive">
+      <div className="archive-hash-anchors" aria-hidden="true">
+        {galleryLaneDefinitions.map((lane) => (
+          <span id={lane.slug} key={lane.key} />
+        ))}
+      </div>
 
       <div className="section-heading archive-heading">
         <div>
@@ -138,7 +193,6 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
           <h2 id="archive-title">{archiveTitle}</h2>
           <p>{filtered.length} {frameLabel} in {filterLabel}.</p>
         </div>
-        {variant === "preview" ? <Link href="/work">Open full archive</Link> : null}
       </div>
 
       <div className="archive-controls">
