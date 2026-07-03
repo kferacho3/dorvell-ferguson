@@ -26,6 +26,7 @@ const graphqlPageLimit = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_LIMIT
 const detailPostLimit = Number(process.env.DORVELL_INSTAGRAM_DETAIL_POST_LIMIT ?? 24);
 const timelinePageSize = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_SIZE ?? 12);
 const timelinePageDelayMs = Number(process.env.DORVELL_INSTAGRAM_GRAPHQL_PAGE_DELAY_MS ?? 450);
+const refreshKnownMetadata = process.env.DORVELL_INSTAGRAM_REFRESH_METADATA === "1";
 
 type InstagramCandidate = {
   url: string;
@@ -631,7 +632,7 @@ async function main() {
       const sourceKey = instagramImageKey(candidate.url);
       if (existingSourceKeys.has(sourceKey)) {
         const existingImage = existingBySourceKey.get(sourceKey);
-        if (existingImage) {
+        if (existingImage && refreshKnownMetadata) {
           applyCandidateMetadata(existingImage, candidate);
           metadataRefreshed += 1;
         }
@@ -723,6 +724,7 @@ async function main() {
         existingAccountPostsCarried: existingInstagramPostUrls.length,
         postsVisitedForDetail: detailPostUrls.length,
         graphQlPagesScanned: timelineResult.pagesScanned ?? 0,
+        refreshKnownMetadata,
         candidatesFound: uniqueCandidates.length,
         imagesAdded: downloaded,
         alreadyKnown,
