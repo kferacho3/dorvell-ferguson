@@ -21,19 +21,19 @@ export type HomeImageCollections = {
 };
 
 const sectionPlan = [
-  ["featuredImages", 6],
-  ["socialImages", 7],
-  ["kineticImages", 12],
-  ["sequenceImages", 8],
-  ["motionPathImages", 8],
-  ["flightImages", 6],
-  ["worldsImages", 12],
-  ["archiveImages", 8],
-  ["studioImages", 6],
-  ["runwayImages", 8],
-  ["designImages", 6],
-  ["aboutImages", 4],
-  ["bookingImages", 6],
+  ["featuredImages", 5],
+  ["socialImages", 5],
+  ["kineticImages", 8],
+  ["sequenceImages", 5],
+  ["motionPathImages", 5],
+  ["flightImages", 4],
+  ["worldsImages", 6],
+  ["archiveImages", 5],
+  ["studioImages", 4],
+  ["runwayImages", 5],
+  ["designImages", 4],
+  ["aboutImages", 3],
+  ["bookingImages", 4],
 ] as const;
 
 function isInstagramImage(image: DorvellImage) {
@@ -55,6 +55,7 @@ function rotate<T>(items: T[], offset: number) {
 }
 
 function sourcePostKey(image: DorvellImage) {
+  if (!isInstagramImage(image)) return image.localOriginal || image.sourceUrl || image.id;
   return image.sourcePage.replace(/\?.*$/, "");
 }
 
@@ -143,7 +144,7 @@ export function buildHomeImageCollections(lanes: GalleryLane[]): HomeImageCollec
     ...lane,
     images: lane.images.filter((image) => !homeScrappedIds.has(image.id)),
   }));
-  const heroImages = imagePool(homeLanes, 14, usedIds, usedPosts, 0);
+  const heroImages = imagePool(homeLanes, 10, usedIds, usedPosts, 0);
   const entryImages = imagePool(homeLanes, 1, usedIds, usedPosts, 83);
   const collections = { entryImages, heroImages } as HomeImageCollections;
 
