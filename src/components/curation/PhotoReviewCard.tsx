@@ -92,7 +92,8 @@ function PhotoReviewCardInner({
           )}
         </button>
 
-        <div className="studio-card__flags" aria-hidden={!needsCategory && !hasNotes}>
+        <div className="studio-card__flags" aria-hidden={!needsCategory && !hasNotes && !photo.isVideo}>
+          {photo.isVideo ? <span className="studio-card__flag studio-card__flag--video">Video</span> : null}
           {needsCategory ? <span className="studio-card__flag studio-card__flag--warn">Needs category</span> : null}
           {hasNotes ? <span className="studio-card__flag studio-card__flag--note">Notes</span> : null}
         </div>

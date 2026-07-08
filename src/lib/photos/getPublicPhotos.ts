@@ -1,5 +1,5 @@
 import curated from "@/content/curatedPhotos.generated.json";
-import type { DorvellImage } from "@/content/dorvell.schema";
+import { dorvellCategories, type DorvellCategory, type DorvellImage } from "@/content/dorvell.schema";
 
 export const CURATED_PUBLIC_SCHEMA = "dorvell-photo-curation-public/v1";
 
@@ -45,6 +45,7 @@ export type CuratedLookup = {
   modelingIds: Set<string>;
   projectIds: Set<string>;
   categoryById: Map<string, string | null>;
+  tagsById: Map<string, string[]>;
 };
 
 let cachedLookup: CuratedLookup | null = null;
@@ -61,11 +62,15 @@ export function getCuratedLookup(): CuratedLookup {
     modelingIds: new Set(),
     projectIds: new Set(),
     categoryById: new Map(),
+    tagsById: new Map(),
   };
   for (const photo of data.photos) {
     if (photo.status === "kept") {
       lookup.keptIds.add(photo.photo_id);
       lookup.categoryById.set(photo.photo_id, photo.category_primary);
+      if (Array.isArray(photo.category_tags) && photo.category_tags.length > 0) {
+        lookup.tagsById.set(photo.photo_id, photo.category_tags);
+      }
       if (photo.portfolio) lookup.portfolioIds.add(photo.photo_id);
       if (photo.modeling) lookup.modelingIds.add(photo.photo_id);
       if (photo.projects) lookup.projectIds.add(photo.photo_id);
@@ -130,4 +135,72 @@ export function projectImages(images: DorvellImage[]): DorvellImage[] {
   const lookup = getCuratedLookup();
   if (lookup.projectIds.size === 0) return [];
   return images.filter((image) => lookup.projectIds.has(image.id));
+}
+
+/**
+ * Maps a Studio curation category label onto the site's published DorvellCategory
+ * taxonomy. Studio uses a broader working vocabulary; unmapped labels (Travel,
+ * Landscape, College Project, …) return null and are simply dropped from the
+ * public category set.
+ */
+const STUDIO_TO_SITE_CATEGORY: Record<string, DorvellCategory> = {
+  Portrait: "Portraits",
+  Headshots: "Headshots",
+  Editorial: "Fashion",
+  Event: "Events",
+  Street: "Photojournalism",
+  Product: "Studio",
+  Lifestyle: "Portraits",
+  Studio: "Studio",
+  Photojournalism: "Photojournalism",
+  Video: "Video",
+  "Behind-the-Scenes": "Behind The Scenes",
+  Modeling: "Modeling",
+  Fashion: "Fashion",
+  Music: "Music",
+  Athletics: "Athletics",
+  "Graphic Design": "Graphic Design",
+  Runway: "Runway",
+};
+const SITE_CATEGORY_SET = new Set<string>(dorvellCategories);
+
+function toSiteCategory(name: string | null | undefined): DorvellCategory | null {
+  if (!name) return null;
+  if (STUDIO_TO_SITE_CATEGORY[name]) return STUDIO_TO_SITE_CATEGORY[name];
+  if (SITE_CATEGORY_SET.has(name)) return name as DorvellCategory;
+  return null;
+}
+
+/**
+ * Applies the client's Studio categorisation (primary + additional categories +
+ * video flag) onto the images so the portfolio's category chips / filters reflect
+ * curated intent. Inert until a curation report has categories (currently a
+ * no-op), so it never changes the pre-curation, scrape-derived categories.
+ */
+export function applyCuratedCategories(images: DorvellImage[]): DorvellImage[] {
+  const lookup = getCuratedLookup();
+  if (lookup.categoryById.size === 0 && lookup.tagsById.size === 0) return images;
+
+  return images.map((image) => {
+    const primary = lookup.categoryById.get(image.id);
+    const tags = lookup.tagsById.get(image.id);
+    if (primary === undefined && tags === undefined) return image;
+
+    const mapped: DorvellCategory[] = [];
+    const sitePrimary = toSiteCategory(primary);
+    if (sitePrimary) mapped.push(sitePrimary);
+    for (const tag of tags ?? []) {
+      const siteTag = toSiteCategory(tag);
+      if (siteTag) mapped.push(siteTag);
+    }
+    const unique = Array.from(new Set(mapped));
+    if (unique.length === 0) return image;
+
+    return {
+      ...image,
+      category: unique[0],
+      categories: unique,
+      mediaType: unique.includes("Video") ? ("video" as const) : image.mediaType,
+    };
+  });
 }

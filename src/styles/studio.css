@@ -988,6 +988,11 @@
   color: var(--st-bg);
 }
 
+.studio-card__flag--video {
+  background: var(--st-teal);
+  color: #06100d;
+}
+
 .studio-card__meta {
   display: flex;
   flex-direction: column;

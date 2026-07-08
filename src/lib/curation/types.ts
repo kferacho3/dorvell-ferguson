@@ -56,6 +56,8 @@ export type CurationPhoto = {
   relativePath?: string;
   /** Category hint carried over from the original scrape/site data. */
   scrapedCategory?: string;
+  /** Moving image (auto-categorised as Video). */
+  isVideo?: boolean;
   alt: string;
   source: "site" | "upload";
   /** Upload previews are object URLs and vanish on reload until re-uploaded. */
@@ -142,6 +144,7 @@ export const SCRAP_REASONS: { value: ScrapReason; label: string }[] = [
  */
 export const DEFAULT_CATEGORIES = [
   "Portrait",
+  "Headshots",
   "Editorial",
   "Travel",
   "Event",
@@ -149,6 +152,9 @@ export const DEFAULT_CATEGORIES = [
   "Landscape",
   "Product",
   "Lifestyle",
+  "Studio",
+  "Photojournalism",
+  "Video",
   "Behind-the-Scenes",
   "College Project",
   "Modeling",
@@ -162,16 +168,29 @@ export const DEFAULT_CATEGORIES = [
 /** Maps legacy scraped categories onto curation defaults for one-tap suggestions. */
 export const SCRAPED_CATEGORY_MAP: Record<string, string> = {
   Portraits: "Portrait",
+  Headshots: "Headshots",
   Fashion: "Fashion",
   Music: "Music",
   Events: "Event",
   Athletics: "Athletics",
+  Studio: "Studio",
+  Photojournalism: "Photojournalism",
+  Video: "Video",
   "Graphic Design": "Graphic Design",
   Modeling: "Modeling",
   Runway: "Runway",
   "Behind The Scenes": "Behind-the-Scenes",
   Uncategorized: "",
 };
+
+const VIDEO_EXTENSIONS = [".mp4", ".mov", ".webm", ".m4v", ".avi", ".mkv"];
+
+/** True when a file (by MIME type or extension) is a moving image. */
+export function isVideoFile(input: { type?: string; name?: string; filename?: string }): boolean {
+  if (input.type && input.type.startsWith("video/")) return true;
+  const name = (input.name ?? input.filename ?? "").toLowerCase();
+  return VIDEO_EXTENSIONS.some((ext) => name.endsWith(ext));
+}
 
 export function emptyDecision(photo: CurationPhoto, now: string): PhotoDecision {
   return {
@@ -181,7 +200,9 @@ export function emptyDecision(photo: CurationPhoto, now: string): PhotoDecision 
     relativePath: photo.relativePath,
     batch: photo.batch,
     status: "unknown",
-    category_primary: null,
+    // Videos are auto-categorised as "Video"; the client adds the subject
+    // category (e.g. Athletics) for dual categorisation.
+    category_primary: photo.isVideo ? "Video" : null,
     category_tags: [],
     destinations: { portfolio: false, modeling: false, projects: false },
     model_assigned: false,

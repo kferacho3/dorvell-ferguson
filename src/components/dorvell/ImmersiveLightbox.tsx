@@ -21,12 +21,17 @@ export function ImmersiveLightbox({
   origin,
   onClose,
   onNavigate,
+  ctaHref,
+  ctaLabel,
 }: {
   images: DorvellImage[];
   index: number;
   origin?: LightboxOrigin;
   onClose: () => void;
   onNavigate: (index: number) => void;
+  /** Optional booking CTA rendered in the details panel (Portfolio drawer). */
+  ctaHref?: string;
+  ctaLabel?: string;
 }) {
   const image = images[index];
   const closeRef = useRef<HTMLButtonElement | null>(null);
@@ -219,6 +224,11 @@ export function ImmersiveLightbox({
               Next
             </button>
           </div>
+          {ctaHref ? (
+            <a className="button-primary lightbox-cta" href={ctaHref}>
+              {ctaLabel ?? "Book similar work"}
+            </a>
+          ) : null}
         </aside>
       </div>
     </div>,

@@ -1,6 +1,6 @@
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { imageAlt } from "@/lib/images";
-import type { CurationPhoto, UploadRecord } from "@/lib/curation/types";
+import { isVideoFile, type CurationPhoto, type UploadRecord } from "@/lib/curation/types";
 
 export const SITE_BATCH = "site";
 
@@ -28,6 +28,11 @@ export function siteManifest(images: DorvellImage[]): CurationPhoto[] {
     batch: SITE_BATCH,
     relativePath: image.localOriginal,
     scrapedCategory: image.category,
+    isVideo:
+      image.mediaType === "video" ||
+      image.category === "Video" ||
+      (image.categories?.includes("Video") ?? false) ||
+      isVideoFile({ name: image.localOriginal }),
     alt: imageAlt(image),
     source: "site" as const,
   }));
@@ -66,6 +71,7 @@ export function uploadManifestEntry(record: UploadRecord, objectUrl: string | nu
     aspectRatio: 1,
     batch: record.batch,
     relativePath: record.relativePath,
+    isVideo: isVideoFile({ type: record.type, name: record.filename }),
     alt: record.filename,
     source: "upload" as const,
     previewDisconnected: !objectUrl,

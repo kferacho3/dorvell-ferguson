@@ -3,6 +3,7 @@
 @import "../styles/studio.css";
 @import "../styles/modeling.css";
 @import "../styles/projects.css";
+@import "../styles/portfolio.css";
 
 @tailwind base;
 @tailwind components;

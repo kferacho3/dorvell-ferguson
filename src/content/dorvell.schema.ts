@@ -2,10 +2,14 @@ import { z } from "zod";
 
 export const dorvellCategories = [
   "Portraits",
+  "Headshots",
   "Fashion",
   "Music",
   "Events",
   "Athletics",
+  "Studio",
+  "Photojournalism",
+  "Video",
   "Graphic Design",
   "Modeling",
   "Runway",
@@ -14,6 +18,9 @@ export const dorvellCategories = [
 ] as const;
 
 export type DorvellCategory = (typeof dorvellCategories)[number];
+
+/** Moving-image vs still. Optional + defaults to photo so all legacy data stays valid. */
+export type DorvellMediaType = "photo" | "video";
 
 export const dorvellImageSchema = z.object({
   id: z.string(),
@@ -32,6 +39,11 @@ export const dorvellImageSchema = z.object({
   alt: z.string(),
   caption: z.string().optional(),
   category: z.enum(dorvellCategories),
+  // Multi-category support (additive, back-compat). When present it supersedes
+  // `category`; consumers read `imageCategories(image)` which falls back to `[category]`.
+  categories: z.array(z.enum(dorvellCategories)).optional(),
+  // Still image vs moving image; absent ⇒ treated as "photo".
+  mediaType: z.enum(["photo", "video"]).optional(),
   tags: z.array(z.string()),
   detectedFrom: z.enum(["img", "srcset", "background", "network", "json", "manual"]),
   hash: z.string(),

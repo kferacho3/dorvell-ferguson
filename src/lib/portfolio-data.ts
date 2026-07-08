@@ -2,7 +2,7 @@ import generated from "@/content/dorvell.generated.json";
 import { dorvellManual } from "@/content/dorvell.manual";
 import { dorvellSiteContentSchema, type DorvellCategory, type DorvellImage, type DorvellSiteContent } from "@/content/dorvell.schema";
 import { readPhotoCategorizationLedgerSync } from "@/lib/dorvell-photo-categorization-ledger";
-import { filterPublicImages } from "@/lib/photos/getPublicPhotos";
+import { applyCuratedCategories, filterPublicImages } from "@/lib/photos/getPublicPhotos";
 
 function buildPortfolioData(images: DorvellImage[], generatedData: DorvellSiteContent) {
   const projects = Array.from(
@@ -60,8 +60,8 @@ export function getPortfolioData() {
       .filter(([, decision]) => decision === "site")
       .map(([imageId]) => imageId),
   );
-  const publicImages = filterPublicImages(
-    rawData.generated.images.filter((image) => !siteScrappedIds.has(image.id)),
+  const publicImages = applyCuratedCategories(
+    filterPublicImages(rawData.generated.images.filter((image) => !siteScrappedIds.has(image.id))),
   );
 
   return buildPortfolioData(publicImages, rawData.generated);

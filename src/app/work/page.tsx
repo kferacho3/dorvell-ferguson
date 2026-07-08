@@ -1,6 +1,5 @@
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
-import { WorkArchive } from "@/components/dorvell/WorkArchive";
-import { WorkArchiveHero } from "@/components/dorvell/WorkArchiveHero";
+import { PortfolioExperience } from "@/components/dorvell/portfolio/PortfolioExperience";
 import { getPortfolioData } from "@/lib/portfolio-data";
 import { portfolioImages } from "@/lib/photos/getPublicPhotos";
 
@@ -8,12 +7,13 @@ import { portfolioImages } from "@/lib/photos/getPublicPhotos";
 const hiddenProjectSlugs = new Set(["home-2", "work", "about"]);
 
 export const metadata = {
-  title: "Work Archive",
-  description: "A full contact-sheet archive of Dorvell Ferguson Jr.'s photography and visual work.",
+  title: "The Work Index",
+  description:
+    "Portraits, concerts, sports, studio work, fashion, events, and photojournalism — Dorvell Ferguson Jr.'s photography explored across cinematic, calm, archive, and story views.",
   openGraph: {
-    title: "Work Archive — Dorvell Ferguson Jr.",
+    title: "The Work Index — Dorvell Ferguson Jr.",
     description:
-      "The full working archive — portraits, live music, athletics, and fashion direction in one contact sheet.",
+      "A living index of Dorvell Ferguson Jr.'s visual world — portraits, live music, athletics, fashion, and photojournalism across four gallery modes.",
   },
 };
 
@@ -26,8 +26,7 @@ export default function WorkPage() {
   return (
     <DorvellShell>
       <div className="route-page work-route">
-        <WorkArchiveHero images={archiveImages} projectCount={projectCount} />
-        <WorkArchive images={archiveImages} variant="full" />
+        <PortfolioExperience images={archiveImages} projectCount={projectCount} />
       </div>
     </DorvellShell>
   );
