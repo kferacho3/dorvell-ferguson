@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { buildGalleryLanes } from "@/lib/gallery-lanes";
 import { getPortfolioData } from "@/lib/portfolio-data";
+import { getSocialLinks } from "@/lib/social-links";
+import { MailIcon, PhoneIcon, SocialGlyph } from "@/components/dorvell/social-icons";
 
 const footerRoutes = [
   { href: "/work", label: "Portfolio", index: "01" },
@@ -12,45 +14,37 @@ const footerRoutes = [
   { href: "/contact", label: "Contact", index: "05" },
 ];
 
-function InstagramIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <rect x="4" y="4" width="16" height="16" rx="5" />
-      <circle cx="12" cy="12" r="3.6" />
-      <circle cx="17.1" cy="6.9" r="0.8" />
-    </svg>
-  );
-}
-
-function TikTokIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M14.2 4v10.05a4.1 4.1 0 1 1-3.5-4.05v3.08a1.25 1.25 0 1 0 .88 1.2V4h2.62Z" />
-      <path d="M14.2 4c.42 2.65 2 4.18 4.56 4.48v3.02c-1.74-.08-3.22-.6-4.56-1.72V4Z" />
-    </svg>
-  );
-}
-
-function MailIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M4 6.8h16v10.4H4z" />
-      <path d="m4.6 7.4 7.4 5.5 7.4-5.5" />
-    </svg>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M8.4 5.1 6.5 6.4c-.62.42-.82 1.24-.48 1.92 2.08 4.15 5.5 7.57 9.66 9.66.68.34 1.5.14 1.92-.48l1.3-1.9-3.4-2.25-1.23 1.08c-1.7-.9-2.8-2-3.7-3.7l1.08-1.23L8.4 5.1Z" />
-    </svg>
-  );
-}
-
 export function DorvellFooter() {
   const { generated, manual } = getPortfolioData();
   const lanes = buildGalleryLanes(generated.images);
+
+  // Sourced from the shared social module so LinkedIn is present and TikTok is
+  // omitted unless a verified URL exists — then the booking email is appended.
+  const socialItems: {
+    platform: string;
+    handle: string;
+    href: string;
+    label: string;
+    icon: ReactNode;
+    external: boolean;
+  }[] = [
+    ...getSocialLinks().map((link) => ({
+      platform: link.platform,
+      handle: link.handle,
+      href: link.href,
+      label: link.label,
+      icon: <SocialGlyph social={link.key} />,
+      external: true,
+    })),
+    {
+      platform: "Booking",
+      handle: "Email",
+      href: `mailto:${manual.profile.email}?subject=${encodeURIComponent("Dorvell Ferguson Jr. booking inquiry")}`,
+      label: "Email Dorvell Ferguson Jr.",
+      icon: <MailIcon />,
+      external: false,
+    },
+  ];
   const closingReel = lanes.flatMap((lane) =>
     lane.images.slice(0, 3).map((image) => ({
       image,
@@ -147,40 +141,7 @@ export function DorvellFooter() {
         <div className="footer-social-panel">
           <span className="footer-social-panel__label">Social / contact</span>
           <div className="footer-socials">
-            {[
-              {
-                platform: "Instagram",
-                handle: "@2kferg",
-                href: "https://www.instagram.com/2kferg/",
-                label: "Open Dorvell on Instagram",
-                icon: <InstagramIcon />,
-                external: true,
-              },
-              {
-                platform: "Studio IG",
-                handle: "@fergphotography",
-                href: "https://www.instagram.com/fergphotography/",
-                label: "Open Ferg Photography on Instagram",
-                icon: <InstagramIcon />,
-                external: true,
-              },
-              {
-                platform: "TikTok",
-                handle: "@2kferg",
-                href: manual.profile.tiktok,
-                label: "Open Dorvell on TikTok",
-                icon: <TikTokIcon />,
-                external: true,
-              },
-              {
-                platform: "Email",
-                handle: "Booking",
-                href: `mailto:${manual.profile.email}?subject=${encodeURIComponent("Dorvell Ferguson Jr. booking inquiry")}`,
-                label: "Email Dorvell Ferguson Jr.",
-                icon: <MailIcon />,
-                external: false,
-              },
-            ].map((social) => (
+            {socialItems.map((social) => (
               <a
                 aria-label={social.label}
                 className="footer-social"

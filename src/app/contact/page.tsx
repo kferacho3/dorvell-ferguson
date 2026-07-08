@@ -1,25 +1,32 @@
-import { ContactPanel } from "@/components/dorvell/ContactPanel";
+import { ContactActionStrip } from "@/components/dorvell/contact/ContactActionStrip";
+import { ContactForm } from "@/components/dorvell/contact/ContactForm";
+import { ContactHero } from "@/components/dorvell/contact/ContactHero";
+import { ContactProofStrip } from "@/components/dorvell/contact/ContactProofStrip";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
-import { ServicesBooking } from "@/components/dorvell/ServicesBooking";
 import { getPortfolioData } from "@/lib/portfolio-data";
+import { getSocialLinks } from "@/lib/social-links";
 
 export const metadata = {
   title: "Contact",
-  description: "Book Dorvell Ferguson Jr. for photography, modeling, creative direction, events, and collaborations.",
+  description:
+    "Book Dorvell Ferguson Jr. for photography, journalism, events, portraits, fashion, modeling, and creative collaborations.",
   openGraph: {
     title: "Contact — Dorvell Ferguson Jr.",
-    description: "Send the brief — shoots, modeling, creative direction, events, and collaborations.",
+    description: "Let’s build the shot — send the brief for shoots, editorial, events, and collaborations.",
   },
 };
 
 export default function ContactPage() {
   const { manual, generated } = getPortfolioData();
+  const socials = getSocialLinks();
 
   return (
     <DorvellShell>
-      <div className="route-page">
-        <ContactPanel profile={manual.profile} images={generated.images} />
-        <ServicesBooking services={manual.services} email={manual.profile.email} images={generated.images} compact />
+      <div className="route-page contact-route">
+        <ContactHero profile={manual.profile} images={generated.images} socials={socials} />
+        <ContactForm email={manual.profile.email} />
+        <ContactActionStrip email={manual.profile.email} portfolio={manual.profile.portfolio} socials={socials} />
+        <ContactProofStrip />
       </div>
     </DorvellShell>
   );
