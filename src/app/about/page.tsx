@@ -4,8 +4,12 @@ import { DorvellShell } from "@/components/dorvell/DorvellShell";
 import { getPortfolioData } from "@/lib/portfolio-data";
 
 export const metadata = {
-  title: "About - Dorvell Ferguson Jr.",
+  title: "About",
   description: "About Dorvell Ferguson Jr., Tampa-based photographer, model, and multimedia visual storyteller.",
+  openGraph: {
+    title: "About — Dorvell Ferguson Jr.",
+    description: "The story behind the archive — a Tampa-based photographer, model, and multimedia visual storyteller.",
+  },
 };
 
 export default function AboutPage() {
@@ -13,10 +17,10 @@ export default function AboutPage() {
 
   return (
     <DorvellShell>
-      <main className="route-page about-route">
+      <div className="route-page about-route">
         <AboutDossierHero manual={manual} images={generated.images} />
         <AboutStory manual={manual} images={generated.images} expanded />
-      </main>
+      </div>
     </DorvellShell>
   );
 }

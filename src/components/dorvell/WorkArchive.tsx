@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { DorvellImage } from "@/content/dorvell.schema";
@@ -12,6 +12,9 @@ import { ImmersiveLightbox } from "./ImmersiveLightbox";
 import { useImageWarmup } from "./useImageWarmup";
 
 const modes = ["grid", "focus", "contact", "carousel"] as const;
+const GRID_CHUNK = 72;
+const MINIMAP_CAP = 120;
+const FOCUS_RAIL_WINDOW = 40;
 const densityModes = [
   { key: "tight", label: "50%", detail: "dense scan" },
   { key: "editorial", label: "75%", detail: "balanced" },
@@ -40,6 +43,8 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [pointerMap, setPointerMap] = useState<PointerMap | null>(null);
+  const [visibleCount, setVisibleCount] = useState(GRID_CHUNK);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const lanes = useMemo(() => buildGalleryLanes(images), [images]);
   const archiveScopeLabel = scopeLabel?.trim();
@@ -83,6 +88,33 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
     [filter, images],
   );
 
+  // Evenly sampled minimap entries so the cursor map never renders thousands of buttons.
+  const minimapEntries = useMemo(() => {
+    if (filtered.length <= MINIMAP_CAP) return filtered.map((image, index) => ({ image, index }));
+    const step = (filtered.length - 1) / (MINIMAP_CAP - 1);
+    return Array.from({ length: MINIMAP_CAP }, (_, sampleIndex) => {
+      const index = Math.round(sampleIndex * step);
+      return { image: filtered[index], index };
+    });
+  }, [filtered]);
+
+  // Append the next chunk of grid cards when the sentinel scrolls into range.
+  useEffect(() => {
+    const sentinel = loadMoreRef.current;
+    if (!sentinel || visibleCount >= filtered.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisibleCount((count) => Math.min(count + GRID_CHUNK, filtered.length));
+        }
+      },
+      { rootMargin: "640px 0px" },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [visibleCount, filtered.length, mode, density]);
+
   const activeLaneLabel = lanes.find((lane) => lane.key === filter)?.label ?? filter;
   const filterLabel = filter === "All" ? (archiveScopeLabel ? `the ${archiveScopeLabel} exhibit` : "all galleries") : activeLaneLabel;
   const mapFilterLabel = filter === "All" ? (archiveScopeLabel ? "Full exhibit" : "All galleries") : activeLaneLabel;
@@ -113,6 +145,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
     setPreviewIndex(null);
     setLightboxState(null);
     setPointerMap(null);
+    setVisibleCount(GRID_CHUNK);
   };
 
   const selectMode = (nextMode: (typeof modes)[number]) => {
@@ -121,6 +154,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
     setPreviewIndex(null);
     setLightboxState(null);
     setPointerMap(null);
+    setVisibleCount(GRID_CHUNK);
   };
 
   if (variant === "preview") {
@@ -178,6 +212,15 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
       </section>
     );
   }
+
+  const remainingCount = Math.max(0, filtered.length - visibleCount);
+  const railStart = Math.max(
+    0,
+    Math.min(selectedFocusIndex - Math.floor(FOCUS_RAIL_WINDOW / 2), filtered.length - FOCUS_RAIL_WINDOW),
+  );
+  const focusRailEntries = filtered
+    .slice(railStart, railStart + FOCUS_RAIL_WINDOW)
+    .map((image, offset) => ({ image, index: railStart + offset }));
 
   return (
     <section className="archive-section" aria-labelledby="archive-title" id="archive">
@@ -317,7 +360,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
               <em>{String(activePreviewIndex + 1).padStart(2, "0")} active</em>
             </div>
             <div className="archive-map-grid">
-              {filtered.map((image, index) => {
+              {minimapEntries.map(({ image, index }) => {
                 const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
                 const isActive = index === activePreviewIndex;
                 return (
@@ -397,7 +440,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
             </div>
           </div>
           <div className="archive-focus-rail" aria-label="Focus gallery">
-            {filtered.map((image, index) => {
+            {focusRailEntries.map(({ image, index }) => {
               const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
               const isSelected = index === selectedFocusIndex;
               const isPreviewing = index === activePreviewIndex;
@@ -438,19 +481,32 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
           </div>
         </div>
       ) : (
-        <div className={cn("archive-grid", `archive-${mode}`, `archive-density-${density}`)} key={`${filter}-${mode}-${density}`}>
-          {filtered.map((image, index) => (
-            <ImageCard
-              key={image.id}
-              image={image}
-              index={index}
-              mode={mode}
-              onOpen={(origin) => setLightboxState({ index, origin })}
-              onPreview={setPreviewIndex}
-              onPointerMap={setPointerMap}
-            />
-          ))}
-        </div>
+        <>
+          <div className={cn("archive-grid", `archive-${mode}`, `archive-density-${density}`)} key={`${filter}-${mode}-${density}`}>
+            {filtered.slice(0, visibleCount).map((image, index) => (
+              <ImageCard
+                key={image.id}
+                image={image}
+                index={index}
+                mode={mode}
+                onOpen={(origin) => setLightboxState({ index, origin })}
+                onPreview={setPreviewIndex}
+                onPointerMap={setPointerMap}
+              />
+            ))}
+          </div>
+          {remainingCount > 0 ? (
+            <div className="archive-load-more">
+              <div ref={loadMoreRef} className="archive-load-more__sentinel" aria-hidden="true" />
+              <button
+                type="button"
+                onClick={() => setVisibleCount((count) => Math.min(count + GRID_CHUNK, filtered.length))}
+              >
+                Show more ({remainingCount} remaining)
+              </button>
+            </div>
+          ) : null}
+        </>
       )}
 
       {filtered.length === 0 ? (

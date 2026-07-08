@@ -4,8 +4,12 @@ import { ServicesBooking } from "@/components/dorvell/ServicesBooking";
 import { getPortfolioData } from "@/lib/portfolio-data";
 
 export const metadata = {
-  title: "Contact - Dorvell Ferguson Jr.",
+  title: "Contact",
   description: "Book Dorvell Ferguson Jr. for photography, modeling, creative direction, events, and collaborations.",
+  openGraph: {
+    title: "Contact — Dorvell Ferguson Jr.",
+    description: "Send the brief — shoots, modeling, creative direction, events, and collaborations.",
+  },
 };
 
 export default function ContactPage() {
@@ -13,10 +17,10 @@ export default function ContactPage() {
 
   return (
     <DorvellShell>
-      <main className="route-page">
+      <div className="route-page">
         <ContactPanel profile={manual.profile} images={generated.images} />
         <ServicesBooking services={manual.services} email={manual.profile.email} images={generated.images} compact />
-      </main>
+      </div>
     </DorvellShell>
   );
 }

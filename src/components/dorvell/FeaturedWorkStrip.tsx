@@ -144,7 +144,10 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
 
         <div className="featured-deck__rail" tabIndex={0} aria-label="Horizontally scroll featured images">
           {featured.map(({ image, lane }, index) => {
-            const href = image.projectSlug ? `/work/${image.projectSlug}` : `/work#${lane.slug}`;
+            // Legacy scrape slugs (home-2/work/about) are 404s — route those to the lane view.
+            const isRealProject =
+              image.projectSlug && !["home-2", "work", "about"].includes(image.projectSlug);
+            const href = isRealProject ? `/work/${image.projectSlug}` : `/work#${lane.slug}`;
             return (
               <Link
                 aria-current={index === activeIndex ? "true" : undefined}

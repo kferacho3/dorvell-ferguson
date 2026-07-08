@@ -4,6 +4,15 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000,
   },
+  async redirects() {
+    return [
+      {
+        source: "/runway",
+        destination: "/modeling",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     const immutableAssetHeaders = [
       {

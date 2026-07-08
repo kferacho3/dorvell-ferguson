@@ -1,16 +1,49 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 
+const ENTRY_SEEN_KEY = "df-entry-gate-seen";
+
+// useLayoutEffect warns during SSR; fall back to useEffect on the server.
+const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+function readEntrySeen() {
+  try {
+    return window.sessionStorage.getItem(ENTRY_SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function writeEntrySeen() {
+  try {
+    window.sessionStorage.setItem(ENTRY_SEEN_KEY, "1");
+  } catch {
+    // Session storage unavailable; the gate simply shows again next visit.
+  }
+}
+
 export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage[]; totalFrames: number }) {
   const [entered, setEntered] = useState(false);
+  const enterButtonRef = useRef<HTMLButtonElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const previewImages = images.slice(0, 4);
+
+  // Skip the gate before paint for returning visitors and hash deep links.
+  useIsomorphicLayoutEffect(() => {
+    if (readEntrySeen() || window.location.hash.length > 1) {
+      setEntered(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (entered) return;
+
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    enterButtonRef.current?.focus();
 
     document.documentElement.classList.add("entry-gate-lock");
     document.body.classList.add("entry-gate-lock");
@@ -21,12 +54,38 @@ export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage
     };
   }, [entered]);
 
-  function enterPortfolio() {
+  const enterPortfolio = useCallback(() => {
+    writeEntrySeen();
     document.documentElement.classList.remove("entry-gate-lock");
     document.body.classList.remove("entry-gate-lock");
     window.scrollTo({ top: 0, behavior: "auto" });
     setEntered(true);
-  }
+    const previousFocus = previousFocusRef.current;
+    if (previousFocus && document.contains(previousFocus)) {
+      previousFocus.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (entered) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        enterPortfolio();
+        return;
+      }
+      // The gate is an opaque full-screen overlay with a single control —
+      // keep Tab from walking onto the invisible page behind it.
+      if (event.key === "Tab") {
+        event.preventDefault();
+        enterButtonRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [entered, enterPortfolio]);
 
   if (entered) return null;
 
@@ -34,9 +93,11 @@ export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage
     <section className="entry-gate" aria-labelledby="entry-title">
       <div className="entry-gate__copy">
         <p>Dorvell Ferguson Jr. / Tampa</p>
-        <h1 id="entry-title">Enter the archive.</h1>
+        <p className="entry-gate__title" id="entry-title">
+          Enter the archive.
+        </p>
         <span>{totalFrames} frames across portraits, music, sports, and fashion.</span>
-        <button type="button" onClick={enterPortfolio}>
+        <button ref={enterButtonRef} type="button" onClick={enterPortfolio}>
           Enter
         </button>
       </div>

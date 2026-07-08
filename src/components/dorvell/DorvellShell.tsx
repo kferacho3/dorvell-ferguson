@@ -10,7 +10,7 @@ export function DorvellShell({ children }: { children: React.ReactNode }) {
       </a>
       <ApertureLoader />
       <DorvellHeader />
-      <div id="main">{children}</div>
+      <main id="main">{children}</main>
       <DorvellFooter />
     </>
   );

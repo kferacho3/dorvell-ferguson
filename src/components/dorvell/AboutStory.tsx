@@ -34,7 +34,7 @@ export function AboutStory({
       <div className="about-copy">
         <p className="eyebrow">Behind the Lens</p>
         <h2 id="about-title">A visual storyteller who knows what it feels like to be in the frame.</h2>
-        <p>{expanded ? manual.profile.fullBio : manual.profile.shortBio}</p>
+        <p>{manual.profile.shortBio}</p>
         <div className="proof-list">
           <span>7+ years hands-on photography experience</span>
           <span>Troy University Multimedia Journalism</span>

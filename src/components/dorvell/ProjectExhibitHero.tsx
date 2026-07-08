@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { DorvellCategory, DorvellImage } from "@/content/dorvell.schema";
+import { dorvellManual } from "@/content/dorvell.manual";
 import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes, galleryLaneDefinitions, laneKeyForImage } from "@/lib/gallery-lanes";
 
@@ -53,7 +54,7 @@ export function ProjectExhibitHero({
           <Link className="button-primary" href={`/work#${projectLane.slug}`}>
             Open {projectLane.label}
           </Link>
-          <a className="button-secondary" href={`mailto:fergusondorvell2@gmail.com?subject=${encodeURIComponent(`${displayTitle} booking inquiry`)}`}>
+          <a className="button-secondary" href={`mailto:${dorvellManual.profile.email}?subject=${encodeURIComponent(`${displayTitle} booking inquiry`)}`}>
             Book this lane
           </a>
         </div>

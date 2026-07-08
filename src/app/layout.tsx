@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { getPortfolioData } from "@/lib/portfolio-data";
 
@@ -9,7 +8,10 @@ const socialProfiles = [...manual.profile.instagram, manual.profile.tiktok];
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dorvellferguson.com"),
-  title: "Dorvell Ferguson Jr. - Photographer, Model & Visual Storyteller",
+  title: {
+    default: "Dorvell Ferguson Jr. - Photographer, Model & Visual Storyteller",
+    template: "%s — Dorvell Ferguson Jr.",
+  },
   description:
     "Tampa-based photographer, model, and multimedia visual storyteller creating authentic imagery across fashion, music, live events, athletics, and editorial portraiture.",
   icons: {
@@ -68,12 +70,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <Script
+        <script
           id="dorvell-person-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         />
-        <Script
+        <script
           id="dorvell-gallery-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(gallerySchema) }}

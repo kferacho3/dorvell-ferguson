@@ -17,10 +17,13 @@
     "scrape:instagram": "tsx scripts/scrape-fergphotography-instagram.ts",
     "process:images": "tsx scripts/process-dorvell-images.ts",
     "build:content": "npm run scrape:portfolio && npm run scrape:instagram && npm run process:images",
-    "verify:portfolio-data": "tsx scripts/verify-dorvell-data.ts"
+    "verify:portfolio-data": "tsx scripts/verify-dorvell-data.ts",
+    "curation:build": "tsx scripts/curation/report-to-json.ts"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "next": "^16.2.9",
     "playwright": "^1.49.1",
     "react": "^19.2.7",

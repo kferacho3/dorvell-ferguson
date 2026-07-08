@@ -2,18 +2,24 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navItems = [
-  { label: "Portraits", href: "/#portraits" },
-  { label: "Music", href: "/#music-live" },
-  { label: "Sports", href: "/#sports-athletics" },
-  { label: "Fashion", href: "/#fashion-creative" },
-  { label: "Archive", href: "/work" },
+  { label: "Portfolio", href: "/work" },
+  { label: "Modeling", href: "/modeling" },
+  { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
+function isActiveRoute(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function DorvellHeader() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const navClassName = ["site-nav", scrolled ? "is-scrolled" : "", open ? "is-open" : ""].filter(Boolean).join(" ");
@@ -46,13 +52,18 @@ export function DorvellHeader() {
       </button>
       <nav id="primary-navigation" className={open ? "nav-links is-open" : "nav-links"} aria-label="Primary">
         {navItems.map((item) => (
-          <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={isActiveRoute(pathname, item.href) ? "page" : undefined}
+            onClick={() => setOpen(false)}
+          >
             {item.label}
           </Link>
         ))}
-        <a className="nav-cta" href="mailto:fergusondorvell2@gmail.com?subject=Booking%20Inquiry%20for%20Dorvell">
+        <Link className="nav-cta" href="/contact" onClick={() => setOpen(false)}>
           Book
-        </a>
+        </Link>
       </nav>
     </header>
   );

@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <DorvellShell>
-      <EntryPreviewGate images={entryImages} totalFrames={data.generated.scrapeSummary?.imagesDownloaded ?? data.generated.images.length} />
+      <EntryPreviewGate images={entryImages} totalFrames={data.generated.images.length} />
       <div id="portfolio" className="portfolio-entry-target">
         <GalleryAtlasHero images={heroImages} summary={data.generated.scrapeSummary} laneTotals={laneTotals} />
       </div>

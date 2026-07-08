@@ -12,7 +12,9 @@ export function AboutDossierHero({
   manual: DorvellManual;
   images: DorvellImage[];
 }) {
-  const creatorImages = images.filter((image) => ["Modeling", "Fashion", "Music", "Athletics"].includes(image.category));
+  const creatorImages = images.filter((image) =>
+    ["Portraits", "Modeling", "Fashion", "Music", "Athletics"].includes(image.category),
+  );
   const lead = creatorImages.find((image) => image.category === "Modeling") ?? creatorImages[0] ?? images[0];
   const tiles = creatorImages.filter((image) => image.id !== lead?.id).slice(0, 7);
   const strip = creatorImages.length > 0 ? Array.from({ length: 12 }, (_, index) => creatorImages[index % creatorImages.length]) : [];
@@ -29,8 +31,11 @@ export function AboutDossierHero({
           <Link className="button-primary" href="/work">
             Enter archive
           </Link>
-          <Link className="button-secondary" href="/runway">
-            Model book
+          <Link className="button-secondary" href="/modeling">
+            Modeling
+          </Link>
+          <Link className="about-dossier__contact-link" href="/contact">
+            Booking &amp; contact
           </Link>
         </div>
         <dl className="about-dossier__stats" aria-label="Creator credentials">

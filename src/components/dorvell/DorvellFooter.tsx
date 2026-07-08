@@ -5,10 +5,11 @@ import { buildGalleryLanes } from "@/lib/gallery-lanes";
 import { getPortfolioData } from "@/lib/portfolio-data";
 
 const footerRoutes = [
-  { href: "/work", label: "Work", index: "01" },
-  { href: "/runway", label: "Runway", index: "02" },
-  { href: "/about", label: "About", index: "03" },
-  { href: "/contact", label: "Contact", index: "04" },
+  { href: "/work", label: "Portfolio", index: "01" },
+  { href: "/modeling", label: "Modeling", index: "02" },
+  { href: "/projects", label: "Projects", index: "03" },
+  { href: "/about", label: "About", index: "04" },
+  { href: "/contact", label: "Contact", index: "05" },
 ];
 
 function InstagramIcon() {
@@ -70,7 +71,7 @@ export function DorvellFooter() {
       <div className="footer-reel" aria-label="Closing portfolio reel">
         {closingReel.concat(closingReel.slice(0, 6)).map(({ image, lane }, index) => (
           <Link
-            href={`/#${lane.slug}`}
+            href={`/work#${lane.slug}`}
             key={`${image.id}-${index}`}
             style={{ "--lane-accent": lane.accent } as CSSProperties}
           >
@@ -106,7 +107,7 @@ export function DorvellFooter() {
 
       <nav className="footer-lanes" aria-label="Gallery lanes">
         {lanes.map((lane, index) => (
-          <Link key={lane.key} href={`/#${lane.slug}`} style={{ "--lane-accent": lane.accent } as CSSProperties}>
+          <Link key={lane.key} href={`/work#${lane.slug}`} style={{ "--lane-accent": lane.accent } as CSSProperties}>
             {lane.images[0] ? (
               <Image
                 src={lane.images[0].localOptimized.sm}

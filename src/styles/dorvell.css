@@ -11091,6 +11091,88 @@ section,
   opacity: 0.56;
 }
 
+/* Portfolio photos are the subject, so major frames preserve the full image. */
+:is(
+  .entry-gate__frame,
+  .atlas-lane-dial__thumb,
+  .atlas-preview,
+  .atlas-gallery-card__image,
+  .gallery-flight__preview,
+  .studio-signal__frames span,
+  .world-lead,
+  .world-stack span,
+  .featured-deck__stage-inner,
+  .featured-frame,
+  .kinetic-lane-list button,
+  .kinetic-preview figure,
+  .kinetic-frame,
+  .sequence-lab__projector,
+  .sequence-lab__lane-thumb,
+  .motion-path-traveler,
+  .motion-path-portal__lead,
+  .archive-preview-card,
+  .archive-preview-frame,
+  .archive-hover-map__thumb,
+  .image-card,
+  .archive-focus-thumb,
+  .lightbox-strip button,
+  .runway-dossier__lead,
+  .runway-dossier__stack span,
+  .runway-frame,
+  .about-image,
+  .about-dossier__lead,
+  .about-dossier__tiles span,
+  .design-monitor,
+  .design-lane-card,
+  .booking-router__routes a,
+  .booking-router__proof span,
+  .booking-lane__image,
+  .service-card__thumb,
+  .work-archive-hero__lead,
+  .work-archive-door__thumb,
+  .project-exhibit__lead,
+  .project-exhibit__stack span,
+  .project-hero,
+  .social-motion__poster,
+  .footer-reel a
+) img {
+  object-fit: contain;
+  object-position: center;
+  background: #030403;
+}
+
+:is(
+  .archive-preview-card,
+  .archive-preview-frame,
+  .archive-hover-map__thumb,
+  .image-card,
+  .archive-focus-thumb,
+  .featured-frame,
+  .kinetic-frame,
+  .work-archive-door__thumb,
+  .booking-lane__image,
+  .footer-reel a
+):hover img,
+:is(
+  .archive-preview-card,
+  .archive-preview-frame,
+  .archive-hover-map__thumb,
+  .image-card,
+  .archive-focus-thumb,
+  .featured-frame,
+  .kinetic-frame,
+  .work-archive-door__thumb,
+  .booking-lane__image,
+  .footer-reel a
+):focus-visible img,
+.archive-instrument[data-cursor-active="true"] .archive-preview-frame img,
+.booking-lane:hover .booking-lane__image img,
+.booking-lane:focus-visible .booking-lane__image img,
+.work-archive-door:hover .work-archive-door__thumb img,
+.work-archive-door:focus-visible .work-archive-door__thumb img {
+  transform: none;
+}
+
 @media (max-width: 1100px) {
   .photo-categorizer__header,
   .photo-categorizer__toolbar {
@@ -11229,3 +11311,144 @@ section,
     display: none;
   }
 }
+
+/* ============================================================
+   PUBLIC PASS ADDITIONS
+   Appended styles for the public-page pass: entry gate heading
+   demotion, active nav state, about contact link, contact panel
+   copy button + form helper, and archive chunked loading.
+   ============================================================ */
+
+/* Entry gate title is now a <p> (single h1 per page); mirror the old h1 styling. */
+.entry-gate__copy .entry-gate__title {
+  max-width: none;
+  margin: 0;
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: clamp(3.1rem, 6.4vw, 7rem);
+  font-weight: 900;
+  line-height: 0.78;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .entry-gate__copy .entry-gate__title {
+    max-width: 310px;
+    font-size: clamp(2.9rem, 16vw, 4.7rem);
+    line-height: 0.78;
+  }
+}
+
+/* Current-route marker in the primary nav. */
+.nav-links a[aria-current="page"] {
+  color: var(--df-text);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 -2px 0 var(--df-teal);
+}
+
+/* Quiet booking link beside the about hero CTAs. */
+.about-dossier__contact-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 6px;
+  color: var(--df-text-soft);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--df-teal) 55%, transparent);
+  text-underline-offset: 5px;
+  transition: color var(--df-fast), text-decoration-color var(--df-fast);
+}
+
+.about-dossier__contact-link:hover,
+.about-dossier__contact-link:focus-visible {
+  color: var(--df-text);
+  text-decoration-color: var(--df-teal);
+}
+
+/* Copy-email button on the contact panel. */
+.contact-copy-email {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--df-line-strong);
+  border-radius: 8px;
+  color: var(--df-text);
+  background: rgba(255, 255, 255, 0.055);
+  font-size: 0.86rem;
+  font-weight: 700;
+  transition: transform var(--df-fast), border-color var(--df-fast), background var(--df-fast), color var(--df-fast);
+}
+
+.contact-copy-email:hover,
+.contact-copy-email:focus-visible {
+  border-color: color-mix(in srgb, var(--df-teal) 58%, var(--df-line-strong));
+  color: var(--df-teal);
+  transform: translateY(-2px);
+}
+
+/* Helper line under the creative-brief form header. */
+.form-header .form-helper {
+  margin: 8px 0 0;
+  color: var(--df-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-transform: none;
+}
+
+/* Prominent fallback link once a draft is prepared. */
+.form-status .form-status__open {
+  min-height: 42px;
+  padding: 0 16px;
+  border-color: var(--df-teal);
+  color: #06100d;
+  background: var(--df-teal);
+  font-weight: 800;
+}
+
+.form-status .form-status__open:hover,
+.form-status .form-status__open:focus-visible {
+  background: color-mix(in srgb, var(--df-teal) 82%, #ffffff);
+}
+
+/* Chunked archive loading: sentinel + manual fallback button. */
+.archive-load-more {
+  display: grid;
+  justify-items: center;
+  margin-top: 26px;
+}
+
+.archive-load-more__sentinel {
+  width: 100%;
+  height: 1px;
+}
+
+.archive-load-more button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 26px;
+  border: 1px solid var(--df-line-strong);
+  border-radius: 999px;
+  color: var(--df-text);
+  background: rgba(255, 255, 255, 0.055);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: transform var(--df-fast), border-color var(--df-fast), background var(--df-fast), color var(--df-fast);
+}
+
+.archive-load-more button:hover,
+.archive-load-more button:focus-visible {
+  border-color: color-mix(in srgb, var(--df-teal) 58%, var(--df-line-strong));
+  color: var(--df-teal);
+  transform: translateY(-2px);
+}
+
+/* END PUBLIC PASS ADDITIONS */

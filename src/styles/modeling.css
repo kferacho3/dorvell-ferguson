@@ -1,0 +1,721 @@
+/* ============================================================
+   MODELING — The Ferguson Room. Members-only world.
+   Deliberately breaks from the main site language: velvet black,
+   bone ivory, brass. No neon. Film grain, vignette, slow light.
+   ============================================================ */
+
+.modeling-route {
+  --room-bg: #050505;
+  --room-bg-2: #0b0a09;
+  --room-bone: #ece7dd;
+  --room-bone-soft: rgba(236, 231, 221, 0.68);
+  --room-bone-faint: rgba(236, 231, 221, 0.64); /* ≥4.5:1 on the velvet black */
+  --room-brass: #b8925a;
+  --room-brass-soft: rgba(184, 146, 90, 0.34);
+  --room-line: rgba(236, 231, 221, 0.12);
+  --room-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --lane-accent: var(--room-brass);
+  position: relative;
+  background:
+    radial-gradient(1100px 640px at 50% -8%, rgba(184, 146, 90, 0.07), transparent 62%),
+    linear-gradient(180deg, var(--room-bg) 0%, var(--room-bg-2) 55%, var(--room-bg) 100%);
+  color: var(--room-bone);
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+.modeling-room {
+  position: relative;
+}
+
+/* ---- atmosphere: grain + vignette (fixed, above content, non-interactive) */
+.modeling-room__grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+}
+
+.modeling-room__vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 46%, transparent 58%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* ---- shared kicker */
+.modeling-kicker {
+  margin: 0 0 0.9rem;
+  color: var(--room-brass);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------
+   The door — cinematic entrance
+   ------------------------------------------------------------ */
+
+.modeling-door {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 92svh;
+  padding: clamp(96px, 14vh, 160px) 24px clamp(48px, 8vh, 96px);
+  text-align: center;
+}
+
+.modeling-door__kicker {
+  margin: 0 0 1.6rem;
+  color: var(--room-brass);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  animation: room-fade 1400ms var(--room-ease) 200ms both;
+}
+
+.modeling-door__kicker::before,
+.modeling-door__kicker::after {
+  content: "";
+  display: inline-block;
+  width: 44px;
+  height: 1px;
+  margin: 0 16px;
+  vertical-align: middle;
+  background: var(--room-brass-soft);
+}
+
+.modeling-door__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10.5vw, 8.6rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--room-bone);
+  text-wrap: balance;
+}
+
+.modeling-door__word {
+  display: inline-block;
+  white-space: pre;
+}
+
+.modeling-door__word > span {
+  display: inline-block;
+  white-space: pre;
+  animation: room-letter 1200ms var(--room-ease) both;
+}
+
+@keyframes room-letter {
+  from {
+    opacity: 0;
+    transform: translateY(0.36em);
+    filter: blur(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes room-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modeling-door__line {
+  max-width: 46ch;
+  margin: 1.8rem 0 0;
+  color: var(--room-bone-soft);
+  font-size: 1rem;
+  line-height: 1.7;
+  animation: room-fade 1400ms var(--room-ease) 1300ms both;
+}
+
+.modeling-door__cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: clamp(36px, 7vh, 72px) 0 0;
+  color: var(--room-bone-faint);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  animation: room-fade 1400ms var(--room-ease) 1900ms both;
+}
+
+.modeling-door__cue span {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(180deg, transparent, var(--room-brass));
+  animation: room-cue 2400ms var(--room-ease) infinite;
+  transform-origin: top;
+}
+
+@keyframes room-cue {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  35% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleY(1) translateY(18px);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   Ribbon field — sticky WebGL stage (or fallback column)
+   ------------------------------------------------------------ */
+
+.modeling-ribbons {
+  position: relative;
+  height: 230vh;
+}
+
+.modeling-ribbons__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.modeling-ribbons__field {
+  position: absolute;
+  inset: 0;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.modeling-ribbons__field:active {
+  cursor: grabbing;
+}
+
+.modeling-ribbons__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.modeling-ribbons__caption {
+  position: absolute;
+  right: clamp(18px, 3vw, 44px);
+  bottom: clamp(18px, 4vh, 40px);
+  z-index: 2;
+  text-align: right;
+  color: var(--room-bone-faint);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.modeling-ribbons__caption p {
+  margin: 0 0 0.35rem;
+}
+
+.modeling-ribbons__caption p:first-child {
+  color: var(--room-brass);
+}
+
+/* fallback column fills the sticky stage */
+.modeling-ribbons__sticky .modeling-fallback {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------
+   Fallback gallery (no WebGL / reduced motion / small screens)
+   ------------------------------------------------------------ */
+
+.modeling-fallback__column {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 4vh, 44px);
+  align-items: center;
+  max-height: 100%;
+  margin: 0;
+  padding: clamp(20px, 4vh, 48px) 24px;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: thin;
+}
+
+.modeling-fallback__frame {
+  position: relative;
+  width: min(560px, 86vw);
+  border: 1px solid var(--room-line);
+  padding: 10px;
+  background: rgba(12, 11, 10, 0.6);
+}
+
+.modeling-fallback__frame--1 {
+  transform: translateX(clamp(12px, 5vw, 72px)) rotate(0.4deg);
+}
+
+.modeling-fallback__frame--2 {
+  transform: translateX(calc(clamp(12px, 5vw, 72px) * -1)) rotate(-0.4deg);
+}
+
+.modeling-fallback__frame figure {
+  margin: 0;
+  position: relative;
+}
+
+.modeling-fallback__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.modeling-fallback__frame figcaption {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  color: var(--room-bone-faint);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+}
+
+/* ------------------------------------------------------------
+   Statement interlude
+   ------------------------------------------------------------ */
+
+.modeling-statement {
+  display: grid;
+  place-items: center;
+  padding: clamp(90px, 16vh, 180px) 24px;
+  text-align: center;
+}
+
+.modeling-statement p {
+  max-width: 30ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--room-bone-soft);
+  text-wrap: balance;
+}
+
+.modeling-statement em {
+  font-style: normal;
+  color: var(--room-brass);
+}
+
+/* ------------------------------------------------------------
+   Drift gallery — sticky horizontal walk
+   ------------------------------------------------------------ */
+
+.modeling-drift {
+  position: relative;
+  height: 250vh;
+}
+
+.modeling-drift__stage {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.modeling-drift__head {
+  padding: 0 clamp(24px, 6vw, 96px) clamp(24px, 4vh, 44px);
+}
+
+.modeling-drift__head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--room-bone);
+}
+
+.modeling-drift__track {
+  display: flex;
+  gap: clamp(28px, 4vw, 64px);
+  margin: 0;
+  padding: 0 clamp(24px, 6vw, 96px);
+  list-style: none;
+  will-change: transform;
+}
+
+.modeling-drift__frame {
+  position: relative;
+  flex: none;
+  width: clamp(300px, 42vw, 620px);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--room-line);
+  background: #0a0908;
+}
+
+.modeling-drift__print {
+  position: absolute;
+  inset: 0 -9%;
+  will-change: transform;
+}
+
+.modeling-drift__print img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modeling-drift__index {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  z-index: 2;
+  color: var(--room-bone);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* static variant: native horizontal scroll, no sticky theatre */
+.modeling-drift--static {
+  height: auto;
+}
+
+.modeling-drift--static .modeling-drift__stage {
+  position: static;
+  height: auto;
+  padding: clamp(70px, 10vh, 120px) 0;
+}
+
+.modeling-drift--static .modeling-drift__track {
+  overflow-x: auto;
+  padding-bottom: 18px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.modeling-drift--static .modeling-drift__frame {
+  scroll-snap-align: center;
+}
+
+.modeling-drift--static .modeling-drift__print {
+  inset: 0;
+}
+
+/* ------------------------------------------------------------
+   Contact sheet — proximity develop
+   ------------------------------------------------------------ */
+
+.modeling-sheet {
+  padding: clamp(80px, 12vh, 150px) clamp(24px, 6vw, 96px);
+}
+
+.modeling-sheet__head {
+  max-width: 560px;
+  margin-bottom: clamp(28px, 5vh, 52px);
+}
+
+.modeling-sheet__head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--room-bone);
+}
+
+.modeling-sheet__note {
+  margin: 0.9rem 0 0;
+  color: var(--room-bone-faint);
+  font-size: 0.85rem;
+}
+
+.modeling-sheet__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 14px;
+  list-style: none;
+  border: 1px solid var(--room-line);
+  background: rgba(10, 9, 8, 0.55);
+}
+
+.modeling-sheet__cell {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  filter: grayscale(1);
+  transition: filter 320ms var(--room-ease), transform 320ms var(--room-ease);
+  will-change: filter, transform;
+}
+
+.modeling-sheet__cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* hover fallback for touch / reduced motion */
+.modeling-sheet__cell:hover {
+  filter: grayscale(0);
+}
+
+/* ------------------------------------------------------------
+   Empty state — the Room before curation
+   ------------------------------------------------------------ */
+
+.modeling-empty {
+  display: grid;
+  place-items: center;
+  padding: clamp(60px, 10vh, 130px) 24px;
+}
+
+.modeling-empty__frame {
+  max-width: 640px;
+  padding: clamp(40px, 6vw, 72px);
+  text-align: center;
+  border: 1px solid var(--room-line);
+  outline: 1px solid rgba(184, 146, 90, 0.18);
+  outline-offset: 10px;
+  background: rgba(10, 9, 8, 0.6);
+}
+
+.modeling-empty__frame h2 {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--room-bone);
+}
+
+.modeling-empty__frame p {
+  margin: 0 0 1.8rem;
+  color: var(--room-bone-soft);
+  line-height: 1.7;
+}
+
+.modeling-empty__frame strong {
+  color: var(--room-brass);
+  letter-spacing: 0.08em;
+}
+
+/* ------------------------------------------------------------
+   Booking descent
+   ------------------------------------------------------------ */
+
+.modeling-cta {
+  padding: clamp(90px, 14vh, 170px) 24px clamp(110px, 16vh, 190px);
+  text-align: center;
+  background: radial-gradient(640px 320px at 50% 100%, rgba(184, 146, 90, 0.1), transparent 70%);
+}
+
+.modeling-cta h2 {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5.4vw, 4.4rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: var(--room-bone);
+}
+
+.modeling-cta > p {
+  margin: 0 auto;
+  max-width: 46ch;
+  color: var(--room-bone-soft);
+  line-height: 1.7;
+}
+
+.modeling-cta__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2.2rem;
+}
+
+.modeling-cta__button {
+  display: inline-block;
+  padding: 15px 38px;
+  border: 1px solid var(--room-brass);
+  color: var(--room-bone);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: linear-gradient(180deg, rgba(184, 146, 90, 0.16), rgba(184, 146, 90, 0.05));
+  transition: background 260ms var(--room-ease), color 260ms var(--room-ease), box-shadow 260ms var(--room-ease);
+}
+
+.modeling-cta__button:hover,
+.modeling-cta__button:focus-visible {
+  background: var(--room-brass);
+  color: #0a0705;
+  box-shadow: 0 12px 44px rgba(184, 146, 90, 0.26);
+}
+
+.modeling-cta__link {
+  color: var(--room-bone-faint);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid var(--room-line);
+  padding-bottom: 4px;
+  transition: color 200ms var(--room-ease), border-color 200ms var(--room-ease);
+}
+
+.modeling-cta__link:hover,
+.modeling-cta__link:focus-visible {
+  color: var(--room-bone);
+  border-color: var(--room-brass);
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .modeling-ribbons {
+    height: auto;
+  }
+
+  .modeling-ribbons__sticky {
+    position: static;
+    height: auto;
+    max-height: none;
+  }
+
+  .modeling-ribbons__sticky .modeling-fallback {
+    height: auto;
+  }
+
+  .modeling-fallback__column {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .modeling-drift {
+    height: auto;
+  }
+
+  .modeling-drift__stage {
+    position: static;
+    height: auto;
+    padding: clamp(60px, 9vh, 100px) 0;
+  }
+
+  .modeling-drift__track {
+    overflow-x: auto;
+    padding-bottom: 18px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+
+  .modeling-drift__frame {
+    width: min(78vw, 420px);
+    scroll-snap-align: center;
+  }
+
+  .modeling-drift__print {
+    inset: 0;
+    transform: none !important;
+  }
+
+  .modeling-sheet__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .modeling-door__kicker::before,
+  .modeling-door__kicker::after {
+    width: 20px;
+    margin: 0 8px;
+  }
+
+  .modeling-sheet__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ------------------------------------------------------------
+   Reduced motion — the Room stands still, fully lit
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modeling-door__title span,
+  .modeling-door__kicker,
+  .modeling-door__line,
+  .modeling-door__cue {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .modeling-door__cue span {
+    animation: none;
+    transform: scaleY(1);
+    opacity: 1;
+  }
+
+  .modeling-sheet__cell {
+    transition: none;
+    filter: grayscale(0.35);
+  }
+
+  .modeling-sheet__cell:hover,
+  .modeling-sheet__cell:focus-within {
+    filter: grayscale(0);
+  }
+
+  .modeling-room__grain {
+    display: none;
+  }
+}

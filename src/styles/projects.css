@@ -1,0 +1,748 @@
+/* ============================================================
+   PROJECTS — coming-soon exhibit
+   Owned by the Projects page. Tokens extend the dorvell system.
+   "The lab notebook, before the exhibit": graph-paper field,
+   one technical drawing of an empty frame, five reserved plates.
+   ============================================================ */
+
+.projects-route {
+  --lane-accent: var(--df-blue);
+  --proj-accent: var(--df-blue);
+  --proj-grid-line: rgba(248, 241, 231, 0.035);
+  --proj-grid-line-strong: rgba(248, 241, 231, 0.065);
+  --proj-ink: color-mix(in srgb, var(--df-text) 62%, transparent);
+  --proj-ink-soft: rgba(248, 241, 231, 0.4);
+  --proj-ink-faint: rgba(248, 241, 231, 0.55);
+  --proj-plate-bg: rgba(9, 12, 11, 0.55);
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+/* Graph-paper backdrop: minor + major grid, faded at page edges */
+.projects-route::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(720px 480px at 74% 6%, color-mix(in srgb, var(--proj-accent) 7%, transparent), transparent 70%),
+    linear-gradient(var(--proj-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--proj-grid-line) 1px, transparent 1px),
+    linear-gradient(var(--proj-grid-line-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--proj-grid-line-strong) 1px, transparent 1px);
+  background-size:
+    auto,
+    26px 26px,
+    26px 26px,
+    130px 130px,
+    130px 130px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 110px, #000 calc(100% - 180px), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 110px, #000 calc(100% - 180px), transparent 100%);
+}
+
+.proj-wrap {
+  width: min(1160px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------
+   Shared type
+   ------------------------------------------------------------ */
+
+.proj-kicker {
+  margin: 0 0 0.85rem;
+  color: var(--proj-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.proj-section-head {
+  max-width: 620px;
+  margin-bottom: clamp(30px, 4vw, 52px);
+}
+
+.proj-section-head__title {
+  margin: 0;
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  font-weight: 900;
+  line-height: 0.88;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.proj-section-head__note {
+  margin: 0.9rem 0 0;
+  color: var(--df-text-soft);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------
+   Reveal motion (CSS-only; fill-mode both so reduced-motion
+   1ms durations land on the visible end state)
+   ------------------------------------------------------------ */
+
+@keyframes proj-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.proj-reveal {
+  animation: proj-rise 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.proj-reveal--1 {
+  animation-delay: 60ms;
+}
+
+.proj-reveal--2 {
+  animation-delay: 140ms;
+}
+
+.proj-reveal--3 {
+  animation-delay: 230ms;
+}
+
+.proj-reveal--4 {
+  animation-delay: 320ms;
+}
+
+.proj-reveal--5 {
+  animation-delay: 420ms;
+}
+
+/* ------------------------------------------------------------
+   1. Hero
+   ------------------------------------------------------------ */
+
+.proj-hero {
+  padding-bottom: clamp(56px, 8vw, 104px);
+}
+
+.proj-hero__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.proj-hero__title {
+  margin: 0;
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: clamp(2.9rem, 6vw, 5.4rem);
+  font-weight: 900;
+  line-height: 0.82;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.proj-hero__lede {
+  max-width: 42ch;
+  margin: 1.3rem 0 0;
+  color: var(--df-text-soft);
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.proj-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 1.8rem;
+}
+
+.proj-hero__note {
+  margin: 1.4rem 0 0;
+  color: var(--df-muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Blueprint visual — frame under construction */
+
+.proj-hero__visual {
+  position: relative;
+}
+
+.proj-hero__visual::before {
+  content: "";
+  position: absolute;
+  inset: 4% 2%;
+  z-index: -1;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--proj-accent) 8%, transparent), transparent 78%);
+  pointer-events: none;
+}
+
+.proj-frame {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.proj-frame__outline {
+  fill: none;
+  stroke: var(--proj-ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 14 9;
+  animation: proj-dash-crawl 42s linear infinite;
+}
+
+@keyframes proj-dash-crawl {
+  to {
+    stroke-dashoffset: -138;
+  }
+}
+
+.proj-frame__corners path {
+  fill: none;
+  stroke: var(--df-line-strong);
+  stroke-width: 1.5;
+  animation: proj-fade 700ms ease both;
+}
+
+.proj-frame__corners path:nth-child(1) {
+  animation-delay: 480ms;
+}
+
+.proj-frame__corners path:nth-child(2) {
+  animation-delay: 580ms;
+}
+
+.proj-frame__corners path:nth-child(3) {
+  animation-delay: 680ms;
+}
+
+.proj-frame__corners path:nth-child(4) {
+  animation-delay: 780ms;
+}
+
+@keyframes proj-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.proj-frame__crosshair line,
+.proj-frame__crosshair circle {
+  fill: none;
+  stroke: var(--proj-accent);
+  stroke-width: 1.5;
+}
+
+/* pathLength=1 lines/rings draw themselves in once */
+.proj-frame__draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: proj-draw 800ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both;
+}
+
+.proj-frame__draw--late {
+  animation-delay: 420ms;
+}
+
+.proj-frame__draw--ring {
+  animation-delay: 600ms;
+  animation-duration: 950ms;
+}
+
+@keyframes proj-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.proj-frame__dot {
+  fill: var(--proj-accent);
+  stroke: none;
+  animation: proj-fade 500ms ease 1000ms both;
+}
+
+.proj-frame__dims path {
+  fill: none;
+  stroke: var(--proj-ink-soft);
+  stroke-width: 1;
+}
+
+.proj-frame__dims,
+.proj-frame__label--dim {
+  animation: proj-fade 800ms ease 1050ms both;
+}
+
+.proj-frame__label {
+  fill: var(--proj-ink-faint);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.proj-frame__annos {
+  animation: proj-fade 800ms ease 1300ms both;
+}
+
+.proj-frame__leader {
+  fill: none;
+  stroke: var(--proj-ink-soft);
+  stroke-width: 1;
+}
+
+.proj-frame__block {
+  animation: proj-fade 800ms ease 1200ms both;
+}
+
+.proj-frame__block rect,
+.proj-frame__block path {
+  fill: none;
+  stroke: var(--proj-ink-soft);
+  stroke-width: 1;
+}
+
+.proj-frame__block .proj-frame__label {
+  font-size: 10px;
+}
+
+/* Stamp */
+
+.proj-stamp {
+  position: absolute;
+  top: 7%;
+  right: 3%;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  padding: 10px 18px 12px;
+  border: 2px solid color-mix(in srgb, var(--proj-accent) 68%, transparent);
+  border-radius: 4px;
+  color: color-mix(in srgb, var(--proj-accent) 86%, var(--df-text));
+  background: color-mix(in srgb, var(--proj-accent) 7%, transparent);
+  transform: rotate(-8deg);
+  animation: proj-stamp 460ms cubic-bezier(0.16, 1, 0.3, 1) 1600ms both;
+}
+
+.proj-stamp::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed color-mix(in srgb, var(--proj-accent) 42%, transparent);
+  border-radius: 2px;
+}
+
+.proj-stamp__label {
+  font-family: var(--font-display);
+  font-size: clamp(0.98rem, 1.4vw, 1.22rem);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.proj-stamp__meta {
+  color: color-mix(in srgb, var(--proj-accent) 62%, var(--df-text-soft));
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@keyframes proj-stamp {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) scale(1.32);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+
+/* ------------------------------------------------------------
+   2. Future index — reserved gallery placards
+   ------------------------------------------------------------ */
+
+.proj-index {
+  padding-block: clamp(48px, 7vw, 96px);
+}
+
+.proj-index__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.proj-plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  grid-column: span 2;
+  min-height: 200px;
+  padding: 20px 20px 24px;
+  border: 1px solid var(--df-line);
+  background: var(--proj-plate-bg);
+  animation: proj-rise 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color var(--df-fast), background var(--df-fast);
+}
+
+.proj-plate:nth-child(4),
+.proj-plate:nth-child(5) {
+  grid-column: span 3;
+}
+
+.proj-plate:nth-child(1) {
+  animation-delay: 340ms;
+}
+
+.proj-plate:nth-child(2) {
+  animation-delay: 420ms;
+}
+
+.proj-plate:nth-child(3) {
+  animation-delay: 500ms;
+}
+
+.proj-plate:nth-child(4) {
+  animation-delay: 580ms;
+}
+
+.proj-plate:nth-child(5) {
+  animation-delay: 660ms;
+}
+
+/* corner mark that shifts on hover */
+.proj-plate::after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 11px;
+  height: 11px;
+  border-top: 1px solid var(--df-line-strong);
+  border-right: 1px solid var(--df-line-strong);
+  transition: transform var(--df-fast), border-color var(--df-fast);
+}
+
+.proj-plate:hover {
+  border-color: color-mix(in srgb, var(--proj-accent) 55%, var(--df-line));
+  background: color-mix(in srgb, var(--proj-accent) 4%, var(--proj-plate-bg));
+}
+
+.proj-plate:hover::after {
+  border-color: var(--proj-accent);
+  transform: translate(3px, -3px);
+}
+
+.proj-plate__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: auto;
+  padding-bottom: 26px;
+}
+
+.proj-plate__index {
+  color: var(--df-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.14em;
+  transition: color var(--df-fast);
+}
+
+.proj-plate:hover .proj-plate__index {
+  color: var(--proj-accent);
+}
+
+.proj-plate__tag {
+  padding: 3px 9px 4px;
+  border: 1px solid color-mix(in srgb, var(--proj-accent) 44%, transparent);
+  border-radius: 3px;
+  color: color-mix(in srgb, var(--proj-accent) 82%, var(--df-text));
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.proj-plate__name {
+  margin: 0;
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: clamp(1.24rem, 1.7vw, 1.56rem);
+  font-weight: 900;
+  line-height: 0.94;
+  text-transform: uppercase;
+}
+
+.proj-plate__note {
+  margin: 0.65rem 0 0;
+  color: var(--df-text-soft);
+  font-size: 0.87rem;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------
+   3. Process strip
+   ------------------------------------------------------------ */
+
+.proj-process {
+  padding-block: clamp(18px, 3vw, 36px);
+}
+
+.proj-process__band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 4vw, 56px);
+  align-items: flex-start;
+  padding-block: clamp(26px, 3.4vw, 40px);
+  border-top: 1px solid var(--df-line);
+  border-bottom: 1px solid var(--df-line);
+}
+
+.proj-process__title {
+  margin: 0;
+  padding-top: 14px;
+  color: var(--df-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.proj-process__steps {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: clamp(20px, 4vw, 64px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.proj-process__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 14px;
+}
+
+/* measurement ticks */
+.proj-process__step::before {
+  content: "";
+  width: 34px;
+  height: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--proj-accent) 72%, transparent) 0 2px,
+    transparent 2px 8px
+  );
+}
+
+.proj-process__step-index {
+  color: var(--df-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+}
+
+.proj-process__step-name {
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.proj-process__note {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--df-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------
+   4. Closing CTA
+   ------------------------------------------------------------ */
+
+.proj-closing {
+  padding-block: clamp(48px, 7vw, 96px) clamp(12px, 2vw, 24px);
+}
+
+.proj-closing__frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  align-items: center;
+  padding: clamp(48px, 7vw, 88px) 24px;
+  border: 1px solid var(--df-line);
+  text-align: center;
+}
+
+.proj-closing__frame::before,
+.proj-closing__frame::after {
+  content: "";
+  position: absolute;
+  width: 26px;
+  height: 26px;
+}
+
+.proj-closing__frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--proj-accent);
+  border-left: 2px solid var(--proj-accent);
+}
+
+.proj-closing__frame::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid var(--proj-accent);
+  border-bottom: 2px solid var(--proj-accent);
+}
+
+.proj-closing__line {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+
+@media (max-width: 960px) {
+  .proj-hero__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+  }
+
+  .proj-hero__visual {
+    max-width: min(560px, 100%);
+    margin-inline: auto;
+  }
+
+  .proj-index__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .proj-plate,
+  .proj-plate:nth-child(4) {
+    grid-column: span 1;
+  }
+
+  .proj-plate:nth-child(5) {
+    grid-column: span 2;
+  }
+
+  .proj-plate {
+    min-height: 176px;
+  }
+
+  .proj-process__band {
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .proj-process__title {
+    padding-top: 0;
+  }
+
+  .proj-process__steps {
+    flex-direction: column;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .proj-wrap {
+    width: calc(100% - 36px);
+  }
+
+  .proj-index__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .proj-plate,
+  .proj-plate:nth-child(4),
+  .proj-plate:nth-child(5) {
+    grid-column: span 1;
+    min-height: 0;
+  }
+
+  .proj-plate__row {
+    padding-bottom: 20px;
+  }
+
+  .proj-stamp {
+    padding: 8px 13px 9px;
+  }
+
+  .proj-stamp__meta {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   Reduced motion — global dorvell.css forces 1ms durations;
+   fill-mode: both above already lands on end states. Delays are
+   zeroed here so nothing waits invisible, and the infinite dash
+   crawl is stopped outright.
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .projects-route .proj-reveal,
+  .projects-route .proj-plate,
+  .projects-route .proj-stamp,
+  .projects-route .proj-frame__corners path,
+  .projects-route .proj-frame__draw,
+  .projects-route .proj-frame__dot,
+  .projects-route .proj-frame__dims,
+  .projects-route .proj-frame__label--dim,
+  .projects-route .proj-frame__annos,
+  .projects-route .proj-frame__block {
+    animation-delay: 0ms !important;
+  }
+
+  .projects-route .proj-frame__outline {
+    animation: none;
+  }
+}

@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type CSSProperties, type FormEvent } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import type { DorvellManual } from "@/content/dorvell.manual";
 import { buildGalleryLanes } from "@/lib/gallery-lanes";
@@ -22,6 +23,26 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
   const lanes = buildGalleryLanes(images);
   const [draftStatus, setDraftStatus] = useState("");
   const [draftHref, setDraftHref] = useState("");
+  const [copied, setCopied] = useState(false);
+  const copyResetRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyResetRef.current !== null) window.clearTimeout(copyResetRef.current);
+    };
+  }, []);
+
+  const copyEmailAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      if (copyResetRef.current !== null) window.clearTimeout(copyResetRef.current);
+      copyResetRef.current = window.setTimeout(() => setCopied(false), 2400);
+    } catch {
+      // Clipboard unavailable — the address is visible right above the button.
+      setCopied(false);
+    }
+  };
 
   const createEmailDraft = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,7 +68,7 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
     const href = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setDraftHref(href);
     window.location.href = href;
-    setDraftStatus("Email draft prepared. Use the link below if your mail app did not open.");
+    setDraftStatus("Draft ready. If your mail app did not open, use the button below or copy the address.");
   };
 
   return (
@@ -79,16 +100,22 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
           <a className="button-secondary" href={`tel:${profile.phone.replace(/[^0-9+]/g, "")}`}>
             {profile.phone}
           </a>
+          <button className="contact-copy-email" type="button" onClick={copyEmailAddress}>
+            {copied ? "Copied" : "Copy email address"}
+          </button>
+          <span aria-live="polite" className="sr-only">
+            {copied ? "Email address copied to clipboard." : ""}
+          </span>
         </div>
         {lanes.length > 0 ? (
           <div className="contact-lane-strip" aria-label="Gallery lanes">
             {lanes.map((lane) => {
               const preview = lane.images[0];
               return (
-                <a
+                <Link
                   key={lane.key}
                   className="contact-lane-chip"
-                  href={`/#${lane.slug}`}
+                  href={`/work#${lane.slug}`}
                   style={{ "--lane-accent": lane.accent } as CSSProperties}
                 >
                   {preview ? (
@@ -101,7 +128,7 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
                     />
                   ) : null}
                   <span>{lane.label}</span>
-                </a>
+                </Link>
               );
             })}
           </div>
@@ -114,18 +141,22 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
         <div className="form-header full">
           <span>Creative brief</span>
           <strong>Give the shoot a shape before the first frame.</strong>
+          <p className="form-helper">
+            Submitting opens your email app with a prepared message — or copy the details from the contact paths on
+            the left.
+          </p>
         </div>
         <label>
           <span>Name</span>
-          <input name="name" required />
+          <input name="name" autoComplete="name" required />
         </label>
         <label>
           <span>Email</span>
-          <input name="email" type="email" required />
+          <input name="email" type="email" autoComplete="email" inputMode="email" required />
         </label>
         <label>
           <span>Phone optional</span>
-          <input name="phone" type="tel" />
+          <input name="phone" type="tel" autoComplete="tel" inputMode="tel" />
         </label>
         <label>
           <span>Inquiry Type</span>
@@ -153,14 +184,14 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
         </label>
         <label className="full">
           <span>Inspiration Link</span>
-          <input name="inspiration" type="url" />
+          <input name="inspiration" type="url" inputMode="url" />
         </label>
         <button type="submit">Create email draft</button>
         {draftStatus ? (
           <p className="form-status" role="status">
             <span>{draftStatus}</span>
             {draftHref ? (
-              <a href={draftHref}>
+              <a className="form-status__open" href={draftHref}>
                 Open prepared email
               </a>
             ) : null}

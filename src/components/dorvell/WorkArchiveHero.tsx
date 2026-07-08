@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import type { DorvellImage, DorvellSiteContent } from "@/content/dorvell.schema";
+import type { DorvellImage } from "@/content/dorvell.schema";
 import { buildGalleryLanes } from "@/lib/gallery-lanes";
 import { blurImageProps, imageAlt } from "@/lib/images";
 
@@ -10,13 +10,13 @@ function formatCount(count: number) {
 
 export function WorkArchiveHero({
   images,
-  summary,
+  projectCount,
 }: {
   images: DorvellImage[];
-  summary?: DorvellSiteContent["scrapeSummary"];
+  projectCount?: number;
 }) {
   const lanes = buildGalleryLanes(images);
-  const totalFrames = summary?.imagesDownloaded ?? images.length;
+  const totalFrames = images.length;
   const heroImage = lanes[3]?.images[0] ?? lanes[0]?.images[0] ?? images[0];
   const reel = lanes.flatMap((lane) => lane.images.slice(0, 4).map((image) => ({ lane, image })));
 
@@ -38,10 +38,12 @@ export function WorkArchiveHero({
             <strong>{lanes.length}</strong>
             lanes
           </span>
-          <span>
-            <strong>01</strong>
-            cursor map
-          </span>
+          {projectCount ? (
+            <span>
+              <strong>{projectCount}</strong>
+              exhibits
+            </span>
+          ) : null}
         </div>
         <a className="button-primary" href="#archive">
           Enter the archive
