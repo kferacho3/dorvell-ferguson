@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment, type CSSProperties } from "react";
 import { aboutClosing } from "@/content/about.data";
 import { getSocialLinks } from "@/lib/social-links";
 import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
@@ -10,15 +11,26 @@ import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
  * carries @fergphotography + LinkedIn). Server component.
  */
 export function AboutClosing() {
+  const words = aboutClosing.headline.split(" ");
+
   return (
-    <section className="about-block about-closing">
+    <section className="about-block about-closing" data-focus>
       <div className="about-closing__ghost" aria-hidden="true">
         {aboutClosing.ghost}
       </div>
 
       <p className="about-eyebrow">{aboutClosing.eyebrow}</p>
-      <h2 className="about-closing__headline" data-reveal>
-        {aboutClosing.headline}
+      <h2 className="about-closing__headline" data-reveal-group aria-label={aboutClosing.headline}>
+        <span aria-hidden="true">
+          {words.map((word, index) => (
+            <Fragment key={`${word}-${index}`}>
+              <span className="about-closing__word" style={{ "--wi": index } as CSSProperties}>
+                {word}
+              </span>
+              {index < words.length - 1 ? " " : ""}
+            </Fragment>
+          ))}
+        </span>
       </h2>
       <p className="about-closing__body">{aboutClosing.body}</p>
 

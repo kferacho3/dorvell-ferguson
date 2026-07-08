@@ -33,6 +33,11 @@ export default function AboutPage() {
   const portrait = pickHeroPortrait(images);
   if (portrait) used.add(portrait.id);
   const plates = aboutRoles.map((role) => pickByCategory(images, role.plateCategory, used, 1)[0]);
+  // Skill-panel plates keyed to each cluster's real source (Freelance /
+  // Troy University / Blue Fish / Freelance workflow).
+  const skillPlates = ["Portraits", "Athletics", "Music", "Fashion"].map(
+    (category) => pickByCategory(images, category, used, 1)[0],
+  );
   const trailerImages = pickTrailerImages(images, used, 6);
 
   return (
@@ -43,7 +48,7 @@ export default function AboutPage() {
         <AboutPointOfView />
         <AboutRoleTriptych plates={plates} />
         <AboutTimeline />
-        <AboutSkills />
+        <AboutSkills plates={skillPlates} />
         <AboutPhilosophy />
         <AboutCredits />
         <AboutClosing />

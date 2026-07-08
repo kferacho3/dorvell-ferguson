@@ -13,10 +13,10 @@ export function AboutPointOfView() {
   const words = pointOfView.headline.split(" ");
 
   return (
-    <section className="about-block about-pov">
+    <section className="about-block about-pov" data-read>
       <div className="about-pov__head">
         <span className="about-pov__counter">.{pointOfView.counter}</span>
-        <h2 className="about-pov__headline" data-reveal-group>
+        <h2 className="about-pov__headline" data-reveal-group style={{ "--words": words.length } as CSSProperties}>
           {words.map((word, index) => (
             <Fragment key={`${word}-${index}`}>
               <span className="about-word" style={{ "--wi": index } as CSSProperties}>

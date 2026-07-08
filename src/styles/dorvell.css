@@ -12871,6 +12871,16 @@ section,
   color: var(--lane-accent);
 }
 
+.about-skill__source {
+  margin: 4px 0 0;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--df-muted);
+}
+
 .about-skill__desc {
   margin: 8px 0 18px;
   font-size: 0.92rem;
@@ -13205,5 +13215,429 @@ section,
   }
   .about-hero__trailer {
     display: none !important;
+  }
+}
+
+/* =====================================================================
+   ABOUT PAGE — ELEVATION PASS
+   Scrubbed typography + layered motion. Native only; scroll vars written
+   by AboutRevealController (--about-scroll, --focus, --parallax, --read,
+   --about-veln/--about-velna). Later rules override the base About block by
+   cascade order. New reduced-motion allowlist at the very end of this file.
+   ===================================================================== */
+
+.about-route {
+  --about-inout: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --about-back: cubic-bezier(0.34, 1.8, 0.64, 1);
+  font-synthesis: none;
+}
+
+/* ---------- 1 · kinetic route-entry overlay (scoped to hero) ---------- */
+.about-enter {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  animation: aboutEnterFade 1500ms var(--about-ease) forwards;
+}
+
+.about-enter__plate {
+  position: absolute;
+  inset: 0;
+  background: var(--df-bg);
+  animation: aboutEnterPlate 640ms var(--about-ease) forwards;
+}
+
+.about-enter__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transform: scale(2.7) rotate(-6deg);
+  animation: aboutEnterField 1400ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.about-enter__line {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(7rem, 18.75vh, 15rem);
+  line-height: 0.74;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--df-text) 6%, transparent);
+  transform: translateX(calc((var(--i) - 2) * 9%));
+  animation: aboutEnterLine 1400ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: calc(var(--i) * 40ms);
+}
+
+@keyframes aboutEnterField {
+  to {
+    transform: scale(1) rotate(0deg);
+  }
+}
+@keyframes aboutEnterLine {
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes aboutEnterPlate {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes aboutEnterFade {
+  0%,
+  72% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ---------- hero: name mask-up, demoted line 2, skewed Jr, depth planes ---------- */
+.about-hero__name .about-hero__line {
+  overflow: hidden;
+  opacity: 1;
+  filter: none;
+  transform: none;
+  animation: none;
+}
+
+.about-hero__line-inner {
+  display: block;
+  transform: translateY(112%);
+  animation: aboutLineRise 1100ms var(--about-ease) forwards;
+  animation-delay: calc(var(--i) * 90ms + 540ms);
+}
+
+@keyframes aboutLineRise {
+  to {
+    transform: translateY(0);
+  }
+}
+
+.about-hero__name .about-hero__line--sub {
+  font-weight: 500;
+  font-size: 0.62em;
+  letter-spacing: 0.04em;
+}
+
+.about-hero__name .about-hero__line:last-child {
+  color: var(--df-text);
+}
+
+.about-hero__jr {
+  display: inline-block;
+  transform: skewX(-9deg);
+  color: var(--lane-accent);
+}
+
+.about-hero__ghost {
+  transform: translate3d(calc(var(--about-scroll, 0) * 0.02px), calc(var(--about-scroll, 0) * -0.05px), 0);
+}
+
+.about-hero__portrait {
+  transform: translate3d(0, calc(var(--about-scroll, 0) * -0.09px), 0);
+  clip-path: inset(0 0 100% 0);
+  animation: aboutPortraitReveal 1150ms var(--about-ease) 620ms forwards;
+}
+
+@keyframes aboutPortraitReveal {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.about-hero__portrait img {
+  transform: scale(calc(1.12 - 0.08 * var(--focus, 0)));
+  transition: transform 700ms var(--about-ease);
+}
+
+/* ---------- 2 · Point of View — scrubbed read-along + drop cap ---------- */
+.about-pov__headline .about-word {
+  --edge: calc(var(--read, 1) * (var(--words, 8) + 3) - var(--wi, 0));
+  --lit: clamp(0, var(--edge), 1);
+  color: color-mix(in srgb, var(--df-text) calc(var(--lit) * 100%), color-mix(in srgb, var(--df-text) 24%, transparent));
+}
+
+.about-pov__body p:not(.about-pov__attr) {
+  filter: blur(10px);
+  transition-delay: calc(var(--reveal-i, 0) * 90ms);
+}
+
+.about-pov__body p:first-child::first-letter {
+  float: left;
+  margin: 0.04em 0.1em 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 2.4em;
+  line-height: 0.72;
+  color: var(--lane-accent);
+}
+
+/* ---------- 3 · Roles — clip wipe + 3-plane parallax + accent skew ---------- */
+.about-role {
+  contain: paint;
+}
+
+.about-role__plate {
+  clip-path: inset(102% 0 0 0);
+  transition: clip-path 1150ms var(--about-ease);
+  transition-delay: calc(var(--reveal-i, 0) * 90ms);
+}
+
+.about-role.is-in-view .about-role__plate {
+  clip-path: inset(0 0 0 0);
+}
+
+.about-role__plate img {
+  transform: translate3d(0, calc(var(--parallax, 0) * 26px), 0) scale(calc(1.14 - 0.14 * var(--focus, 0)));
+  transition: filter 900ms var(--about-ease), opacity 520ms var(--about-ease);
+}
+
+.about-role__title .about-role__accent {
+  display: inline-block;
+  transform: skewX(-8deg);
+}
+
+.about-role__meta {
+  transform: translate3d(0, calc(var(--parallax, 0) * -6px), 0);
+}
+
+/* ---------- 4 · Timeline — self-drawing spine + bold gold numerals ---------- */
+.about-timeline__list {
+  position: relative;
+  padding-left: clamp(14px, 2vw, 26px);
+}
+
+.about-timeline__spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--lane-accent), transparent);
+  transform: scaleY(var(--read, 1));
+  transform-origin: top;
+  opacity: 0.7;
+}
+
+.about-timeline__index {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  color: color-mix(in srgb, var(--lane-accent) 42%, transparent);
+}
+
+/* ---------- 5 · Skills — duotone focus plates + chip cascade + numeral ---------- */
+.about-skill {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-skill__plate {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.about-skill__plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.12;
+  filter: grayscale(1) blur(calc((1 - var(--focus, 0)) * 6px));
+  transform: scale(calc(1.08 - 0.08 * var(--focus, 0)));
+  mix-blend-mode: luminosity;
+  transition: opacity 520ms var(--about-ease), filter 520ms var(--about-ease);
+}
+
+.about-skill:hover .about-skill__plate img {
+  opacity: 0.26;
+  filter: grayscale(0.35) blur(0);
+}
+
+.about-skill__index {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 3vw, 3rem);
+  color: color-mix(in srgb, var(--df-text) 9%, transparent);
+}
+
+.about-skill__chips li {
+  opacity: 0;
+  transform: translateY(16px) scale(0.86) rotate(var(--cr, 0deg)) translateX(var(--cx, 0px));
+  transition: opacity 520ms var(--about-back), transform 520ms var(--about-back);
+  transition-delay: calc(var(--ci, 0) * 55ms);
+}
+
+.about-skill__chips.is-in-view li {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- 6 · Philosophy — per-letter velocity bend + hierarchy ---------- */
+.about-philosophy__line--muted {
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  color: var(--df-text-soft);
+}
+
+.about-philosophy__line--kinetic {
+  font-weight: 900;
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  color: var(--lane-accent);
+  transform: scaleY(clamp(1, calc(1 + var(--about-velna, 0) * 0.3), 1.2));
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.about-phil__char {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 620ms var(--about-ease), filter 620ms var(--about-ease);
+  transition-delay: calc(var(--ci, 0) * 26ms);
+  transform: translate3d(0, calc(var(--cf, 0) * var(--about-veln, 0) * -34px), 0) rotate(calc(var(--cs, 0) * var(--cf, 0) * var(--about-veln, 0) * 7deg));
+  will-change: transform;
+}
+
+.about-philosophy__line--kinetic.is-in-view .about-phil__char {
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* ---------- 7 · Closing — word-split bookend + ghost settle + mirrored band ---------- */
+.about-closing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(-118deg, transparent 0 46%, color-mix(in srgb, var(--lane-accent) 12%, transparent) 46% 54%, transparent 54%);
+}
+
+.about-closing__ghost {
+  transform: translate3d(0, calc(var(--about-scroll, 0) * -0.03px), 0) scale(calc(0.9 + 0.1 * var(--focus, 0)));
+  opacity: calc(0.03 + 0.05 * var(--focus, 0));
+}
+
+.about-closing__word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em) scale(1.06);
+  filter: blur(10px);
+  transition: opacity 900ms var(--about-ease), transform 900ms var(--about-ease), filter 900ms var(--about-ease);
+  transition-delay: calc(var(--wi, 0) * 70ms);
+}
+
+.about-closing__headline.is-in-view .about-closing__word {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.about-closing__headline .about-closing__word:last-child {
+  color: color-mix(in srgb, var(--df-text) 62%, var(--lane-accent));
+}
+
+/* ---------- 8 · Credits — mask-reveal names + self-drawing rule ---------- */
+.about-credit {
+  border-top: none;
+  position: relative;
+}
+
+.about-credit::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--df-line);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 620ms var(--about-ease);
+  transition-delay: calc(var(--reveal-i, 0) * 90ms + 120ms);
+}
+
+.about-credit.is-in-view::before {
+  transform: scaleX(1);
+}
+
+.about-credit__mask {
+  display: block;
+  overflow: hidden;
+}
+
+.about-credit__name {
+  display: inline-block;
+  transform: translateY(106%);
+  transition: transform 720ms var(--about-ease);
+  transition-delay: calc(var(--reveal-i, 0) * 90ms);
+}
+
+.about-credit.is-in-view .about-credit__name {
+  transform: translateY(0);
+}
+
+.about-credit__detail,
+.about-credit__label {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 620ms var(--about-ease), transform 620ms var(--about-ease);
+  transition-delay: calc(var(--reveal-i, 0) * 90ms + 160ms);
+}
+
+.about-credit.is-in-view .about-credit__detail,
+.about-credit.is-in-view .about-credit__label {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===================== reduced-motion allowlist (ELEVATION) ===================== */
+@media (prefers-reduced-motion: reduce) {
+  .about-enter {
+    display: none !important;
+  }
+  .about-hero__line-inner,
+  .about-hero__portrait,
+  .about-hero__portrait img,
+  .about-hero__ghost,
+  .about-closing__ghost,
+  .about-closing__word,
+  .about-phil__char,
+  .about-philosophy__line--kinetic,
+  .about-role__plate,
+  .about-role__plate img,
+  .about-role__meta,
+  .about-timeline__spine,
+  .about-skill__plate img,
+  .about-skill__chips li,
+  .about-credit__name,
+  .about-pov__headline .about-word {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+    clip-path: none !important;
+  }
+  .about-credit::before {
+    transform: scaleX(1) !important;
+    transition: none !important;
+  }
+  .about-credit__detail,
+  .about-credit__label {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

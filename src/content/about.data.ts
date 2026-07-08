@@ -43,6 +43,8 @@ export type TimelineItem = {
 
 export type SkillGroup = {
   label: string;
+  /** Where these skills were built — attributed to real LinkedIn roles. */
+  source: string;
   description: string;
   items: string[];
 };
@@ -148,7 +150,7 @@ export const aboutTimeline: TimelineItem[] = [
     org: "Blue Fish",
     era: "Editorial",
     blurb: "Expanded into editorial storytelling, digital strategy, advertising, social media, website building, and image editing.",
-    proof: "needsVerification", // client-provided; not yet in repo manual
+    proof: "verified", // confirmed via LinkedIn
   },
   {
     title: "Freelance Professional Photographer",
@@ -162,7 +164,7 @@ export const aboutTimeline: TimelineItem[] = [
     org: "Concert coverage",
     era: "Ybor City · Cuban Club",
     blurb: "Concert-photo coverage connected to Trippie Redd, RiFF RAFF, and Waka Flocka Flame at Ybor City's Cuban Club.",
-    proof: "needsVerification", // client-provided; cltampa.com article 403'd the crawler
+    proof: "verified", // client-confirmed credit (cltampa.com article blocks crawlers, 403)
   },
 ];
 
@@ -171,26 +173,32 @@ export const aboutTimeline: TimelineItem[] = [
 export const skillsMicrocopy =
   "A cross-discipline toolkit for images that need to work as art, documentation, marketing, and identity.";
 
+// Grouped by the real LinkedIn source (Freelance / Troy University / Blue Fish);
+// Walmart distribution skills (forklift, heavy-lift, etc.) are intentionally omitted.
 export const skillGroups: SkillGroup[] = [
   {
-    label: "Photography Craft",
+    label: "Freelance Photography",
+    source: "Professional Photographer · Freelance",
     description: "The shooting disciplines, from a controlled studio to a moving crowd.",
-    items: ["Studio & lighting", "Portrait & headshot", "Concert photography", "Sports & athletic", "Event coverage", "Fashion editorial"],
+    items: ["Studio Photography", "Studio Lighting", "Portrait Photography", "Concert Photography", "Sports Photography", "Photography"],
   },
   {
-    label: "Editing & Post",
-    description: "Where a captured moment gains its second dimension.",
-    items: ["Adobe Lightroom", "Adobe Photoshop", "Adobe InDesign", "Image retouching", "Video editing", "Premiere · CapCut"],
+    label: "University Photographer",
+    source: "Troy University",
+    description: "Athletics, campus life, headshots, and events on assignment.",
+    items: ["Athletic Photography", "Event Photography", "Headshot Photography", "Image Editing", "Organization"],
   },
   {
-    label: "Journalism & Media",
+    label: "Photojournalism & Media",
+    source: "Photojournalist · Blue Fish",
     description: "A story-first eye trained to move images across platforms.",
-    items: ["Photojournalism", "Digital strategy", "Advertising", "Social media marketing", "Website building", "Content delivery"],
+    items: ["Photojournalism", "Digital Strategy", "Advertising", "Social Media Marketing", "Website Building"],
   },
   {
-    label: "Direction & Delivery",
-    description: "Turning a concept into on-set direction and finished frames.",
-    items: ["Shoot direction", "Creative direction", "Organized & efficient", "Team collaboration", "Client-ready delivery", "Deadline-driven"],
+    label: "Post-production & Tools",
+    source: "Freelance workflow",
+    description: "Where a captured moment gains its second dimension.",
+    items: ["Adobe Lightroom", "Adobe Photoshop", "Video Editing", "Mac proficiency", "Social Media"],
   },
 ];
 
@@ -209,7 +217,7 @@ export const proofPoints: ProofPoint[] = [
     name: "Creative Loafing Tampa",
     detail: "Concert coverage — Trippie Redd, RiFF RAFF & Waka Flocka Flame, Ybor City's Cuban Club.",
     label: "Press / Music",
-    proof: "needsVerification",
+    proof: "verified", // client-confirmed (cltampa.com blocks crawlers)
   },
   {
     name: "Shoutout Atlanta",
@@ -227,7 +235,7 @@ export const proofPoints: ProofPoint[] = [
     name: "Blue Fish",
     detail: "Photojournalism, digital strategy, and editorial image-making.",
     label: "Editorial",
-    proof: "needsVerification",
+    proof: "verified",
   },
   {
     name: "Freelance",

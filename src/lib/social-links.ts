@@ -5,10 +5,11 @@ import { dorvellManual } from "@/content/dorvell.manual";
  * Portfolio, footer, nav). Single source of truth — derive from the manual so
  * the handles never drift out of sync.
  *
- * TikTok resolves from a verified env override ONLY. The client has confirmed
- * there is no live TikTok presence, so it is never guessed from a handle: if
- * `NEXT_PUBLIC_DORVELL_TIKTOK_URL` is unset the value is `null` and TikTok is
- * omitted everywhere it would render (no broken link ever ships).
+ * TikTok resolves from an env override first, then the verified @2kferg handle
+ * in the manual (the live creator feed embeds successfully on the landing
+ * page). A `NEXT_PUBLIC_DORVELL_TIKTOK_URL` env value can point it elsewhere;
+ * if the manual handle is ever cleared it falls back to `null` and TikTok is
+ * omitted everywhere it would render (no broken link ships).
  */
 const { profile } = dorvellManual;
 
@@ -19,7 +20,7 @@ export const socialLinks = {
   linkedin: profile.linkedin,
   instagramPhotography: instagramPhotographyUrl,
   instagramPersonal: instagramPersonalUrl,
-  tiktok: process.env.NEXT_PUBLIC_DORVELL_TIKTOK_URL ?? null,
+  tiktok: process.env.NEXT_PUBLIC_DORVELL_TIKTOK_URL ?? profile.tiktok ?? null,
 } as const;
 
 export type SocialKey = "linkedin" | "instagramPhotography" | "instagramPersonal" | "tiktok";

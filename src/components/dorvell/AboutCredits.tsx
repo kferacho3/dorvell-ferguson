@@ -19,11 +19,13 @@ export function AboutCredits() {
         {proofPoints.map((point, index) => (
           <li
             className="about-credit"
-            data-reveal
+            data-reveal-group
             key={point.name}
             style={{ "--reveal-i": index } as CSSProperties}
           >
-            <span className="about-credit__name">{point.name}</span>
+            <span className="about-credit__mask">
+              <span className="about-credit__name">{point.name}</span>
+            </span>
             <span
               className={
                 point.proof === "needsVerification"

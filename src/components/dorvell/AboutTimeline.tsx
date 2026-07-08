@@ -10,17 +10,19 @@ import { aboutTimeline } from "@/content/about.data";
  */
 export function AboutTimeline() {
   return (
-    <section className="about-block about-timeline">
+    <section className="about-block about-timeline" data-read>
       <div className="about-roles__head">
         <p className="about-eyebrow">Proof of work</p>
         <h2 className="about-roles__title">A record, not a résumé.</h2>
       </div>
 
       <ol className="about-timeline__list">
+        <span className="about-timeline__spine" aria-hidden="true" />
         {aboutTimeline.map((item, index) => (
           <li
             className="about-timeline__row"
             data-reveal
+            data-focus
             key={item.title}
             style={{ "--reveal-i": index } as CSSProperties}
           >
