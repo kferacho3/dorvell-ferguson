@@ -264,65 +264,155 @@
    MODE SWITCH
    ======================================================================= */
 .pf-modeswitch {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 5px;
-  border: 1px solid var(--pf-edge);
-  border-radius: 999px;
-  background: rgba(10, 13, 11, 0.72);
-  backdrop-filter: blur(10px);
+  display: grid;
+  gap: 8px;
 }
 .pf-modeswitch__btn {
   position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  padding: 8px 15px;
-  min-height: 44px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 13px 16px;
+  min-height: 58px;
+  overflow: hidden;
+  border: 1px solid var(--pf-edge);
+  border-radius: var(--pf-radius);
+  background: rgba(255, 255, 255, 0.028);
   color: var(--df-text-soft);
-  transition: color var(--df-fast), background var(--df-fast);
+  transition: color var(--df-fast), border-color var(--df-fast), background var(--df-fast), transform var(--df-fast);
 }
-.pf-modeswitch__btn strong {
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
+/* Accent rail that grows on hover/active — makes each segment feel deliberate. */
+.pf-modeswitch__btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--df-teal);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--df-fast);
 }
-.pf-modeswitch__btn small {
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+.pf-modeswitch__btn:hover::before,
+.pf-modeswitch__btn:focus-visible::before {
+  transform: scaleY(1);
+}
+.pf-modeswitch__index {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--df-muted);
+}
+.pf-modeswitch__label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.pf-modeswitch__label strong {
+  font-family: var(--font-display);
   text-transform: uppercase;
-  opacity: 0.66;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  font-size: 1.02rem;
 }
-.pf-modeswitch__btn:hover {
+.pf-modeswitch__label small {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+.pf-modeswitch__btn:hover,
+.pf-modeswitch__btn:focus-visible {
   color: var(--df-text);
+  border-color: color-mix(in srgb, var(--df-teal) 50%, var(--pf-edge));
+  transform: translateY(-2px);
 }
 .pf-modeswitch__btn.is-active {
   color: #06100d;
-  background: var(--lane-accent);
+  background: var(--df-teal);
+  border-color: var(--df-teal);
 }
-.pf-modeswitch__btn.is-active small {
+.pf-modeswitch__btn.is-active::before {
+  transform: scaleY(0);
+}
+.pf-modeswitch__btn.is-active .pf-modeswitch__index {
+  color: rgba(6, 16, 13, 0.55);
+}
+.pf-modeswitch__btn.is-active .pf-modeswitch__label small {
   opacity: 0.72;
 }
 
-@media (max-width: 620px) {
-  .pf-modeswitch {
-    width: 100%;
-    justify-content: space-between;
+/* Hero variant — a prominent full-width segmented selector. */
+.pf-modeswitch--hero {
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 760px) {
+  .pf-modeswitch--hero {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .pf-modeswitch__btn small {
+}
+
+/* Bar variant — compact, used in the sticky control rail. */
+.pf-modeswitch--bar {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid var(--pf-edge);
+  border-radius: 999px;
+  background: rgba(10, 13, 11, 0.7);
+  backdrop-filter: blur(10px);
+}
+.pf-modeswitch--bar .pf-modeswitch__btn {
+  min-height: 42px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+}
+.pf-modeswitch--bar .pf-modeswitch__btn::before {
+  display: none;
+}
+.pf-modeswitch--bar .pf-modeswitch__index,
+.pf-modeswitch--bar .pf-modeswitch__label small {
+  display: none;
+}
+.pf-modeswitch--bar .pf-modeswitch__label strong {
+  font-size: 0.82rem;
+}
+.pf-modeswitch--bar .pf-modeswitch__btn:hover,
+.pf-modeswitch--bar .pf-modeswitch__btn:focus-visible {
+  transform: none;
+}
+@media (max-width: 760px) {
+  .pf-modeswitch--bar {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .pf-modeswitch--bar::-webkit-scrollbar {
     display: none;
   }
-  .pf-modeswitch__btn {
-    flex: 1;
-    align-items: center;
-    padding: 10px 8px;
+  .pf-modeswitch--bar .pf-modeswitch__btn {
+    flex: 0 0 auto;
   }
+}
+
+/* Hero mode-selector bar (full-width row under the hero grid) */
+.pf-hero__modebar {
+  position: relative;
+  z-index: 3;
+  width: min(1240px, calc(100% - 36px));
+  margin: clamp(28px, 4vw, 52px) auto 0;
+}
+.pf-hero__modebar .pf-eyebrow {
+  margin-bottom: 12px;
+}
+.pf-gallery {
+  scroll-margin-top: 96px;
 }
 
 /* =======================================================================
@@ -1048,10 +1138,14 @@
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
+  /* Promote to its own layer so resuming the paused animation always repaints
+     (some GPUs freeze a paused 3D animation without this). */
+  will-change: transform;
   animation: pf-ring-spin 52s linear infinite;
 }
-.pf-ring__stage:hover .pf-ring__spin,
-.pf-ring__stage:focus-within .pf-ring__spin {
+/* Pause only on hover — NOT focus-within, whose focus lingers after a click and
+   would stop the rotation permanently. */
+.pf-ring__stage:hover .pf-ring__spin {
   animation-play-state: paused;
 }
 .pf-ring__card {

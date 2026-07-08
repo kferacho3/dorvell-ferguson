@@ -109,8 +109,10 @@ export function PortfolioExperience({
       <div className="pf-experience">
         <PortfolioHero />
         <PortfolioCategoryNav />
-        <PortfolioControlBar />
-        <PortfolioBody />
+        <div id="pf-gallery" className="pf-gallery">
+          <PortfolioControlBar />
+          <PortfolioBody />
+        </div>
         <PortfolioCTA />
       </div>
     </PortfolioModeProvider>

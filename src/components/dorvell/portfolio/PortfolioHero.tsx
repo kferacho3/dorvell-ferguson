@@ -63,9 +63,6 @@ export function PortfolioHero() {
             calm contact sheets to immersive, motion-led rooms.
           </p>
 
-          <div className="pf-hero__controls">
-            <PortfolioModeSwitch />
-          </div>
           <PortfolioCategoryChips className="pf-hero__chips" />
 
           <div className="pf-hero__actions">
@@ -143,6 +140,11 @@ export function PortfolioHero() {
             </div>
           ) : null}
         </div>
+      </div>
+
+      <div className="pf-hero__modebar">
+        <p className="pf-eyebrow">Choose your experience</p>
+        <PortfolioModeSwitch variant="hero" />
       </div>
     </section>
   );
