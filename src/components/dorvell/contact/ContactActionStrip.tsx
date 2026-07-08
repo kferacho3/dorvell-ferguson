@@ -107,6 +107,9 @@ export function ContactActionStrip({
                 href={action.href}
                 target={action.external ? "_blank" : undefined}
                 rel={action.external ? "noreferrer" : undefined}
+                aria-label={
+                  action.external ? `${action.label}, ${action.detail} (opens in a new tab)` : undefined
+                }
               >
                 <span className="contact-action__label">{action.label}</span>
                 <span className="contact-action__detail">{action.detail}</span>

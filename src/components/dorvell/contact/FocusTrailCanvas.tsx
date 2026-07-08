@@ -57,7 +57,10 @@ export function FocusTrailCanvas({ containerRef }: FocusTrailCanvasProps) {
     const tailColor = styles.getPropertyValue("--df-teal").trim() || "#35e0bb";
     const inkColor = styles.getPropertyValue("--df-ink").trim() || "#090a09";
 
-    const GAP = 12;
+    // The head rides a fixed left rail (inside the card's reserved padding-left
+    // gutter) and only tracks the focused field vertically — so it never lands
+    // in the two-column grid gap or behind a neighbouring input.
+    const RAIL_X = 15;
     const RADIUS = 5;
     const TAIL = 9;
     const head = { x: NaN, y: NaN, r: RADIUS, tx: 0, ty: 0, vx: 0, check: 0, checkTarget: 0 };
@@ -70,7 +73,7 @@ export function FocusTrailCanvas({ containerRef }: FocusTrailCanvasProps) {
     const aim = (el: Field) => {
       const cr = container.getBoundingClientRect();
       const er = el.getBoundingClientRect();
-      head.tx = er.left - cr.left - GAP;
+      head.tx = RAIL_X;
       head.ty = er.top - cr.top + er.height / 2;
     };
 

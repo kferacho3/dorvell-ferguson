@@ -91,7 +91,7 @@ export function ContactForm({ email }: ContactFormProps) {
 
           <InquiryTypeSelector value={inquiryId} onChange={setInquiryId} />
 
-          <p className="contact-form__helper" aria-live="polite">
+          <p className="contact-form__helper" id="contact-inquiry-helper" aria-live="polite">
             {activeType.helper}
           </p>
 
@@ -130,7 +130,7 @@ export function ContactForm({ email }: ContactFormProps) {
             </label>
             <label className="contact-field contact-field--full">
               <span className="contact-field__label">Message / project details</span>
-              <textarea name="message" rows={4} required />
+              <textarea name="message" rows={4} required aria-describedby="contact-inquiry-helper" />
             </label>
           </div>
 
@@ -139,6 +139,9 @@ export function ContactForm({ email }: ContactFormProps) {
             <button type="button" className="contact-form__copy" onClick={copyEmail}>
               {copied ? "Copied ✓" : "Copy email"}
             </button>
+            <span className="sr-only" aria-live="polite">
+              {copied ? "Email address copied to clipboard." : ""}
+            </span>
           </div>
 
           <p className="contact-form__status" role="status" aria-live="polite">

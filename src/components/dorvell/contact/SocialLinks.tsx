@@ -25,7 +25,7 @@ export function SocialLinks({ links, className, variant = "row" }: SocialLinksPr
             href={link.href}
             target="_blank"
             rel="noreferrer"
-            aria-label={link.label}
+            aria-label={`${link.label} (opens in a new tab)`}
           >
             <span className="social-links__icon" aria-hidden="true">
               <SocialGlyph social={link.key} />
