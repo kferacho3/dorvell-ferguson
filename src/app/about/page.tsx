@@ -1,25 +1,52 @@
-import { AboutStory } from "@/components/dorvell/AboutStory";
-import { AboutDossierHero } from "@/components/dorvell/AboutDossierHero";
+import { AboutClosing } from "@/components/dorvell/AboutClosing";
+import { AboutCredits } from "@/components/dorvell/AboutCredits";
+import { AboutHero } from "@/components/dorvell/AboutHero";
+import { AboutPhilosophy } from "@/components/dorvell/AboutPhilosophy";
+import { AboutPointOfView } from "@/components/dorvell/AboutPointOfView";
+import { AboutRevealController } from "@/components/dorvell/AboutRevealController";
+import { AboutRoleTriptych } from "@/components/dorvell/AboutRoleTriptych";
+import { AboutSkills } from "@/components/dorvell/AboutSkills";
+import { AboutTimeline } from "@/components/dorvell/AboutTimeline";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
+import { aboutRoles } from "@/content/about.data";
+import { pickByCategory, pickHeroPortrait, pickTrailerImages } from "@/lib/about-images";
 import { getPortfolioData } from "@/lib/portfolio-data";
 
 export const metadata = {
   title: "About",
-  description: "About Dorvell Ferguson Jr., Tampa-based photographer, model, and multimedia visual storyteller.",
+  description:
+    "Dorvell Ferguson Jr. — a Multimedia Journalism graduate and Tampa-based photographer, model, and visual storyteller working across portraits, concerts, fashion, sports, and editorial.",
   openGraph: {
     title: "About — Dorvell Ferguson Jr.",
-    description: "The story behind the archive — a Tampa-based photographer, model, and multimedia visual storyteller.",
+    description:
+      "The story behind the archive — a Multimedia Journalism graduate shaping culture through portraits, concerts, fashion, sports, and editorial moments.",
   },
 };
 
 export default function AboutPage() {
-  const { manual, generated } = getPortfolioData();
+  const { generated } = getPortfolioData();
+  const images = generated.images;
+
+  // Deterministic, server-side image selection (dedup across the whole page):
+  // hero portrait → role plates → hero cursor-trailer frames.
+  const used = new Set<string>();
+  const portrait = pickHeroPortrait(images);
+  if (portrait) used.add(portrait.id);
+  const plates = aboutRoles.map((role) => pickByCategory(images, role.plateCategory, used, 1)[0]);
+  const trailerImages = pickTrailerImages(images, used, 6);
 
   return (
     <DorvellShell>
       <div className="route-page about-route">
-        <AboutDossierHero manual={manual} images={generated.images} />
-        <AboutStory manual={manual} images={generated.images} expanded />
+        <AboutRevealController />
+        <AboutHero portrait={portrait} trailerImages={trailerImages} />
+        <AboutPointOfView />
+        <AboutRoleTriptych plates={plates} />
+        <AboutTimeline />
+        <AboutSkills />
+        <AboutPhilosophy />
+        <AboutCredits />
+        <AboutClosing />
       </div>
     </DorvellShell>
   );
