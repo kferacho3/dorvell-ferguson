@@ -13498,6 +13498,11 @@ section,
   will-change: transform;
 }
 
+.about-char-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .about-phil__char {
   display: inline-block;
   white-space: pre;

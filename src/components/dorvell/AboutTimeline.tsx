@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { aboutTimeline } from "@/content/about.data";
+import { CharWords } from "@/components/dorvell/about-split";
 
 /**
  * Section 4 — Proof timeline. Numbered chapters (CSS counter) with headlines
@@ -33,13 +34,7 @@ export function AboutTimeline() {
 
             <div className="about-timeline__main">
               <h3 className="about-timeline__title" aria-label={item.title}>
-                <span aria-hidden="true">
-                  {Array.from(item.title).map((char, ci) => (
-                    <span className="about-char" key={ci} style={{ "--ci": ci } as CSSProperties}>
-                      {char}
-                    </span>
-                  ))}
-                </span>
+                <CharWords text={item.title} />
               </h3>
               <p className="about-timeline__org">{item.org}</p>
               <p className="about-timeline__blurb">{item.blurb}</p>

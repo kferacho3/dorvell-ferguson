@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { philosophyLines } from "@/content/about.data";
+import { CharWords } from "@/components/dorvell/about-split";
 
 /**
  * Section 6 — Philosophy pull-quotes. Two-to-three large editorial lines, one
@@ -27,8 +28,6 @@ export function AboutPhilosophy() {
             </blockquote>
           );
         }
-        const chars = Array.from(line.text);
-        const last = chars.length - 1;
         return (
           <blockquote
             className="about-philosophy__line about-philosophy__line--kinetic"
@@ -37,22 +36,15 @@ export function AboutPhilosophy() {
             key={index}
             aria-label={line.text}
           >
-            <span aria-hidden="true">
-              {chars.map((char, ci) => {
+            <CharWords
+              text={line.text}
+              charClass="about-phil__char"
+              extra={(i, total) => ({
                 // triangle factor: 0 at the ends, 1 at the centre of the line
-                const cf = last > 0 ? 1 - Math.abs(ci / last - 0.5) * 2 : 1;
-                const cs = ci % 2 === 0 ? 1 : -1;
-                return (
-                  <span
-                    className="about-phil__char"
-                    key={ci}
-                    style={{ "--ci": ci, "--cf": cf.toFixed(3), "--cs": cs } as CSSProperties}
-                  >
-                    {char}
-                  </span>
-                );
+                "--cf": (total > 1 ? 1 - Math.abs(i / (total - 1) - 0.5) * 2 : 1).toFixed(3),
+                "--cs": i % 2 === 0 ? 1 : -1,
               })}
-            </span>
+            />
           </blockquote>
         );
       })}
