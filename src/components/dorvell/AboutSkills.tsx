@@ -9,7 +9,7 @@ import { skillGroups, skillsMicrocopy } from "@/content/about.data";
  */
 export function AboutSkills() {
   return (
-    <section className="about-section about-skills">
+    <section className="about-block about-skills">
       <div className="about-skills__head" data-reveal>
         <p className="about-eyebrow">Creative operating system</p>
         <p className="about-skills__micro">{skillsMicrocopy}</p>

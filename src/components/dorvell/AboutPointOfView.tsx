@@ -13,7 +13,7 @@ export function AboutPointOfView() {
   const words = pointOfView.headline.split(" ");
 
   return (
-    <section className="about-section about-pov">
+    <section className="about-block about-pov">
       <div className="about-pov__head">
         <span className="about-pov__counter">.{pointOfView.counter}</span>
         <h2 className="about-pov__headline" data-reveal-group>

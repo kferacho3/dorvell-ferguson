@@ -9,7 +9,7 @@ import { proofPoints } from "@/content/about.data";
  */
 export function AboutCredits() {
   return (
-    <section className="about-section about-credits">
+    <section className="about-block about-credits">
       <div className="about-credits__head">
         <p className="about-eyebrow">.02 Recognition</p>
         <h2 className="about-credits__title">Selected credits.</h2>

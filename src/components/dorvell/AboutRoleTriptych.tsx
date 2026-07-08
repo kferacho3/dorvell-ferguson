@@ -12,7 +12,7 @@ import { blurImageProps } from "@/lib/images";
  */
 export function AboutRoleTriptych({ plates }: { plates: (DorvellImage | undefined)[] }) {
   return (
-    <section className="about-section about-roles">
+    <section className="about-block about-roles">
       <div className="about-roles__head">
         <p className="about-eyebrow">Creative disciplines</p>
         <h2 className="about-roles__title">One eye, three disciplines.</h2>

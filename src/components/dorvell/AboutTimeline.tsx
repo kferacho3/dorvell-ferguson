@@ -10,7 +10,7 @@ import { aboutTimeline } from "@/content/about.data";
  */
 export function AboutTimeline() {
   return (
-    <section className="about-section about-timeline">
+    <section className="about-block about-timeline">
       <div className="about-roles__head">
         <p className="about-eyebrow">Proof of work</p>
         <h2 className="about-roles__title">A record, not a résumé.</h2>

@@ -11,7 +11,7 @@ import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
  */
 export function AboutClosing() {
   return (
-    <section className="about-section about-closing">
+    <section className="about-block about-closing">
       <div className="about-closing__ghost" aria-hidden="true">
         {aboutClosing.ghost}
       </div>

@@ -10,7 +10,7 @@ import { PhilosophyLines } from "@/components/dorvell/PhilosophyLines";
  */
 export function AboutPhilosophy() {
   return (
-    <section className="about-section about-philosophy" aria-label="Working philosophy">
+    <section className="about-block about-philosophy" aria-label="Working philosophy">
       {philosophyLines.map((line, index) => (
         <blockquote
           className={

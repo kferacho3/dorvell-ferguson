@@ -34,9 +34,14 @@ export function AboutHero({
 
       <div className="about-hero__masthead">
         <p className="about-eyebrow">{aboutHero.eyebrow}</p>
-        <h1 className="about-hero__name">
+        <h1 className="about-hero__name" aria-label={aboutHero.name}>
           {NAME_LINES.map((line, index) => (
-            <span className="about-hero__line" key={line} style={{ "--i": index } as CSSProperties}>
+            <span
+              className="about-hero__line"
+              aria-hidden="true"
+              key={line}
+              style={{ "--i": index } as CSSProperties}
+            >
               {line}
             </span>
           ))}
