@@ -5,6 +5,7 @@ import { EntryPreviewGate } from "@/components/dorvell/EntryPreviewGate";
 import { FeaturedWorkStrip } from "@/components/dorvell/FeaturedWorkStrip";
 import { GalleryAtlasHero } from "@/components/dorvell/GalleryAtlasHero";
 import { ServicesBooking } from "@/components/dorvell/ServicesBooking";
+import { SocialMotionSpotlight } from "@/components/dorvell/SocialMotionSpotlight";
 import { WorkArchive } from "@/components/dorvell/WorkArchive";
 import { buildGalleryLanes, type GalleryLane } from "@/lib/gallery-lanes";
 import { buildHomeImageCollections } from "@/lib/home-image-collections";
@@ -20,6 +21,7 @@ export default function Home() {
     entryImages,
     heroImages,
     featuredImages,
+    socialImages,
     archiveImages,
     aboutImages,
     bookingImages,
@@ -33,6 +35,9 @@ export default function Home() {
       </div>
       <DeferredHomeSection minHeight={860}>
         <FeaturedWorkStrip images={featuredImages} />
+      </DeferredHomeSection>
+      <DeferredHomeSection minHeight={920}>
+        <SocialMotionSpotlight images={socialImages} />
       </DeferredHomeSection>
       <DeferredHomeSection minHeight={760}>
         <WorkArchive images={archiveImages} variant="preview" />
