@@ -12515,7 +12515,7 @@ section,
   max-width: 62ch;
 }
 
-.about-pov__body p {
+.about-pov__body p:not(.about-pov__attr) {
   margin: 0 0 1.2em;
   font-size: clamp(1.05rem, 1.5vw, 1.32rem);
   line-height: 1.62;
@@ -12535,7 +12535,7 @@ section,
   color: var(--df-text);
 }
 
-.about-pov__body.is-in-view p {
+.about-pov__body.is-in-view p:not(.about-pov__attr) {
   opacity: 1;
   transform: none;
   filter: none;

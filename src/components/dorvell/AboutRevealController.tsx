@@ -6,8 +6,10 @@ import { useEffect } from "react";
  * One controller for the whole About page (mirrors StudioSignalController's
  * frame-locked rAF idiom):
  *  - a single IntersectionObserver adds a persistent `.is-in-view` class to
- *    every `[data-reveal]` element the first time it enters, then unobserves it
- *    (reveals are one-shot; nothing toggles back off).
+ *    every `[data-reveal]` (whole-element rise) and `[data-reveal-group]`
+ *    (child-staggered container — the container stays put, its children
+ *    animate) the first time it enters, then unobserves it (reveals are
+ *    one-shot; nothing toggles back off).
  *  - a shared, frame-guarded scroll loop writes CSS custom properties only —
  *    `--about-scroll` on the root for ghost-type parallax, and a per-element
  *    `--focus` (0→1 by viewport position) on each `[data-focus]` plate for the
@@ -19,7 +21,7 @@ import { useEffect } from "react";
  */
 export function AboutRevealController() {
   useEffect(() => {
-    const revealEls = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    const revealEls = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal], [data-reveal-group]"));
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (prefersReduced) {
