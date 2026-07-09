@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ElasticButton } from "../contact/ElasticButton";
+import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
 import { getSocialLinks, socialLinks } from "@/lib/social-links";
 
 /**
@@ -52,16 +53,7 @@ export function CreativeCTA() {
           </a>
         </div>
 
-        <ul className="cw-cta__socials" aria-label="Social links">
-          {socials.map((social) => (
-            <li key={social.key}>
-              <a href={social.href} target="_blank" rel="noreferrer" aria-label={social.label}>
-                <span className="cw-cta__social-platform">{social.platform}</span>
-                <strong className="cw-cta__social-handle">{social.handle}</strong>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <SocialLinks links={socials} className="cw-cta__social" />
       </div>
     </section>
   );
