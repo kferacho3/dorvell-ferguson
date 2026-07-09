@@ -29,7 +29,7 @@ export default function ContactPage() {
       title: item.title,
       orientation: item.orientation,
       mp4: resolveCreativeAsset(item.mp4Src),
-      webm: item.webmSrc ? resolveCreativeAsset(item.webmSrc) : null,
+      mobile: resolveCreativeAsset(item.mobileSrc),
       poster: resolveCreativeAsset(item.posterSrc),
     }));
 

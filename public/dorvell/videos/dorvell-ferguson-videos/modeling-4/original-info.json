@@ -10,7 +10,7 @@
   "hasAudio": true,
   "publicDir": "/dorvell/videos/dorvell-ferguson-videos/modeling-4",
   "mp4Src": "/dorvell/videos/dorvell-ferguson-videos/modeling-4/video.mp4",
-  "webmSrc": "/dorvell/videos/dorvell-ferguson-videos/modeling-4/video.webm",
+  "mobileSrc": "/dorvell/videos/dorvell-ferguson-videos/modeling-4/video-mobile.mp4",
   "posterSrc": "/dorvell/videos/dorvell-ferguson-videos/modeling-4/poster.jpg",
   "posterWebpSrc": "/dorvell/videos/dorvell-ferguson-videos/modeling-4/poster.webp",
   "thumbSrc": "/dorvell/videos/dorvell-ferguson-videos/modeling-4/thumb.webp",

@@ -1582,82 +1582,222 @@
   margin-top: 0.2rem;
 }
 
-/* ---- SECTION · photomode polaroids ------------------------------------ */
-.cw-polaroid {
+/* ---- SECTION · photomode GRAFFITI wall -------------------------------- */
+.cw-graf {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   border-top: 1px solid var(--cw-line);
 }
-.cw-polaroid__sets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(2rem, 6vw, 4rem);
-  justify-content: center;
-  margin-top: clamp(2rem, 5vw, 3.5rem);
+/* concrete wall base + faint vertical scoring */
+.cw-graf::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--cw-ink) 2%, transparent) 0 2px, transparent 2px 6px),
+    linear-gradient(180deg, #0a0c0b, var(--cw-bg));
 }
-.cw-polaroid__stack {
+/* vibrant gradient spray glow — the bold color moment, framed by dark */
+.cw-graf__glow {
+  position: absolute;
+  inset: -12% -6%;
+  z-index: -1;
+  background:
+    radial-gradient(48% 55% at 18% 24%, color-mix(in srgb, var(--cw-teal) 42%, transparent), transparent 62%),
+    radial-gradient(44% 50% at 84% 30%, color-mix(in srgb, var(--cw-gold) 44%, transparent), transparent 62%),
+    radial-gradient(60% 62% at 60% 92%, color-mix(in srgb, var(--cw-brown) 50%, transparent), transparent 66%),
+    radial-gradient(38% 40% at 42% 62%, color-mix(in srgb, var(--cw-red) 28%, transparent), transparent 60%);
+  filter: blur(34px) saturate(1.35);
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  animation: cw-graf-drift 20s ease-in-out infinite alternate;
+}
+@keyframes cw-graf-drift {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(3%, 2%, 0) scale(1.08);
+  }
+}
+.cw-graf__inner {
+  position: relative;
+  z-index: 1;
+}
+.cw-graf__head {
   display: grid;
   justify-items: center;
-  gap: 1rem;
+  text-align: center;
+  gap: 0.7rem;
+  max-width: 60ch;
+  margin: 0 auto clamp(2rem, 5vw, 3.5rem);
 }
-.cw-polaroid__deck {
+/* graffiti tag — gradient fill, dark 3D offset, skew + drip */
+.cw-graf__tag {
   position: relative;
-  width: clamp(220px, 30vw, 300px);
-  height: clamp(300px, 42vw, 400px);
-  border: 0;
-  background: none;
-  cursor: pointer;
-  perspective: 1000px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(3rem, 13vw, 9.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  margin: 0.1em 0 0.16em;
+  transform: rotate(-3deg) skewX(-7deg);
+  background: linear-gradient(115deg, var(--cw-teal), var(--cw-gold) 52%, var(--cw-brown));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(5px 7px 0 rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 34px color-mix(in srgb, var(--cw-teal) 32%, transparent));
 }
-.cw-polaroid__deck:focus-visible {
-  outline: 2px solid var(--cw-teal);
-  outline-offset: 6px;
-  border-radius: 8px;
-}
-.cw-polaroid__card {
+.cw-graf__tag::before {
+  content: attr(data-text);
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: clamp(200px, 26vw, 270px);
-  background: var(--df-paper);
-  padding: 10px 10px 42px;
-  border-radius: 3px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  transition: transform var(--cw-med), box-shadow var(--cw-med);
-  transform-origin: center;
+  inset: 0;
+  z-index: -1;
+  -webkit-text-stroke: 9px #0a0c0b;
+  color: #0a0c0b;
+  transform: translate(6px, 8px);
 }
-.cw-polaroid__card.is-top {
-  box-shadow: 0 30px 64px rgba(0, 0, 0, 0.62);
+.cw-graf__tag::after {
+  content: "";
+  position: absolute;
+  left: 16%;
+  bottom: -0.12em;
+  width: 7px;
+  height: 0.55em;
+  background: linear-gradient(180deg, var(--cw-gold), transparent);
+  border-radius: 0 0 8px 8px;
+  opacity: 0.7;
 }
-.cw-polaroid__photo {
+/* scattered ghost tags */
+.cw-graf__sticker {
+  position: absolute;
+  z-index: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cw-ink) 10%, transparent);
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--cw-teal) 38%, transparent);
+  pointer-events: none;
+}
+.cw-graf__sticker--1 {
+  top: 7%;
+  left: 1%;
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  transform: rotate(-13deg);
+}
+.cw-graf__sticker--2 {
+  bottom: 9%;
+  right: 2%;
+  font-size: clamp(1.1rem, 3vw, 2rem);
+  letter-spacing: 0.1em;
+  transform: rotate(9deg);
+}
+/* the wall of gif-prints */
+.cw-graf__wall {
   position: relative;
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1.6rem, 5vw, 4.5rem);
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+}
+.cw-graf__print {
+  position: relative;
+  width: clamp(230px, 32vw, 360px);
+  background: var(--df-paper);
+  padding: 12px 12px 44px;
+  border-radius: 2px;
+  transform: rotate(var(--rot, 0deg));
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  transition: transform var(--cw-med), box-shadow var(--cw-med);
+}
+.cw-graf__print:hover {
+  transform: rotate(0deg) translateY(-8px) scale(1.03);
+  box-shadow: 0 42px 84px rgba(0, 0, 0, 0.72), 0 0 46px color-mix(in srgb, var(--cw-gold) 22%, transparent);
+  z-index: 5;
+}
+.cw-graf__photo {
+  position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: #111;
+  background: #0a0c0b;
 }
-.cw-polaroid__img {
+.cw-graf__frame {
   object-fit: cover;
+  transition: opacity 130ms linear;
 }
-.cw-polaroid__caption {
-  display: block;
-  text-align: center;
-  margin-top: 8px;
-  font-family: var(--font-body);
+.cw-graf__sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    120deg,
+    transparent 42%,
+    color-mix(in srgb, var(--cw-ink) 14%, transparent) 50%,
+    transparent 58%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.cw-graf__gifbadge {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  z-index: 3;
+  font-family: var(--font-display);
+  font-weight: 800;
   font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  padding: 0.22rem 0.5rem;
+  border-radius: 4px;
+  background: linear-gradient(120deg, var(--cw-teal), var(--cw-gold));
+  color: #0a0c0b;
+  transform: rotate(6deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+.cw-graf__caption {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 4px 0;
+  font-family: var(--font-body);
+  font-size: 0.64rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--df-brown);
 }
-.cw-polaroid__hint {
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cw-muted);
-  margin: 0;
+.cw-graf__tape {
+  position: absolute;
+  width: 76px;
+  height: 26px;
+  z-index: 4;
+  background: color-mix(in srgb, var(--cw-gold) 26%, rgba(232, 226, 210, 0.55));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
+  opacity: 0.85;
 }
-.cw-polaroid__actions {
+.cw-graf__tape--tl {
+  top: -11px;
+  left: -14px;
+  transform: rotate(-34deg);
+}
+.cw-graf__tape--br {
+  bottom: 40px;
+  right: -16px;
+  transform: rotate(-34deg);
+}
+.cw-graf__actions {
   justify-content: center;
   margin-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+@media (max-width: 600px) {
+  .cw-graf__sticker {
+    display: none;
+  }
 }
 
 /* ---- SECTION 10 · particle word --------------------------------------- */

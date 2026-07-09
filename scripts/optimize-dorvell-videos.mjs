@@ -31,7 +31,6 @@
  *   node scripts/optimize-dorvell-videos.mjs                 # posters + encodes, skip existing
  *   node scripts/optimize-dorvell-videos.mjs --only=posters  # fast: metadata + poster/thumb/blur only
  *   node scripts/optimize-dorvell-videos.mjs --only=encode   # mp4 + webm only
- *   node scripts/optimize-dorvell-videos.mjs --no-webm       # skip VP9 (faster)
  *   node scripts/optimize-dorvell-videos.mjs --force         # re-generate even if outputs exist
  *   node scripts/optimize-dorvell-videos.mjs --concurrency=4
  *   node scripts/optimize-dorvell-videos.mjs path/to/one.mov # process specific files
@@ -55,8 +54,12 @@ const PUBLIC_BASE = "/dorvell/videos/dorvell-ferguson-videos";
 const MANIFEST_PATH = path.join(ROOT, "src/content/creative.media.generated.json");
 const SOURCE_FOLDER_LABEL = "dorvell ferguson videos";
 const SUPPORTED = new Set([".mov", ".mp4", ".m4v", ".webm"]);
-const MAX_LONG_EDGE = 1280;
+const MAX_LONG_EDGE = 1280; // poster long-edge cap
 const THUMB_LONG_EDGE = 640;
+// Two H.264 renditions per clip: desktop gets the near-original HD, mobile a
+// lighter compressed cut. The player picks by viewport (see VideoPlayer).
+const HD_LONG_EDGE = 1920; // desktop — never upscaled, so most clips stay source res
+const MOBILE_LONG_EDGE = 854;
 
 // ---- args -----------------------------------------------------------------
 const argv = process.argv.slice(2);
@@ -66,7 +69,6 @@ const opt = (name, fallback) => {
   return hit ? hit.split("=")[1] : fallback;
 };
 const FORCE = flag("force");
-const NO_WEBM = flag("no-webm");
 const ONLY = opt("only", "all"); // posters | encode | all
 const CONCURRENCY = Math.max(1, Number(opt("concurrency", "3")) || 3);
 const explicitFiles = argv.filter((a) => !a.startsWith("--"));
@@ -191,31 +193,15 @@ async function makePoster(input, dir, meta) {
   return { skipped: false, blurDataURL: `data:image/jpeg;base64,${blurBuf.toString("base64")}` };
 }
 
-async function encodeMp4(input, dir) {
-  const out = path.join(dir, "video.mp4");
+async function encodeMp4Variant(input, out, longEdge, crf, audioBitrate) {
   if (!FORCE && existsSync(out)) return { skipped: true, path: out };
   await execFileP("ffmpeg", [
     "-y", "-i", input,
     "-map", "0:v:0", "-map", "0:a?",
-    "-vf", scaleFilter(),
-    "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p",
+    "-vf", scaleFilter(longEdge),
+    "-c:v", "libx264", "-preset", "medium", "-crf", String(crf), "-pix_fmt", "yuv420p",
     "-movflags", "+faststart",
-    "-c:a", "aac", "-b:a", "128k",
-    out,
-  ], { maxBuffer: 1024 * 1024 * 32 });
-  return { skipped: false, path: out };
-}
-
-async function encodeWebm(input, dir) {
-  const out = path.join(dir, "video.webm");
-  if (NO_WEBM) return { skipped: true, path: null };
-  if (!FORCE && existsSync(out)) return { skipped: true, path: out };
-  await execFileP("ffmpeg", [
-    "-y", "-i", input,
-    "-map", "0:v:0", "-map", "0:a?",
-    "-vf", scaleFilter(),
-    "-c:v", "libvpx-vp9", "-crf", "34", "-b:v", "0", "-row-mt", "1", "-deadline", "good", "-cpu-used", "4",
-    "-c:a", "libopus", "-b:a", "96k",
+    "-c:a", "aac", "-b:a", audioBitrate,
     out,
   ], { maxBuffer: 1024 * 1024 * 32 });
   return { skipped: false, path: out };
@@ -238,12 +224,12 @@ async function processClip(input) {
   }
   let mp4Done = false;
   if (ONLY === "encode" || ONLY === "all") {
-    await encodeMp4(input, dir);
-    await encodeWebm(input, dir);
+    await encodeMp4Variant(input, path.join(dir, "video.mp4"), HD_LONG_EDGE, 20, "128k"); // desktop / HD
+    await encodeMp4Variant(input, path.join(dir, "video-mobile.mp4"), MOBILE_LONG_EDGE, 27, "96k"); // mobile
+    await rm(path.join(dir, "video.webm"), { force: true }); // legacy — no longer served
     mp4Done = true;
   }
 
-  const webmExists = existsSync(path.join(dir, "video.webm"));
   const record = {
     slug,
     originalFileName,
@@ -255,8 +241,8 @@ async function processClip(input) {
     duration: meta.duration,
     hasAudio: meta.hasAudio,
     publicDir: pubDir,
-    mp4Src: `${pubDir}/video.mp4`,
-    webmSrc: webmExists ? `${pubDir}/video.webm` : null,
+    mp4Src: `${pubDir}/video.mp4`, // desktop / HD (near-original)
+    mobileSrc: `${pubDir}/video-mobile.mp4`, // mobile / compressed
     posterSrc: `${pubDir}/poster.jpg`,
     posterWebpSrc: `${pubDir}/poster.webp`,
     thumbSrc: `${pubDir}/thumb.webp`,
@@ -277,8 +263,8 @@ async function processClip(input) {
   await writeFile(infoPath, JSON.stringify(record, null, 2));
 
   const sizes = {
-    mp4: await bytesOf(path.join(dir, "video.mp4")),
-    webm: await bytesOf(path.join(dir, "video.webm")),
+    hd: await bytesOf(path.join(dir, "video.mp4")),
+    mobile: await bytesOf(path.join(dir, "video-mobile.mp4")),
   };
   return { record, sizes, mp4Done };
 }
@@ -320,7 +306,7 @@ async function main() {
     return;
   }
 
-  console.log(`\n🎬 Optimizing ${inputs.length} clip(s)  [only=${ONLY}  webm=${!NO_WEBM}  force=${FORCE}  concurrency=${CONCURRENCY}]\n`);
+  console.log(`\n🎬 Optimizing ${inputs.length} clip(s)  [only=${ONLY}  force=${FORCE}  concurrency=${CONCURRENCY}]\n`);
 
   const t0 = Date.now();
   const processed = await pool(
@@ -351,16 +337,18 @@ async function main() {
       manifest = {};
     }
   }
-  for (const { record } of ok) manifest[record.slug] = { ...(manifest[record.slug] || {}), ...record };
+  // full replace for regenerated slugs (record is complete, incl. blurDataURL) so
+  // no stale keys (e.g. legacy webmSrc) survive; other clips' records are untouched.
+  for (const { record } of ok) manifest[record.slug] = record;
   await mkdir(path.dirname(MANIFEST_PATH), { recursive: true });
   await writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
 
   // summary table
-  console.log(`\n  ${"slug".padEnd(22)} ${"orient".padEnd(9)} ${"dur".padStart(6)} ${"mp4".padStart(8)} ${"webm".padStart(8)}`);
+  console.log(`\n  ${"slug".padEnd(22)} ${"orient".padEnd(9)} ${"dur".padStart(6)} ${"hd".padStart(8)} ${"mobile".padStart(8)}`);
   console.log(`  ${"-".repeat(22)} ${"-".repeat(9)} ${"-".repeat(6)} ${"-".repeat(8)} ${"-".repeat(8)}`);
   for (const { record, sizes } of ok) {
     console.log(
-      `  ${record.slug.padEnd(22)} ${record.orientation.padEnd(9)} ${String(record.duration).padStart(6)} ${mb(sizes.mp4).padStart(8)} ${mb(sizes.webm).padStart(8)}`
+      `  ${record.slug.padEnd(22)} ${record.orientation.padEnd(9)} ${String(record.duration).padStart(6)} ${mb(sizes.hd).padStart(8)} ${mb(sizes.mobile).padStart(8)}`
     );
   }
   const secs = ((Date.now() - t0) / 1000).toFixed(0);

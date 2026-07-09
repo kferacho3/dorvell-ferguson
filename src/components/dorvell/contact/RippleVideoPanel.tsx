@@ -14,6 +14,12 @@ const getReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const getServerReducedMotion = () => false;
 
+/* Desktop plays the near-original HD cut, mobile the compressed one — same
+   responsive rule as the Creative page's VideoPlayer (resolved at load time). */
+const isMobileViewport = () =>
+  typeof window !== "undefined" && Boolean(window.matchMedia?.("(max-width: 760px)").matches);
+const clipSrc = (v: StudioVideo) => (isMobileViewport() ? v.mobile : v.mp4);
+
 type PanelControls = { pause: () => void; resume: () => void };
 
 /** Small pause/play toggle so auto-playing motion has a control (WCAG 2.2.2). */
@@ -177,7 +183,7 @@ export function RippleVideoPanel({ videos, className }: Props) {
 
       const makeVideo = (v: StudioVideo) => {
         const el = document.createElement("video");
-        el.src = v.mp4;
+        el.src = clipSrc(v);
         el.muted = true;
         el.loop = true;
         el.playsInline = true;
@@ -286,7 +292,7 @@ export function RippleVideoPanel({ videos, className }: Props) {
           const hidden = 1 - showing;
           const el = vids[hidden];
           el.pause();
-          el.src = order[orderPtr % order.length].mp4;
+          el.src = clipSrc(order[orderPtr % order.length]);
           orderPtr += 1;
           el.load();
           void el.play().catch(() => {});
@@ -453,8 +459,8 @@ function CrossfadeVideoPanel({
     const b = bRef.current;
     if (!a || !b) return;
     const st = stateRef.current;
-    a.src = st.order[0].mp4;
-    b.src = st.order[1 % st.order.length].mp4;
+    a.src = clipSrc(st.order[0]);
+    b.src = clipSrc(st.order[1 % st.order.length]);
     void a.play().catch(() => {});
     void b.play().catch(() => {});
     controlsRef.current = {
@@ -497,7 +503,7 @@ function CrossfadeVideoPanel({
     st.front = showingA ? 1 : 0;
     window.setTimeout(() => {
       st.ptr = (st.ptr + 1) % st.order.length;
-      outgoing.src = st.order[st.ptr].mp4;
+      outgoing.src = clipSrc(st.order[st.ptr]);
       outgoing.load();
       if (!st.paused) void outgoing.play().catch(() => {});
       st.busy = false;

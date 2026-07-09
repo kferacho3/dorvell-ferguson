@@ -10,7 +10,7 @@
   "hasAudio": true,
   "publicDir": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1",
   "mp4Src": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/video.mp4",
-  "webmSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/video.webm",
+  "mobileSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/video-mobile.mp4",
   "posterSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/poster.jpg",
   "posterWebpSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/poster.webp",
   "thumbSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/thumb.webp",

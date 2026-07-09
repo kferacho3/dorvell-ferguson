@@ -4,7 +4,7 @@
  *
  * Sources of truth:
  *   src/content/dorvell.generated.json          → portfolio sm/md/lg webp
- *   src/content/creative.media.generated.json   → mp4, webm, poster.jpg, thumb.webp
+ *   src/content/creative.media.generated.json   → video.mp4 (HD), video-mobile.mp4, poster.jpg, thumb.webp
  *   src/content/creative.photomode.generated.json → md.webp only
  *   services reel paths (hardcoded below)
  *
@@ -73,7 +73,7 @@ async function collectUsedPaths() {
     const videos = JSON.parse(await readFile(path.join(ROOT, "src/content/creative.media.generated.json"), "utf8"));
     for (const clip of Object.values(videos)) {
       addPath(paths, clip.mp4Src);
-      addPath(paths, clip.webmSrc);
+      addPath(paths, clip.mobileSrc);
       addPath(paths, clip.posterSrc);
       addPath(paths, clip.thumbSrc);
     }

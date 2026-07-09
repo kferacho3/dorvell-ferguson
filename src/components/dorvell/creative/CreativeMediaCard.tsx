@@ -40,8 +40,8 @@ export function CreativeMediaCard({
 
   const canPreview = hoverPreview && mode === "cinematic" && !reducedMotion;
   const thumb = resolveCreativeAsset(item.thumbSrc);
-  const mp4 = resolveCreativeAsset(item.mp4Src);
-  const webm = resolveCreativeAsset(item.webmSrc);
+  // hover preview is desktop-only; use the lighter mobile cut so it loads fast
+  const previewSrc = resolveCreativeAsset(item.mobileSrc);
 
   return (
     <button
@@ -79,8 +79,7 @@ export function CreativeMediaCard({
             aria-hidden="true"
             tabIndex={-1}
           >
-            {webm ? <source src={webm} type="video/webm" /> : null}
-            <source src={mp4} type="video/mp4" />
+            <source src={previewSrc} type="video/mp4" />
           </video>
         ) : null}
 

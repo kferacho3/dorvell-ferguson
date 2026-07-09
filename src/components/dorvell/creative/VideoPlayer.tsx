@@ -7,6 +7,7 @@ import { resolveCreativeAsset } from "@/lib/creative-assets";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import type { CreativeItem } from "@/content/creative";
 import { useInView } from "./useInView";
+import { useIsMobile } from "./useIsMobile";
 import { MutedIcon, PauseIcon, PlayIcon, SoundIcon } from "./icons";
 
 type PlayOverride = "auto" | "play" | "pause";
@@ -58,8 +59,9 @@ export function VideoPlayer({
   const [current, setCurrent] = useState(0);
   const [pageHidden, setPageHidden] = useState(false);
 
-  const mp4 = resolveCreativeAsset(item.mp4Src);
-  const webm = resolveCreativeAsset(item.webmSrc);
+  // desktop gets the near-original HD cut, mobile the compressed one
+  const isMobile = useIsMobile();
+  const videoSrc = resolveCreativeAsset(isMobile ? item.mobileSrc : item.mp4Src);
   const poster = resolveCreativeAsset(item.posterSrc);
 
   // pause when the tab is hidden (setState only inside the event callback)
@@ -191,8 +193,7 @@ export function VideoPlayer({
               : undefined
           }
         >
-          {webm ? <source src={webm} type="video/webm" /> : null}
-          <source src={mp4} type="video/mp4" />
+          <source src={videoSrc} type="video/mp4" />
         </video>
       ) : null}
 

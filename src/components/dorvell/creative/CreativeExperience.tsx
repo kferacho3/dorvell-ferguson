@@ -13,7 +13,7 @@ import { ReelRunway } from "./ReelRunway";
 import { CreativePhotoshootGallery } from "./CreativePhotoshootGallery";
 import { CreativeArchive } from "./CreativeArchive";
 import { DirectorNotebook } from "./DirectorNotebook";
-import { PhotomodePolaroids } from "./PhotomodePolaroids";
+import { PhotomodeGraffiti } from "./PhotomodeGraffiti";
 import { CreativeCTA } from "./CreativeCTA";
 
 // Progressive-enhancement toys: client-only, code-split, cinematic mode only.
@@ -54,7 +54,7 @@ export function CreativeExperience() {
           <CreativePhotoshootGallery />
           <CreativeArchive />
           <DirectorNotebook />
-          <PhotomodePolaroids />
+          <PhotomodeGraffiti />
           {cinematic ? <CreativeParticleWord word="WORLD" /> : null}
           {cinematic ? <CreativeOrbitRing /> : null}
           <CreativeCTA />

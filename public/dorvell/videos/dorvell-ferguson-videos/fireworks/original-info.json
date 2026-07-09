@@ -10,7 +10,7 @@
   "hasAudio": true,
   "publicDir": "/dorvell/videos/dorvell-ferguson-videos/fireworks",
   "mp4Src": "/dorvell/videos/dorvell-ferguson-videos/fireworks/video.mp4",
-  "webmSrc": "/dorvell/videos/dorvell-ferguson-videos/fireworks/video.webm",
+  "mobileSrc": "/dorvell/videos/dorvell-ferguson-videos/fireworks/video-mobile.mp4",
   "posterSrc": "/dorvell/videos/dorvell-ferguson-videos/fireworks/poster.jpg",
   "posterWebpSrc": "/dorvell/videos/dorvell-ferguson-videos/fireworks/poster.webp",
   "thumbSrc": "/dorvell/videos/dorvell-ferguson-videos/fireworks/thumb.webp",

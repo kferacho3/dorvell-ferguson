@@ -80,8 +80,8 @@ export type CreativeItem = {
   description: string;
   directorNote?: string;
   // media (raw public paths — resolve at render)
-  mp4Src: string;
-  webmSrc: string | null;
+  mp4Src: string; // desktop / HD (near-original)
+  mobileSrc: string; // mobile / compressed
   posterSrc: string;
   posterWebpSrc: string;
   thumbSrc: string;
@@ -519,7 +519,7 @@ type RawMedia = {
   hasAudio: boolean;
   publicDir: string;
   mp4Src: string;
-  webmSrc: string | null;
+  mobileSrc?: string;
   posterSrc: string;
   posterWebpSrc: string;
   thumbSrc: string;
@@ -558,7 +558,7 @@ function buildItem(c: Curation): CreativeItem {
     description: c.description,
     directorNote: c.directorNote,
     mp4Src: m.mp4Src,
-    webmSrc: m.webmSrc,
+    mobileSrc: m.mobileSrc ?? m.mp4Src,
     posterSrc: m.posterSrc,
     posterWebpSrc: m.posterWebpSrc,
     thumbSrc: m.thumbSrc,
