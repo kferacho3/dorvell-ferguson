@@ -35,10 +35,10 @@ export function AboutClosing() {
       <p className="about-closing__body">{aboutClosing.body}</p>
 
       <div className="about-closing__actions">
-        <Link className="about-cta about-cta--primary" href={aboutClosing.primary.href}>
+        <Link className="button-primary" href={aboutClosing.primary.href}>
           {aboutClosing.primary.label}
         </Link>
-        <Link className="about-cta about-cta--ghost" href={aboutClosing.secondary.href}>
+        <Link className="button-secondary" href={aboutClosing.secondary.href}>
           {aboutClosing.secondary.label}
         </Link>
         <Link className="about-closing__journalism" href={aboutClosing.journalism.href}>

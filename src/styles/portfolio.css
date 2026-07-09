@@ -51,8 +51,8 @@
 
 .pf-eyebrow {
   margin: 0;
-  font-size: 0.7rem;
-  font-weight: 800;
+  font-size: 0.72rem;
+  font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--lane-accent) 78%, var(--df-text));
@@ -1352,41 +1352,9 @@
   flex-wrap: wrap;
   margin-bottom: clamp(26px, 3vw, 40px);
 }
-.pf-cta__socials {
-  display: flex;
-  gap: 10px;
+.pf-cta__social {
   justify-content: center;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.pf-cta__socials a {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 10px 16px;
-  min-height: 46px;
-  border: 1px solid var(--pf-edge);
-  border-radius: var(--pf-radius);
-  text-align: left;
-  transition: border-color var(--df-fast), transform var(--df-fast);
-}
-.pf-cta__socials a:hover,
-.pf-cta__socials a:focus-visible {
-  border-color: var(--df-teal);
-  transform: translateY(-2px);
-}
-.pf-cta__socials span {
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--df-muted);
-}
-.pf-cta__socials strong {
-  font-size: 0.85rem;
-  color: var(--df-text);
+  margin-top: 20px;
 }
 
 /* Room loading skeleton + drawer CTA */

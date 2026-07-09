@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getSocialLinks } from "@/lib/social-links";
+import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
 
 /**
  * Closing CTA — calm, professional, echoing the Contact page language. Booking
@@ -31,21 +32,7 @@ export function PortfolioCTA() {
           </Link>
         </div>
 
-        <ul className="pf-cta__socials" aria-label="Social links">
-          {socials.map((social) => (
-            <li key={social.key}>
-              <a
-                href={social.href}
-                aria-label={social.label}
-                target={social.href.startsWith("http") ? "_blank" : undefined}
-                rel={social.href.startsWith("http") ? "noreferrer" : undefined}
-              >
-                <span>{social.platform}</span>
-                <strong>{social.handle} ↗</strong>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <SocialLinks links={socials} className="pf-cta__social" />
       </div>
     </section>
   );

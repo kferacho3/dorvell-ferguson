@@ -4,20 +4,17 @@ import { SocialGlyph } from "@/components/dorvell/social-icons";
 type SocialLinksProps = {
   links: SocialLink[];
   className?: string;
-  variant?: "row" | "rail";
 };
 
 /**
- * Reusable social row. Renders LinkedIn, @fergphotography, @2kferg and TikTok
- * (only when a verified URL exists — the caller passes the already-filtered
- * list from `getSocialLinks`).
+ * Shared bare-icon social row. Each link renders as an icon-only target with its
+ * handle revealed on hover/focus; the accessible name always lives on the
+ * anchor. Single source so the footer, About hero, and About closing render an
+ * identical row.
  */
-export function SocialLinks({ links, className, variant = "row" }: SocialLinksProps) {
+export function SocialLinks({ links, className }: SocialLinksProps) {
   return (
-    <ul
-      className={className ? `social-links social-links--${variant} ${className}` : `social-links social-links--${variant}`}
-      aria-label="Social profiles"
-    >
+    <ul className={className ? `social-links ${className}` : "social-links"} aria-label="Social profiles">
       {links.map((link) => (
         <li key={link.key}>
           <a
@@ -30,9 +27,8 @@ export function SocialLinks({ links, className, variant = "row" }: SocialLinksPr
             <span className="social-links__icon" aria-hidden="true">
               <SocialGlyph social={link.key} />
             </span>
-            <span className="social-links__text">
-              <strong>{link.platform}</strong>
-              <em>{link.handle}</em>
+            <span className="social-links__tip" aria-hidden="true">
+              {link.handle}
             </span>
           </a>
         </li>

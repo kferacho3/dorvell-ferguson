@@ -106,7 +106,7 @@
   gap: 0.6rem;
   font-family: var(--font-body);
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--cw-teal);
@@ -826,7 +826,7 @@
 }
 .cw-hero__eyebrow {
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--cw-teal);
@@ -1801,40 +1801,12 @@
 .cw-cta__links {
   justify-content: center;
 }
-.cw-cta__socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.4rem;
+.cw-cta__social {
   justify-content: center;
-  list-style: none;
-  padding: 1.6rem 0 0;
-  margin: clamp(1.5rem, 4vw, 2.5rem) 0 0;
-  border-top: 1px solid var(--cw-line);
   width: 100%;
-}
-.cw-cta__socials a {
-  display: grid;
-  gap: 0.2rem;
-  text-decoration: none;
-  color: var(--cw-soft);
-}
-.cw-cta__socials a:hover .cw-cta__social-handle {
-  color: var(--cw-teal);
-}
-.cw-cta__socials a:focus-visible {
-  outline: 2px solid var(--cw-teal);
-  outline-offset: 3px;
-}
-.cw-cta__social-platform {
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--cw-muted);
-}
-.cw-cta__social-handle {
-  font-size: 0.95rem;
-  color: var(--cw-ink);
-  transition: color var(--cw-fast);
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--cw-line);
 }
 
 /* ---- cross-page · modeling motion strip ------------------------------- */
