@@ -4,6 +4,7 @@ import { getPortfolioData } from "@/lib/portfolio-data";
 import { modelingImages } from "@/lib/photos/getPublicPhotos";
 import { imageAlt } from "@/lib/images";
 import { ModelingExperience } from "@/components/modeling/ModelingExperience";
+import { ModelingMotionStrip } from "@/components/dorvell/creative/ModelingMotionStrip";
 import type { ModelingImage } from "@/components/modeling/modelingTypes";
 
 export const metadata: Metadata = {
@@ -39,6 +40,7 @@ export default function ModelingPage() {
     <DorvellShell>
       <div className="route-page modeling-route">
         <ModelingExperience images={roomImages} curated={curated} />
+        <ModelingMotionStrip />
       </div>
     </DorvellShell>
   );

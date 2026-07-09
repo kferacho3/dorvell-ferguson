@@ -1,0 +1,19 @@
+{
+  "slug": "misc-creative-1",
+  "originalFileName": "Misc-Creative1.mp4",
+  "sourceFolderLabel": "dorvell ferguson videos",
+  "codec": "h264",
+  "width": 576,
+  "height": 1024,
+  "orientation": "portrait",
+  "duration": 25.4,
+  "hasAudio": true,
+  "publicDir": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1",
+  "mp4Src": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/video.mp4",
+  "webmSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/video.webm",
+  "posterSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/poster.jpg",
+  "posterWebpSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/poster.webp",
+  "thumbSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/thumb.webp",
+  "blurSrc": "/dorvell/videos/dorvell-ferguson-videos/misc-creative-1/blur.jpg",
+  "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYAA4DASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAUBAwT/xAAgEAABBQACAgMAAAAAAAAAAAABAAIDBBEFIRIiM1GB/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//EABcRAQEBAQAAAAAAAAAAAAAAAAACAUH/2gAMAwEAAhEDEQA/AMkV2R1lgsQmN29FPYbPqlPIW2XbbJDE6NrRn6rGOwZ5HpJNAuO4bWuMitRgxEMw6QpipxP+Rg0fSEIzv//Z"
+}

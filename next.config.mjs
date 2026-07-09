@@ -31,6 +31,14 @@ const nextConfig = {
         headers: immutableAssetHeaders,
       },
       {
+        source: "/dorvell/videos/:path*",
+        headers: immutableAssetHeaders,
+      },
+      {
+        source: "/dorvell/creative/:path*",
+        headers: immutableAssetHeaders,
+      },
+      {
         source: "/dorvell-ferguson-symbol-v2.png",
         headers: immutableAssetHeaders,
       },

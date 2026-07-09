@@ -4,6 +4,9 @@ dist/
 out/
 *.tsbuildinfo
 public/dorvell/originals/
+# Raw, unoptimized source media — never shipped. Optimized web assets live in
+# public/dorvell/videos + public/dorvell/creative and ARE committed/deployed.
+assets/raw/
 .env*.local
 .DS_Store
 tmp/

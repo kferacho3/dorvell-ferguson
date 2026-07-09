@@ -1,0 +1,19 @@
+{
+  "slug": "music-event",
+  "originalFileName": "music-event.mp4",
+  "sourceFolderLabel": "dorvell ferguson videos",
+  "codec": "h264",
+  "width": 720,
+  "height": 1280,
+  "orientation": "portrait",
+  "duration": 12.75,
+  "hasAudio": true,
+  "publicDir": "/dorvell/videos/dorvell-ferguson-videos/music-event",
+  "mp4Src": "/dorvell/videos/dorvell-ferguson-videos/music-event/video.mp4",
+  "webmSrc": "/dorvell/videos/dorvell-ferguson-videos/music-event/video.webm",
+  "posterSrc": "/dorvell/videos/dorvell-ferguson-videos/music-event/poster.jpg",
+  "posterWebpSrc": "/dorvell/videos/dorvell-ferguson-videos/music-event/poster.webp",
+  "thumbSrc": "/dorvell/videos/dorvell-ferguson-videos/music-event/thumb.webp",
+  "blurSrc": "/dorvell/videos/dorvell-ferguson-videos/music-event/blur.jpg",
+  "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYAA4DASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAMEBf/EACIQAAIBAwMFAQAAAAAAAAAAAAECAAMEEQUUIQYSMUFCcf/EABYBAQEBAAAAAAAAAAAAAAAAAAIAAf/EABURAQEAAAAAAAAAAAAAAAAAAABB/9oADAMBAAIRAxEAPwCDV7nb01VWw5PqOtKy3NBXX8MzeoFO4VvnHEq0IYtmz4JjoxLrBZqSknIBjbCp22ac4hCVbH//2Q=="
+}

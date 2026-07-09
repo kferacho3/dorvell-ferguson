@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const scrapedAt = new Date(data.generated.scrapedAt);
   const lastModified = Number.isNaN(scrapedAt.getTime()) ? new Date() : scrapedAt;
 
-  const routes = ["", "/work", "/modeling", "/projects", "/about", "/contact"];
+  const routes = ["", "/work", "/modeling", "/creative", "/projects", "/about", "/contact"];
   const projects = data.projects
     .filter((project) => !excludedProjectSlugs.has(project.slug))
     .map((project) => `/work/${project.slug}`);

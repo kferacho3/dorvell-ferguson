@@ -16,6 +16,11 @@
     "scrape:portfolio": "tsx scripts/scrape-dorvell-portfolio.ts",
     "scrape:instagram": "tsx scripts/scrape-fergphotography-instagram.ts",
     "process:images": "tsx scripts/process-dorvell-images.ts",
+    "optimize:videos": "node scripts/optimize-dorvell-videos.mjs",
+    "optimize:photomode": "node scripts/optimize-dorvell-photomode.mjs",
+    "optimize:creative": "npm run optimize:videos && npm run optimize:photomode",
+    "upload:assets": "node scripts/upload-dorvell-assets.mjs",
+    "upload:assets:dry-run": "node scripts/upload-dorvell-assets.mjs --dry-run",
     "build:content": "npm run scrape:portfolio && npm run scrape:instagram && npm run process:images",
     "verify:portfolio-data": "tsx scripts/verify-dorvell-data.ts",
     "curation:build": "tsx scripts/curation/report-to-json.ts"

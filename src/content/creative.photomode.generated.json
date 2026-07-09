@@ -1,0 +1,104 @@
+{
+  "effect-1": {
+    "slug": "effect-1",
+    "label": "Photomode · Set I",
+    "sourceFolder": "custom effect 1",
+    "items": [
+      {
+        "slug": "01",
+        "originalFileName": "imgi_25_b8aeef24a1cb41109996622c06f28e64~tplv-photomode-image.jpg",
+        "width": 2160,
+        "height": 3240,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-1/01.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-1/01.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-1/01.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABADASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAQDBQb/xAAgEAACAQQCAwEAAAAAAAAAAAABAgADBBESEyEiMVFh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAXEQEBAQEAAAAAAAAAAAAAAAAAAREh/9oADAMBAAIRAxEAPwDZheovzI9V6Y9rJ1rI7FAe4klppcq++dc5/YacVtteXXOS9IgfY4b0r5anEISYq9f/2Q=="
+      },
+      {
+        "slug": "02",
+        "originalFileName": "imgi_53_1f6c36e4a68e4fcf86bad47795e4791e~tplv-photomode-image.jpg",
+        "width": 1080,
+        "height": 1440,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-1/02.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-1/02.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-1/02.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABIDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAQCAwb/xAAiEAABAwQCAgMAAAAAAAAAAAABAAIDBRETIQRhFDEiQaH/xAAVAQEBAAAAAAAAAAAAAAAAAAABAv/EABgRAQEBAQEAAAAAAAAAAAAAAAABEQIh/9oADAMBAAIRAxEAPwDpROO6Oo8eT0119Feoic85RKNfSgbSmxEGOT5Rm46VIie+5Mtu1MmKqU1AAkYzpFk0aYknyjvpFOdHxRJmZG+THt3uxWGNnDBGInFp3e6IqCoP5IAGH9RESH//2Q=="
+      },
+      {
+        "slug": "03",
+        "originalFileName": "imgi_54_34531c81de65458da48784b07f0f4890~tplv-photomode-image.jpg",
+        "width": 2160,
+        "height": 3240,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-1/03.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-1/03.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-1/03.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAQGBf/EAB0QAAEEAwEBAAAAAAAAAAAAAAEAAgMRBAUSQSH/xAAWAQEBAQAAAAAAAAAAAAAAAAACAAH/xAAXEQEBAQEAAAAAAAAAAAAAAAABABEC/9oADAMBAAIRAxEAPwC15sUkuWx9N9BtPdNsgH6FP7HJONPI91mO6BKPTkg2b7njmc8vYQfAsHfZks8ZiERoG7QhY0X/2Q=="
+      },
+      {
+        "slug": "04",
+        "originalFileName": "imgi_55_84e0edb517784702b5e12682adf803a0~tplv-photomode-image.jpg",
+        "width": 2160,
+        "height": 3240,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-1/04.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-1/04.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-1/04.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAMEBv/EAB0QAAICAgMBAAAAAAAAAAAAAAECAAMEERITITH/xAAVAQEBAAAAAAAAAAAAAAAAAAABAv/EABURAQEAAAAAAAAAAAAAAAAAAAAR/9oADAMBAAIRAxEAPwDWBfIskEkKQdfYztRuSqw5AfJJi0dZd2Oyx9hSgxbM4XM1lOgZWb7K02az7CElT//Z"
+      },
+      {
+        "slug": "05",
+        "originalFileName": "imgi_56_34dd704de56942f790a1fd3d5fd07186~tplv-photomode-image.jpg",
+        "width": 2160,
+        "height": 3240,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-1/05.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-1/05.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-1/05.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABADASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAQCBv/EAB4QAQEAAwACAwEAAAAAAAAAAAECAAMRBAUSIUFR/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAWEQEBAQAAAAAAAAAAAAAAAAAAESH/2gAMAwEAAhEDEQA/AOxUiWqeB+4OUCPRybyqduhjWnXNeLRGiZa6mRZiCfU7de6adtfEf7lJ6u5Vna/b3GMQr//Z"
+      },
+      {
+        "slug": "06",
+        "originalFileName": "imgi_57_52e8a01a64cc4e1cb7354b6e81e8ed1b~tplv-photomode-image.jpg",
+        "width": 2160,
+        "height": 3240,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-1/06.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-1/06.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-1/06.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAQGBf/EACAQAAEFAAEFAQAAAAAAAAAAAAEAAgMEESETIjFBUaH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAv/EABgRAQADAQAAAAAAAAAAAAAAAAABESFB/9oADAMBAAIRAxEAPwCgwNGuOD6h8eeOQlZXGxZERBDB+lPFvTaAVPVVieoR25brJHSbzyMW3NDbkh7BjgfaEJRMv//Z"
+      }
+    ]
+  },
+  "effect-2": {
+    "slug": "effect-2",
+    "label": "Photomode · Set II",
+    "sourceFolder": "custom effect 2",
+    "items": [
+      {
+        "slug": "01",
+        "originalFileName": "imgi_53_05d5b8982e5d485782f1f53109608cc6~tplv-photomode-image.jpg",
+        "width": 2156,
+        "height": 2698,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-2/01.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-2/01.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-2/01.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABMDASIAAhEBAxEB/8QAGAABAAMBAAAAAAAAAAAAAAAAAAMEBQH/xAAhEAACAgIBBAMAAAAAAAAAAAABAgADBBESEyJBUTFxkf/EABYBAQEBAAAAAAAAAAAAAAAAAAABAv/EABURAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIRAxEAPwDLtxmbqWDxIakFy9obfvxNN6TdUKkbixP7O42NZg1OHHJT6mG0VVGq1+olhW7REC3h1JslvmSZtYNDEGIkWKFa6rERED//2Q=="
+      },
+      {
+        "slug": "02",
+        "originalFileName": "imgi_54_b44970b02739426ab254d4e56bb0e357~tplv-photomode-image.jpg",
+        "width": 2156,
+        "height": 2874,
+        "orientation": "portrait",
+        "lgSrc": "/dorvell/creative/photomode/effect-2/02.lg.webp",
+        "mdSrc": "/dorvell/creative/photomode/effect-2/02.md.webp",
+        "blurSrc": "/dorvell/creative/photomode/effect-2/02.blur.jpg",
+        "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAYABIDASIAAhEBAxEB/8QAGAABAAMBAAAAAAAAAAAAAAAAAAECAwb/xAAcEAEAAgIDAQAAAAAAAAAAAAABAAIRIQMSMQT/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAL/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDmb9hVXGZINq5LLNOemaKC78lfmMZ7amS2qW6m3yJqBgiSUrx32Yk8tEohWIgUVrfqafIiIp//2Q=="
+      }
+    ]
+  }
+}
