@@ -32,6 +32,7 @@
  *   node scripts/optimize-dorvell-videos.mjs --only=posters  # fast: metadata + poster/thumb/blur only
  *   node scripts/optimize-dorvell-videos.mjs --only=encode   # mp4 + webm only
  *   node scripts/optimize-dorvell-videos.mjs --force         # re-generate even if outputs exist
+ *   node scripts/optimize-dorvell-videos.mjs "clip.mov" --trim=18 --force  # hard-cut output to 18s
  *   node scripts/optimize-dorvell-videos.mjs --concurrency=4
  *   node scripts/optimize-dorvell-videos.mjs path/to/one.mov # process specific files
  */
@@ -71,6 +72,7 @@ const opt = (name, fallback) => {
 const FORCE = flag("force");
 const ONLY = opt("only", "all"); // posters | encode | all
 const CONCURRENCY = Math.max(1, Number(opt("concurrency", "3")) || 3);
+const TRIM = Math.max(0, Number(opt("trim", "0")) || 0); // hard-cut output to N seconds (0 = full)
 const explicitFiles = argv.filter((a) => !a.startsWith("--"));
 
 // ---- known-clip slug overrides (media only; editorial curation lives in creative.ts) ----
@@ -197,6 +199,7 @@ async function encodeMp4Variant(input, out, longEdge, crf, audioBitrate) {
   if (!FORCE && existsSync(out)) return { skipped: true, path: out };
   await execFileP("ffmpeg", [
     "-y", "-i", input,
+    ...(TRIM ? ["-t", String(TRIM)] : []),
     "-map", "0:v:0", "-map", "0:a?",
     "-vf", scaleFilter(longEdge),
     "-c:v", "libx264", "-preset", "medium", "-crf", String(crf), "-pix_fmt", "yuv420p",
@@ -215,6 +218,9 @@ async function processClip(input) {
   await mkdir(dir, { recursive: true });
 
   const meta = await ffprobe(input);
+  // when trimming, the real output duration is the cut length
+  const effectiveDuration = TRIM ? Math.min(TRIM, meta.duration) : meta.duration;
+  meta.duration = effectiveDuration;
   const pubDir = `${PUBLIC_BASE}/${slug}`;
 
   let blurDataURL = null;
