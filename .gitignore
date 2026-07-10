@@ -4,9 +4,12 @@ dist/
 out/
 *.tsbuildinfo
 public/dorvell/originals/
-# Raw, unoptimized source media — never shipped. Optimized web assets live in
-# public/dorvell/videos + public/dorvell/creative and ARE committed/deployed.
+# Raw, unoptimized source media — never shipped.
 assets/raw/
+# Optimized creative video is served from S3 (see resolveCreativeAsset default);
+# `npm run optimize:videos` writes here locally, then `npm run upload:assets` ships
+# it to the bucket. Kept out of git so the repo/deploy stays light.
+public/dorvell/videos/
 .env*.local
 .DS_Store
 tmp/

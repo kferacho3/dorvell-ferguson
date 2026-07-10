@@ -183,6 +183,9 @@ export function RippleVideoPanel({ videos, className }: Props) {
 
       const makeVideo = (v: StudioVideo) => {
         const el = document.createElement("video");
+        // required to texture a cross-origin (S3/CDN) video into WebGL without
+        // tainting — must be set before src; the bucket sends Access-Control-Allow-Origin.
+        el.crossOrigin = "anonymous";
         el.src = clipSrc(v);
         el.muted = true;
         el.loop = true;
@@ -518,8 +521,8 @@ function CrossfadeVideoPanel({
       role="img"
       aria-label="Creative reel of Dorvell Ferguson's work."
     >
-      <video ref={aRef} className="ripple-panel__video" style={{ opacity: 1 }} muted loop playsInline aria-hidden="true" />
-      <video ref={bRef} className="ripple-panel__video" style={{ opacity: 0 }} muted loop playsInline aria-hidden="true" />
+      <video ref={aRef} className="ripple-panel__video" style={{ opacity: 1 }} muted loop playsInline crossOrigin="anonymous" aria-hidden="true" />
+      <video ref={bRef} className="ripple-panel__video" style={{ opacity: 0 }} muted loop playsInline crossOrigin="anonymous" aria-hidden="true" />
       <span className="ripple-panel__hint" aria-hidden="true">
         Hover to switch
       </span>

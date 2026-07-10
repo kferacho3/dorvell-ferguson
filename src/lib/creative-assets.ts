@@ -1,14 +1,19 @@
 /**
  * Single seam for where Creative media is served from.
  *
- * Today every optimized video/photo lives under `public/dorvell/...` and these
- * helpers are pass-throughs. When Dorvell moves the library to S3/CloudFront,
- * set `NEXT_PUBLIC_ASSET_BASE_URL` (e.g. "https://cdn.dorvellferguson.com") and
- * every creative asset resolves through it — no data or component changes. Data
- * stays portable (raw `/dorvell/...` paths); resolution happens only at render.
+ * The optimized video/photo library lives in a public-read S3 bucket, so we
+ * serve from it BY DEFAULT — prod and dev need zero env config. Data stays
+ * portable (raw `/dorvell/...` paths); resolution to the base happens only at
+ * render. Override with `NEXT_PUBLIC_ASSET_BASE_URL` (e.g. a CloudFront domain),
+ * or set it to "" to serve from local `/public` instead.
+ *
+ * Upload after (re)optimizing: `npm run upload:assets`. To point at a CDN later,
+ * change DEFAULT_ASSET_BASE (or set the env var) — nothing else changes.
  */
 
-const RAW_BASE = process.env.NEXT_PUBLIC_ASSET_BASE_URL?.replace(/\/+$/, "") ?? "";
+const DEFAULT_ASSET_BASE = "https://dorvell-ferguson.s3.us-east-2.amazonaws.com";
+// undefined env → S3 default; explicit "" → local /public; explicit URL → that URL
+const RAW_BASE = (process.env.NEXT_PUBLIC_ASSET_BASE_URL ?? DEFAULT_ASSET_BASE).replace(/\/+$/, "");
 
 /** Prepend the asset base (when configured) to a root-relative public path. */
 export function resolveCreativeAsset<T extends string | null | undefined>(path: T): T {
