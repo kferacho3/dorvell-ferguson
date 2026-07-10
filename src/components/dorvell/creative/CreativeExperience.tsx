@@ -7,7 +7,6 @@ import { useCreativeMode } from "./creativeMode";
 import { CreativeHeroVideo } from "./CreativeHeroVideo";
 import { CreativeManifesto } from "./CreativeManifesto";
 import { FeaturedCreativeFilm } from "./FeaturedCreativeFilm";
-import { CreativeRooms } from "./CreativeRooms";
 import { ScrollMorphGallery } from "./ScrollMorphGallery";
 import { ReelRunway } from "./ReelRunway";
 import { CreativePhotoshootGallery } from "./CreativePhotoshootGallery";
@@ -48,7 +47,6 @@ export function CreativeExperience() {
           <CreativeControlRail />
           <CreativeManifesto />
           <FeaturedCreativeFilm />
-          <CreativeRooms />
           <ScrollMorphGallery />
           <ReelRunway />
           <CreativePhotoshootGallery />

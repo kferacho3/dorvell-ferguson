@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 import {
   creativeCategories,
@@ -10,7 +10,6 @@ import {
   type CreativeOrientation,
 } from "@/content/creative";
 import { CreativeMediaCard } from "./CreativeMediaCard";
-import { CREATIVE_FILTER_EVENT, type CreativeFilterDetail } from "./creativeFilter";
 
 type CategoryFilter = "all" | CreativeCategoryKey;
 type FormatFilter = "all" | CreativeOrientation;
@@ -32,22 +31,12 @@ const SORTS: { key: SortKey; label: string }[] = [
 
 /**
  * Section 8 — Creative archive / filterable index. Practical library of every
- * clip: filter by room + format, sort, open any card in the lightbox. Responds
- * to the Rooms filter event so a room click focuses the matching category.
+ * clip: filter by room + format, sort, open any card in the lightbox.
  */
 export function CreativeArchive() {
   const [category, setCategory] = useState<CategoryFilter>("all");
   const [format, setFormat] = useState<FormatFilter>("all");
   const [sort, setSort] = useState<SortKey>("featured");
-
-  useEffect(() => {
-    const handler = (event: Event) => {
-      const detail = (event as CustomEvent<CreativeFilterDetail>).detail;
-      if (detail?.category) setCategory(detail.category);
-    };
-    window.addEventListener(CREATIVE_FILTER_EVENT, handler);
-    return () => window.removeEventListener(CREATIVE_FILTER_EVENT, handler);
-  }, []);
 
   const results = useMemo(() => {
     const filtered = creativeItems.filter((item) => {
