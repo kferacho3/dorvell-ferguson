@@ -25,39 +25,80 @@ function GifPrint({ set, index }: { set: PhotomodeSet; index: number }) {
     return () => clearInterval(id);
   }, [animated, inView, paused, set.items.length]);
 
+  const bloomSrc = resolveCreativeAsset(set.items[frame]?.mdSrc ?? set.items[0].mdSrc);
+
   return (
     <div
       ref={ref}
-      className="cw-graf__print"
+      className="cw-graf__printwrap"
       style={{ ["--rot" as string]: ROTATIONS[index % ROTATIONS.length] }}
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
     >
-      <span className="cw-graf__tape cw-graf__tape--tl" aria-hidden="true" />
-      <span className="cw-graf__tape cw-graf__tape--br" aria-hidden="true" />
-      <span className="cw-graf__gifbadge">{animated ? "GIF" : "STILL"}</span>
-      <div className="cw-graf__photo">
-        {set.items.map((image, i) => (
-          <Image
-            key={image.slug}
-            src={resolveCreativeAsset(image.mdSrc)}
-            alt={i === 0 ? `${set.label} — @2kferg photomode` : ""}
-            fill
-            unoptimized
-            sizes="(max-width: 760px) 80vw, 360px"
-            placeholder={image.blurDataURL ? "blur" : "empty"}
-            blurDataURL={image.blurDataURL}
-            className="cw-graf__frame"
-            style={{ opacity: i === frame ? 1 : 0 }}
-          />
-        ))}
-        <span className="cw-graf__sheen" aria-hidden="true" />
-      </div>
-      <div className="cw-graf__caption">
-        <span>@2kferg</span>
-        <span>{set.items.length} frames</span>
+      {/* chromatic + lens-blur bloom of the current frame — glows around the print */}
+      <span className="cw-graf__bloom" style={{ backgroundImage: `url(${bloomSrc})` }} aria-hidden="true" />
+      <div className="cw-graf__print">
+        <span className="cw-graf__tape cw-graf__tape--tl" aria-hidden="true" />
+        <span className="cw-graf__tape cw-graf__tape--br" aria-hidden="true" />
+        <span className="cw-graf__gifbadge">{animated ? "GIF" : "STILL"}</span>
+        <div className="cw-graf__photo">
+          {set.items.map((image, i) => (
+            <Image
+              key={image.slug}
+              src={resolveCreativeAsset(image.mdSrc)}
+              alt={i === 0 ? `${set.label} — @2kferg photomode` : ""}
+              fill
+              unoptimized
+              sizes="(max-width: 760px) 80vw, 360px"
+              placeholder={image.blurDataURL ? "blur" : "empty"}
+              blurDataURL={image.blurDataURL}
+              className="cw-graf__frame"
+              style={{ opacity: i === frame ? 1 : 0 }}
+            />
+          ))}
+          <span className="cw-graf__chroma" aria-hidden="true" style={{ backgroundImage: `url(${bloomSrc})` }} />
+          <span className="cw-graf__sheen" aria-hidden="true" />
+        </div>
+        <div className="cw-graf__caption">
+          <span>@2kferg</span>
+          <span>{set.items.length} frames</span>
+        </div>
       </div>
     </div>
+  );
+}
+
+/** Reusable chromatic-aberration (RGB channel split) SVG filter, defined once. */
+function ChromaticFilterDefs() {
+  return (
+    <svg aria-hidden="true" focusable="false" width="0" height="0" style={{ position: "absolute" }}>
+      <defs>
+        <filter id="cw-chroma" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+            result="r"
+          />
+          <feOffset in="r" dx="4" dy="0.6" result="ro" />
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
+            result="g"
+          />
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"
+            result="b"
+          />
+          <feOffset in="b" dx="-4" dy="-0.6" result="bo" />
+          <feBlend in="ro" in2="g" mode="screen" result="rg" />
+          <feBlend in="rg" in2="bo" mode="screen" />
+        </filter>
+      </defs>
+    </svg>
   );
 }
 
@@ -71,6 +112,7 @@ export function PhotomodeGraffiti() {
 
   return (
     <section className="cw-section cw-graf" aria-labelledby="cw-graf-title">
+      <ChromaticFilterDefs />
       <span className="cw-graf__glow" aria-hidden="true" />
       <span className="cw-graf__sticker cw-graf__sticker--1" aria-hidden="true">
         2KFERG

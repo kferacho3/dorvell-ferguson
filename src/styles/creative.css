@@ -1604,13 +1604,16 @@
   position: absolute;
   inset: -12% -6%;
   z-index: -1;
+  /* vibrant chromatic spread (teal → blue → violet → pink → gold), from brand
+     tokens + a color-mix violet — the bold Morflax-style color moment */
   background:
-    radial-gradient(48% 55% at 18% 24%, color-mix(in srgb, var(--cw-teal) 42%, transparent), transparent 62%),
-    radial-gradient(44% 50% at 84% 30%, color-mix(in srgb, var(--cw-gold) 44%, transparent), transparent 62%),
-    radial-gradient(60% 62% at 60% 92%, color-mix(in srgb, var(--cw-brown) 50%, transparent), transparent 66%),
-    radial-gradient(38% 40% at 42% 62%, color-mix(in srgb, var(--cw-red) 28%, transparent), transparent 60%);
-  filter: blur(34px) saturate(1.35);
-  opacity: 0.5;
+    radial-gradient(46% 52% at 15% 22%, color-mix(in srgb, var(--cw-teal) 56%, transparent), transparent 60%),
+    radial-gradient(40% 46% at 82% 18%, color-mix(in srgb, var(--df-blue) 50%, transparent), transparent 60%),
+    radial-gradient(42% 46% at 90% 60%, color-mix(in srgb, var(--cw-red) 48%, transparent), transparent 62%),
+    radial-gradient(52% 56% at 58% 98%, color-mix(in srgb, var(--cw-gold) 52%, transparent), transparent 64%),
+    radial-gradient(40% 44% at 34% 72%, color-mix(in srgb, color-mix(in srgb, var(--df-blue) 55%, var(--cw-red)) 55%, transparent), transparent 60%);
+  filter: blur(38px) saturate(1.7);
+  opacity: 0.62;
   mix-blend-mode: screen;
   animation: cw-graf-drift 20s ease-in-out infinite alternate;
 }
@@ -1703,23 +1706,52 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: clamp(1.6rem, 5vw, 4.5rem);
-  padding: clamp(1.5rem, 4vw, 3rem) 0;
+  gap: clamp(2rem, 6vw, 5.5rem);
+  padding: clamp(2rem, 5vw, 4rem) 0;
+}
+/* wrapper carries the loose rotation so the bloom halo rotates with the print */
+.cw-graf__printwrap {
+  position: relative;
+  width: clamp(230px, 32vw, 360px);
+  transform: rotate(var(--rot, 0deg));
+  transition: transform var(--cw-med);
+}
+.cw-graf__printwrap:hover {
+  transform: rotate(0deg);
+  z-index: 5;
+}
+/* chromatic + lens-blur bloom of the current frame — the Morflax-style glow halo */
+.cw-graf__bloom {
+  position: absolute;
+  inset: -14% -12%;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: url(#cw-chroma) blur(26px) saturate(1.8) brightness(1.05);
+  transform: scale(1.04);
+  opacity: 0.72;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transition: opacity var(--cw-med), filter var(--cw-med), transform var(--cw-med);
+}
+.cw-graf__printwrap:hover .cw-graf__bloom {
+  opacity: 1;
+  filter: url(#cw-chroma) blur(30px) saturate(2.2) brightness(1.12);
+  transform: scale(1.12);
 }
 .cw-graf__print {
   position: relative;
-  width: clamp(230px, 32vw, 360px);
+  z-index: 1;
+  width: 100%;
   background: var(--df-paper);
   padding: 12px 12px 44px;
   border-radius: 2px;
-  transform: rotate(var(--rot, 0deg));
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
   transition: transform var(--cw-med), box-shadow var(--cw-med);
 }
-.cw-graf__print:hover {
-  transform: rotate(0deg) translateY(-8px) scale(1.03);
+.cw-graf__printwrap:hover .cw-graf__print {
+  transform: translateY(-8px) scale(1.03);
   box-shadow: 0 42px 84px rgba(0, 0, 0, 0.72), 0 0 46px color-mix(in srgb, var(--cw-gold) 22%, transparent);
-  z-index: 5;
 }
 .cw-graf__photo {
   position: relative;
@@ -1730,12 +1762,31 @@
 }
 .cw-graf__frame {
   object-fit: cover;
-  transition: opacity 130ms linear;
+  transition: opacity 130ms linear, filter var(--cw-med);
+}
+/* on hover the print itself leans into blur + chromatic (interactive play) */
+.cw-graf__printwrap:hover .cw-graf__frame {
+  filter: blur(1.4px);
+}
+.cw-graf__chroma {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-size: cover;
+  background-position: center;
+  filter: url(#cw-chroma);
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transition: opacity var(--cw-med);
+}
+.cw-graf__printwrap:hover .cw-graf__chroma {
+  opacity: 0.55;
 }
 .cw-graf__sheen {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   background: linear-gradient(
     120deg,
     transparent 42%,
@@ -1744,6 +1795,15 @@
   );
   mix-blend-mode: screen;
   pointer-events: none;
+}
+/* reduced motion: keep the bloom but drop the interactive blur/chroma shifts */
+@media (prefers-reduced-motion: reduce) {
+  .cw-graf__printwrap:hover .cw-graf__frame {
+    filter: none;
+  }
+  .cw-graf__printwrap:hover .cw-graf__chroma {
+    opacity: 0;
+  }
 }
 .cw-graf__gifbadge {
   position: absolute;
