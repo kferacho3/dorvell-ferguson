@@ -184,23 +184,32 @@ export function FocusReview({
             </select>
           </label>
         ) : (
-          <label className={`studio-card__field${needsCategory ? " studio-card__field--warn" : ""}`}>
+          <div
+            className={`studio-card__field${needsCategory ? " studio-card__field--warn" : ""}`}
+            role="group"
+            aria-label={`Primary category for ${photo.filename}${isKept ? " (required)" : ""}`}
+          >
             <span>
               Primary category{isKept ? " (required)" : ""}
               {needsCategory ? <em className="studio-focus__warn"> — needs category</em> : null}
             </span>
-            <select
-              value={decision?.category_primary ?? ""}
-              onChange={(event) => onSetCategory(photo.photo_id, event.target.value || null)}
-            >
-              <option value="">Choose category…</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </label>
+            <div className="studio-card__categories studio-card__categories--focus">
+              {categories.map((category) => {
+                const isActive = decision?.category_primary === category;
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    className={`studio-cat${isActive ? " is-on" : ""}`}
+                    aria-pressed={isActive}
+                    onClick={() => onSetCategory(photo.photo_id, isActive ? null : category)}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         )}
 
         <div className="studio-focus__tags">

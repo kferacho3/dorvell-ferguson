@@ -1102,6 +1102,48 @@
   border-color: var(--st-warn);
 }
 
+.studio-card__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.studio-card__categories--focus {
+  gap: 6px;
+}
+
+.studio-cat {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border: 1px solid var(--st-line-strong);
+  border-radius: 999px;
+  background: var(--st-panel);
+  color: var(--st-ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 160ms var(--st-ease), border-color 160ms var(--st-ease), color 160ms var(--st-ease);
+}
+
+.studio-cat:hover {
+  border-color: var(--st-teal);
+  color: var(--st-teal);
+}
+
+.studio-cat.is-on {
+  background: var(--st-ink);
+  border-color: var(--st-ink);
+  color: var(--st-cream, #f8f1e7);
+}
+
+.studio-card__field--warn .studio-cat:not(.is-on) {
+  border-color: color-mix(in srgb, var(--st-warn) 55%, var(--st-line-strong));
+}
+
 .studio-card__destinations {
   display: flex;
   flex-wrap: wrap;

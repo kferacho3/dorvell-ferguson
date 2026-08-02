@@ -163,6 +163,7 @@ export const DEFAULT_CATEGORIES = [
   "Athletics",
   "Graphic Design",
   "Runway",
+  "Throwbacks",
 ] as const;
 
 /** Maps legacy scraped categories onto curation defaults for one-tap suggestions. */
