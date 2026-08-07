@@ -2106,3 +2106,28 @@
     transition: none;
   }
 }
+
+/* =====================================================================
+   PARTICLE WORD  ·  appended (never reorder — see file header)
+   The stage was short enough that the word had no presence and the
+   section read as unfinished; it now has room, and the copy sits
+   closer to the word it belongs to.
+   ===================================================================== */
+
+.cw-particle__stage {
+  width: min(1040px, 100%);
+  height: clamp(200px, 30vw, 400px);
+}
+.cw-particle__inner {
+  gap: 0.85rem;
+}
+/* The eyebrow leads the word, so it should not float away from it. */
+.cw-particle__inner .cw-eyebrow {
+  margin-bottom: 0.35rem;
+}
+.cw-particle__inner .cw-lede {
+  max-width: 44ch;
+}
+.cw-particle__inner .cw-btn {
+  margin-top: 0.5rem;
+}

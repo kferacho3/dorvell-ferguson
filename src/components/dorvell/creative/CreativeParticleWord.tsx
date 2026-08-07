@@ -36,6 +36,30 @@ export function CreativeParticleWord({ word = "WORLD" }: { word?: string }) {
     let raf = 0;
     let running = true;
 
+    const FONT_STACK = '"Big Shoulders Display", Impact, sans-serif';
+
+    /**
+     * Size the word to the box by measuring it, rather than guessing from a
+     * character count. A guessed size overflows a condensed display face and
+     * the glyphs get clipped by the canvas edge — which is exactly what the
+     * old `width / (length * 0.62)` heuristic did.
+     */
+    const fitFont = (maxWidth: number, maxHeight: number) => {
+      let size = Math.floor(maxHeight);
+      let metrics = null as TextMetrics | null;
+      for (let i = 0; i < 12; i += 1) {
+        ctx.font = `900 ${size}px ${FONT_STACK}`;
+        metrics = ctx.measureText(word);
+        const glyphHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        if (!metrics.width || !glyphHeight) break;
+        const scale = Math.min(maxWidth / metrics.width, maxHeight / glyphHeight);
+        if (scale > 0.99 && scale <= 1.01) break;
+        size = Math.max(12, Math.floor(size * scale));
+      }
+      ctx.font = `900 ${size}px ${FONT_STACK}`;
+      return ctx.measureText(word);
+    };
+
     const build = () => {
       const rect = host.getBoundingClientRect();
       width = Math.max(320, Math.floor(rect.width));
@@ -47,16 +71,19 @@ export function CreativeParticleWord({ word = "WORLD" }: { word?: string }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // stamp the word, then sample its pixels into particle home positions
-      const fontSize = Math.min(width / (word.length * 0.62), height * 0.72);
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = "#fff";
       ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.font = `900 ${fontSize}px "Big Shoulders Display", Impact, sans-serif`;
-      ctx.fillText(word, width / 2, height / 2);
+      // alphabetic + the real ink box centres the glyphs optically; "middle"
+      // uses the em box, which sits high on a display face.
+      ctx.textBaseline = "alphabetic";
+      const metrics = fitFont(width * 0.94, height * 0.84);
+      const baselineY =
+        height / 2 + (metrics.actualBoundingBoxAscent - metrics.actualBoundingBoxDescent) / 2;
+      ctx.fillText(word, width / 2, baselineY);
 
       const image = ctx.getImageData(0, 0, width, height).data;
-      const step = width > 640 ? 5 : 4;
+      const step = width > 640 ? 4 : 3;
       const particles: Particle[] = [];
       for (let y = 0; y < height; y += step) {
         for (let x = 0; x < width; x += step) {
@@ -69,7 +96,7 @@ export function CreativeParticleWord({ word = "WORLD" }: { word?: string }) {
               y: height / 2 + (Math.random() - 0.5) * height,
               vx: 0,
               vy: 0,
-              s: step * 0.5,
+              s: step * 0.72,
             });
           }
         }
@@ -99,18 +126,33 @@ export function CreativeParticleWord({ word = "WORLD" }: { word?: string }) {
         p.vy *= 0.86;
         p.x += p.vx;
         p.y += p.vy;
-        const twinkle = 0.55 + 0.45 * Math.sin(i * 12.9 + burst);
+        const twinkle = 0.72 + 0.28 * Math.sin(i * 12.9 + burst);
         // literal gold (--df-gold) + ink (--df-text): a Canvas 2D context can't
         // resolve CSS custom properties, so these mirror the brand tokens by value.
-        ctx.fillStyle = i % 7 === 0 ? `rgba(240,179,90,${twinkle})` : `rgba(248,241,231,${0.7 * twinkle})`;
+        ctx.fillStyle = i % 6 === 0 ? `rgba(240,179,90,${twinkle})` : `rgba(248,241,231,${0.92 * twinkle})`;
         ctx.fillRect(p.x, p.y, p.s, p.s);
       }
       if (burstRef.current > 0) burstRef.current -= 1;
     };
 
-    build();
-    frame();
-    const onResize = () => build();
+    const start = () => {
+      if (!running) return;
+      build();
+      frame();
+    };
+
+    // Measuring before the display face has loaded sizes the word against the
+    // Impact fallback, which has different metrics — the result is a word that
+    // no longer fits its box once the real font swaps in.
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(start).catch(start);
+    } else {
+      start();
+    }
+
+    const onResize = () => {
+      if (running) build();
+    };
     window.addEventListener("resize", onResize);
     return () => {
       running = false;
