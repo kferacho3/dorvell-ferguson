@@ -6,7 +6,7 @@ import { resolveCreativeAsset } from "@/lib/creative-assets";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { useSavesData } from "@/lib/useConnectionAwareMedia";
 import { trackFilmEvent } from "@/lib/analytics";
-import { formatRuntime, motionPortalFilm, filmIndexItems } from "@/content/creative";
+import { formatRuntime, motionPortalFilm, motionPortalFilms, filmIndexItems } from "@/content/creative";
 import { useInView } from "@/components/dorvell/creative/useInView";
 import { useIsMobile } from "@/components/dorvell/creative/useIsMobile";
 import { useFilmViewer } from "./film/FilmViewer";
@@ -115,7 +115,11 @@ export function HeroMotionPortal() {
 
   const poster = resolveCreativeAsset(film.posterSrc);
   const loopSrc = resolveCreativeAsset(film.loopSrc ?? film.mobileSrc);
-  const indexLabel = `${String(film.filmIndex ?? 1).padStart(2, "0")} / ${String(filmIndexItems.length).padStart(2, "0")}`;
+  // The hero counts the motion doorway, not the Creative Hub's featured order —
+  // LOOK UP is film 02 in the featured index but it is the first thing the
+  // landing page shows, so labelling it "02" here would read as a mistake.
+  const portalPosition = motionPortalFilms.findIndex((f) => f.slug === film.slug) + 1;
+  const indexLabel = `${String(Math.max(portalPosition, 1)).padStart(2, "0")} / ${String(filmIndexItems.length).padStart(2, "0")}`;
   const needsTap = isMobile && !mobileOptIn && allowedByPreference;
 
   return (

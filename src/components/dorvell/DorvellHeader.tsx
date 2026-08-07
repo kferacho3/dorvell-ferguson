@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FollowTheWork } from "./social/FollowTheWork";
 
 const navItems = [
   { label: "Portfolio", href: "/work" },
@@ -101,6 +102,15 @@ export function DorvellHeader() {
         <Link className="nav-cta" href="/contact" onClick={() => setOpen(false)}>
           Book
         </Link>
+        {/* Follow group — full text links inside the drawer. The top nav is
+            already seven items, so /social lives here and in the footer rather
+            than adding an eighth. */}
+        <div className="nav-follow">
+          <Link className="nav-follow__hub" href="/social" onClick={() => setOpen(false)}>
+            Follow the work
+          </Link>
+          <FollowTheWork variant="stacked" placement="nav" label="Channels" />
+        </div>
       </nav>
     </header>
   );

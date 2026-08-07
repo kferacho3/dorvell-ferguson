@@ -13428,3 +13428,206 @@ section,
     transform: none;
   }
 }
+
+/* =====================================================================
+   VERTICAL MOTION RAIL  ·  landing, .social-motion
+   Replaces the retired TikTok embed column (.social-motion__phone /
+   __embed / __strip, whose rules above are now unused). Self-hosted
+   vertical work, one live decoder at a time. Appended so these win.
+   ===================================================================== */
+
+.social-motion__stage {
+  grid-template-columns: minmax(200px, 0.56fr) minmax(0, 1fr);
+  min-height: 0;
+  align-items: center;
+}
+
+.social-motion__rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(8px, 1vw, 14px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social-motion__clip {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--df-line);
+  border-radius: 8px;
+  background: #050606;
+  cursor: pointer;
+  isolation: isolate;
+  transition: border-color var(--df-fast), transform var(--df-fast), box-shadow var(--df-fast);
+}
+.social-motion__clip:hover,
+.social-motion__clip:focus-visible {
+  border-color: var(--df-red);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 34px rgba(240, 77, 94, 0.18);
+}
+
+.social-motion__clip img,
+.social-motion__clip-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.social-motion__clip-video {
+  z-index: 2;
+}
+
+.social-motion__clip-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.76), transparent 52%);
+}
+
+.social-motion__clip-badge {
+  position: absolute;
+  z-index: 4;
+  top: 8px;
+  left: 8px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--df-teal);
+  color: var(--df-ink);
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.social-motion__clip-meta {
+  position: absolute;
+  z-index: 4;
+  right: 9px;
+  bottom: 8px;
+  left: 9px;
+  display: grid;
+  gap: 1px;
+  text-align: left;
+}
+.social-motion__clip-meta strong {
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.social-motion__clip-meta small {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.58rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.social-motion__clip-play {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(5, 7, 6, 0.5);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  opacity: 0;
+  transition: opacity var(--df-fast);
+}
+.social-motion__clip-play svg {
+  width: 13px;
+  height: 13px;
+  margin-left: 2px;
+}
+.social-motion__clip:hover .social-motion__clip-play,
+.social-motion__clip:focus-visible .social-motion__clip-play {
+  opacity: 1;
+}
+/* A live clip needs no play affordance over it. */
+.social-motion__clip.is-live .social-motion__clip-play {
+  opacity: 0;
+}
+
+.social-motion__follow {
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .social-motion__stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .social-motion__poster {
+    transform: none;
+    margin-inline: auto;
+  }
+  .social-motion__rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* No hover on touch — keep the affordance readable. */
+  .social-motion__clip-play {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-motion__clip,
+  .social-motion__clip-play {
+    transition: none;
+  }
+  .social-motion__clip:hover,
+  .social-motion__clip:focus-visible {
+    transform: none;
+  }
+}
+
+/* Follow group inside the mobile nav drawer. Desktop keeps the top nav to
+   its seven routes — /social is reached from the drawer and the footer. */
+.nav-follow {
+  display: none;
+}
+.nav-links.is-open .nav-follow {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--df-line);
+}
+.nav-follow__hub {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--df-teal);
+}
+.footer-follow {
+  margin-top: 14px;
+}
+
+/* The motion headline wraps to five lines in this column; 0.78 was tuned for a
+   shorter wrap and collides at that length. 0.9 keeps the display-face
+   tightness while staying legible. */
+.social-motion__copy h2 {
+  font-size: clamp(3rem, 6.2vw, 6.8rem);
+  line-height: 0.9;
+}

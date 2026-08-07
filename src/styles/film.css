@@ -682,13 +682,15 @@
   flex-wrap: wrap;
 }
 
-/* Separator dots between platforms — the "IG · TT · FB" editorial line. */
-.ftw--rail .ftw__list > li + li::before {
+/* Separator dots between platforms — the "IG · TT · FB" editorial line.
+   Trailing (::after on all but the last) rather than leading, so a rail that
+   wraps in a narrow column never starts a line with an orphaned dot. */
+.ftw--rail .ftw__list > li:not(:last-child)::after {
   content: "";
   display: inline-block;
   width: 3px;
   height: 3px;
-  margin: 0 0.35rem;
+  margin: 0 0.3rem;
   border-radius: 50%;
   background: var(--fv-line-strong);
   vertical-align: middle;

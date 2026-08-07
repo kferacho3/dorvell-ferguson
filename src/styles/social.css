@@ -1,0 +1,626 @@
+/* =====================================================================
+   SOCIAL HUB  ·  /social
+   The one page where third-party embeds are allowed — and even here the
+   TikTok script sits behind a click. Namespace .shub- (verified unused;
+   deliberately not .soc-, which reads as the unrelated .social-* family
+   in dorvell.css).
+
+   Also carries the /creative/<slug> film route (.filmpage-), which
+   shares this file's editorial rhythm and the .fv-* button system.
+   ===================================================================== */
+
+.shub,
+.filmpage {
+  --shub-pad: clamp(1.15rem, 4vw, 3rem);
+  --shub-container: 1180px;
+  position: relative;
+  max-width: var(--shub-container);
+  margin-inline: auto;
+  padding: clamp(3.5rem, 9vw, 7rem) var(--shub-pad) clamp(3rem, 7vw, 5.5rem);
+  color: var(--df-text);
+  font-family: var(--font-body);
+}
+
+.shub__section-label,
+.filmpage__section-label {
+  margin-bottom: 0.9rem;
+  color: var(--df-muted);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------------
+   SOCIAL HUB — head
+   --------------------------------------------------------------------- */
+
+.shub__head {
+  max-width: 62ch;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+.shub__eyebrow {
+  margin-bottom: 0.7rem;
+  color: var(--df-teal);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+.shub__title {
+  margin-bottom: 0.9rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 8vw, 5.6rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+.shub__lede {
+  color: var(--df-text-soft);
+  font-size: clamp(0.95rem, 1.5vw, 1.08rem);
+  line-height: 1.6;
+}
+.shub__rail {
+  margin-top: 1.4rem;
+}
+
+/* ---------------------------------------------------------------------
+   Account cards
+   --------------------------------------------------------------------- */
+
+.shub__accounts {
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+.shub__account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
+  gap: clamp(0.7rem, 1.4vw, 1.1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shub-card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  height: 100%;
+  padding: 1.15rem 1.2rem 1.3rem;
+  border: 1px solid var(--df-line);
+  border-radius: 12px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), transparent 60%);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color var(--df-fast), transform var(--df-fast), background var(--df-fast);
+}
+.shub-card::before {
+  position: absolute;
+  inset: auto auto -40% -20%;
+  width: 70%;
+  aspect-ratio: 1;
+  content: "";
+  border-radius: 50%;
+  background: var(--shub-accent, var(--df-teal));
+  opacity: 0;
+  filter: blur(52px);
+  transition: opacity var(--df-med);
+  pointer-events: none;
+}
+.shub-card[data-platform="instagram"] { --shub-accent: #e1306c; }
+.shub-card[data-platform="tiktok"] { --shub-accent: #fe2c55; }
+.shub-card[data-platform="facebook"] { --shub-accent: #1877f2; }
+
+.shub-card:hover,
+.shub-card:focus-visible {
+  border-color: var(--shub-accent, var(--df-teal));
+  transform: translateY(-3px);
+}
+.shub-card:hover::before,
+.shub-card:focus-visible::before {
+  opacity: 0.22;
+}
+
+.shub-card__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--df-line);
+  border-radius: 9px;
+  color: var(--df-text-soft);
+  transition: color var(--df-fast), border-color var(--df-fast);
+}
+.shub-card__icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.shub-card:hover .shub-card__icon,
+.shub-card:focus-visible .shub-card__icon {
+  color: var(--shub-accent, var(--df-teal));
+  border-color: currentColor;
+}
+
+.shub-card__role {
+  color: var(--df-muted);
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.shub-card__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 900;
+  line-height: 1;
+}
+.shub-card__blurb {
+  color: var(--df-text-soft);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+.shub-card__go {
+  margin-top: 0.5rem;
+  color: var(--shub-accent, var(--df-teal));
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.shub-card__go::after {
+  content: " \2197";
+}
+
+/* ---------------------------------------------------------------------
+   Films + their exact destinations
+   --------------------------------------------------------------------- */
+
+.shub__films {
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+.shub__film-list {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shub-film {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: clamp(0.9rem, 2vw, 1.5rem);
+  padding: 0.9rem;
+  border: 1px solid var(--df-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.shub-film__poster {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000;
+}
+.shub-film__poster img {
+  object-fit: cover;
+  transition: transform var(--df-med);
+}
+.shub-film__poster:hover img,
+.shub-film__poster:focus-visible img {
+  transform: scale(1.05);
+}
+
+.shub-film__body {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.shub-film__index {
+  color: var(--df-teal);
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.shub-film__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.shub-film__title a {
+  color: inherit;
+  text-decoration: none;
+}
+.shub-film__title a:hover,
+.shub-film__title a:focus-visible {
+  color: var(--df-teal);
+}
+.shub-film__desc {
+  color: var(--df-text-soft);
+  font-size: 0.87rem;
+  line-height: 1.55;
+}
+.shub-film__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.shub-film__link {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--df-line);
+  border-radius: 999px;
+  color: var(--df-muted);
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: color var(--df-fast), border-color var(--df-fast), background var(--df-fast);
+}
+/* An exact post carries weight; a profile-only link stays quiet, so the
+   styling agrees with the label about where the link actually goes. */
+.shub-film__link.is-post {
+  border-color: var(--df-line-strong);
+  color: var(--df-text);
+  font-weight: 600;
+}
+.shub-film__link:hover,
+.shub-film__link:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--df-text);
+}
+.shub-film__link[data-platform="instagram"]:hover,
+.shub-film__link[data-platform="instagram"]:focus-visible { border-color: #e1306c; }
+.shub-film__link[data-platform="tiktok"]:hover,
+.shub-film__link[data-platform="tiktok"]:focus-visible { border-color: #fe2c55; }
+.shub-film__link[data-platform="facebook"]:hover,
+.shub-film__link[data-platform="facebook"]:focus-visible { border-color: #1877f2; }
+
+/* ---------------------------------------------------------------------
+   Click-to-load embed
+   --------------------------------------------------------------------- */
+
+.shub__feed {
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+.shub-embed {
+  display: grid;
+  gap: 0.7rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--df-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.shub-embed--gate {
+  justify-items: start;
+  max-width: 46rem;
+}
+.shub-embed__label {
+  color: var(--df-text);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.shub-embed__note {
+  max-width: 52ch;
+  color: var(--df-muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+.shub-embed__direct {
+  color: var(--df-text-soft);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shub-embed__direct:hover,
+.shub-embed__direct:focus-visible {
+  color: var(--df-teal);
+}
+.shub-embed__frame {
+  overflow-x: auto;
+}
+
+/* ---------------------------------------------------------------------
+   Closing
+   --------------------------------------------------------------------- */
+
+.shub__closing {
+  padding-top: clamp(2rem, 5vw, 3rem);
+  border-top: 1px solid var(--df-line);
+}
+.shub__closing-title {
+  margin-bottom: 0.7rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.shub__closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.3rem 0;
+}
+.shub__closing-follow {
+  max-width: 22rem;
+}
+
+/* =====================================================================
+   FILM ROUTE  ·  /creative/<slug>
+   ===================================================================== */
+
+.filmpage__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.6rem;
+  color: var(--df-muted);
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.filmpage__crumbs a {
+  color: var(--df-text-soft);
+  text-decoration: none;
+}
+.filmpage__crumbs a:hover,
+.filmpage__crumbs a:focus-visible {
+  color: var(--df-teal);
+}
+
+.filmpage__head {
+  max-width: 62ch;
+  margin-bottom: clamp(1.6rem, 4vw, 2.4rem);
+}
+.filmpage__eyebrow {
+  margin-bottom: 0.7rem;
+  color: var(--df-teal);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.filmpage__title {
+  margin-bottom: 0.8rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 8vw, 5.6rem);
+  font-weight: 900;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+.filmpage__thesis {
+  color: var(--df-text-soft);
+  font-size: clamp(0.98rem, 1.6vw, 1.15rem);
+  line-height: 1.55;
+}
+
+.filmpage__stage {
+  position: relative;
+  width: 100%;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+  border: 1px solid var(--df-line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--df-shadow);
+}
+.filmpage__stage--landscape {
+  aspect-ratio: 16 / 9;
+}
+/* A vertical film is presented in a tall editorial frame — the letterbox
+   inside the 9:16 canvas is the composition, not an error to crop out. */
+.filmpage__stage--portrait {
+  aspect-ratio: 9 / 16;
+  max-width: min(100%, 26rem);
+  margin-inline: auto;
+}
+.filmpage__stage--square {
+  aspect-ratio: 1;
+  max-width: min(100%, 40rem);
+  margin-inline: auto;
+}
+
+.filmpage__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.75fr);
+  gap: clamp(1.6rem, 4vw, 3.2rem);
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+.filmpage__main {
+  display: grid;
+  gap: clamp(1.4rem, 3vw, 2.2rem);
+  align-content: start;
+  min-width: 0;
+}
+.filmpage__aside {
+  align-content: start;
+  min-width: 0;
+}
+
+.filmpage__note p,
+.filmpage__synopsis p {
+  color: var(--df-text-soft);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.filmpage__note p {
+  padding-left: 1rem;
+  border-left: 2px solid var(--df-gold);
+}
+
+.filmpage__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.filmpage__tags li {
+  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--df-line);
+  border-radius: 999px;
+  color: var(--df-text-soft);
+  font-size: 0.75rem;
+}
+
+.filmpage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.1rem 0;
+}
+.filmpage__follow {
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--df-line);
+}
+
+.filmpage__more,
+.filmpage__related {
+  padding-top: clamp(1.6rem, 4vw, 2.4rem);
+  border-top: 1px solid var(--df-line);
+}
+.filmpage__more {
+  margin-bottom: clamp(1.6rem, 4vw, 2.4rem);
+}
+.filmpage__more-grid,
+.filmpage__related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(0.7rem, 1.5vw, 1.1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.filmpage__more-card,
+.filmpage__related-card {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.filmpage__more-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--df-line);
+  border-radius: 10px;
+  background: #000;
+  transition: border-color var(--df-fast), transform var(--df-fast);
+}
+.filmpage__more-frame--landscape { aspect-ratio: 16 / 9; }
+.filmpage__more-frame--portrait { aspect-ratio: 4 / 5; }
+.filmpage__more-frame--square { aspect-ratio: 1; }
+.filmpage__more-frame img {
+  object-fit: cover;
+}
+.filmpage__more-card:hover .filmpage__more-frame,
+.filmpage__more-card:focus-visible .filmpage__more-frame,
+.filmpage__related-card:hover .filmpage__more-frame,
+.filmpage__related-card:focus-visible .filmpage__more-frame {
+  border-color: var(--df-teal);
+  transform: translateY(-3px);
+}
+.filmpage__more-meta {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.filmpage__more-meta strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.filmpage__more-meta small {
+  color: var(--df-muted);
+  font-size: 0.72rem;
+}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+
+@media (max-width: 900px) {
+  .filmpage__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .shub-film {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .shub-film {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .shub-film__poster {
+    aspect-ratio: 16 / 9;
+  }
+  .shub__closing-actions .fv-btn,
+  .filmpage__actions .fv-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+/* =====================================================================
+   REDUCED MOTION
+   ===================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .shub-card,
+  .shub-card::before,
+  .shub-card__icon,
+  .shub-film__poster img,
+  .shub-film__link,
+  .filmpage__more-frame {
+    transition: none;
+  }
+  .shub-card:hover,
+  .shub-card:focus-visible,
+  .shub-film__poster:hover img,
+  .shub-film__poster:focus-visible img,
+  .filmpage__more-card:hover .filmpage__more-frame,
+  .filmpage__more-card:focus-visible .filmpage__more-frame,
+  .filmpage__related-card:hover .filmpage__more-frame,
+  .filmpage__related-card:focus-visible .filmpage__more-frame {
+    transform: none;
+  }
+}

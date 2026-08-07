@@ -6,6 +6,7 @@ import { getPortfolioData } from "@/lib/portfolio-data";
 import { getSocialLinks } from "@/lib/social-links";
 import { PhoneIcon } from "@/components/dorvell/social-icons";
 import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
+import { FollowTheWork } from "@/components/dorvell/social/FollowTheWork";
 
 const footerRoutes = [
   { href: "/work", label: "Portfolio" },
@@ -15,6 +16,7 @@ const footerRoutes = [
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/social", label: "Follow the work" },
 ];
 
 export function DorvellFooter() {
@@ -81,6 +83,7 @@ export function DorvellFooter() {
           <div>
             <p className="footer-col__label">Connect</p>
             <SocialLinks links={getSocialLinks()} />
+            <FollowTheWork variant="rail" placement="footer" className="footer-follow" />
           </div>
           <a className="footer-phone" href={`tel:${manual.profile.phone.replace(/\D/g, "")}`}>
             <PhoneIcon />

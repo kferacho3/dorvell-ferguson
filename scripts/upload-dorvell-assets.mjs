@@ -74,6 +74,7 @@ async function collectUsedPaths() {
     for (const clip of Object.values(videos)) {
       addPath(paths, clip.mp4Src);
       addPath(paths, clip.mobileSrc);
+      addPath(paths, clip.loopSrc); // silent hero/teaser cut — the landing page plays this
       addPath(paths, clip.posterSrc);
       addPath(paths, clip.thumbSrc);
     }
