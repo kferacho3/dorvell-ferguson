@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { resolveCreativeAsset } from "@/lib/creative-assets";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
@@ -152,10 +152,16 @@ export function VideoPlayer({
     [item.duration],
   );
 
+  // The clip's true ratio, published to CSS so a frame is always shaped like
+  // the film inside it. With this set, `object-fit: contain` produces no bars
+  // — the work is never cropped and never letterboxed.
+  const ratioStyle = { "--cw-ar": `${item.width} / ${item.height}` } as CSSProperties;
+
   const inner = (
     <div
       ref={viewRef}
       className={cn("cw-video", fit === "contain" && "is-fit-contain", playing && "is-playing", className)}
+      style={ratioStyle}
     >
       <Image
         src={poster}
@@ -249,5 +255,9 @@ export function VideoPlayer({
   );
 
   if (!framed) return inner;
-  return <div className={cn("cw-frame", `cw-frame--${item.orientation}`)}>{inner}</div>;
+  return (
+    <div className={cn("cw-frame", `cw-frame--${item.orientation}`)} style={ratioStyle}>
+      {inner}
+    </div>
+  );
 }

@@ -9,21 +9,45 @@ import { socialLinks } from "@/lib/social-links";
 import { useInView } from "./useInView";
 
 const ROTATIONS = ["-5deg", "4deg", "-3deg", "6deg"];
+/** How many prints of the pile stay visible behind the top one. */
+const PILE_DEPTH = 5;
 
-/** One photomode set as a taped print that cycles its frames like a gif. */
+/**
+ * Stable pile geometry for one print. Derived from the card's own index, never
+ * from its current depth, so each print keeps the same angle for the life of
+ * the stack — the pile reads as a physical object someone set down, rather
+ * than shuffling every tick.
+ */
+function pileGeometry(i: number) {
+  return {
+    rot: ((i * 37) % 11) - 5, // -5..5deg
+    dx: ((i * 53) % 13) - 6, // -6..6px
+    dy: ((i * 29) % 11) - 5,
+  };
+}
+
+/**
+ * One photomode set as a physical pile of prints.
+ *
+ * Every frame is its own bordered print, offset and rotated so the edges of
+ * the ones underneath stay visible. Cycling re-orders the stack — the top
+ * print goes to the back — instead of swapping one image in place, which read
+ * as a glitch rather than a stack.
+ */
 function GifPrint({ set, index }: { set: PhotomodeSet; index: number }) {
   const reducedMotion = usePrefersReducedMotion();
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.3 });
   const [frame, setFrame] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  const animated = !reducedMotion && set.items.length > 1;
+  const total = set.items.length;
+  const animated = !reducedMotion && total > 1;
 
   useEffect(() => {
     if (!animated || !inView || paused) return;
-    const id = setInterval(() => setFrame((f) => (f + 1) % set.items.length), 380);
+    const id = setInterval(() => setFrame((f) => (f + 1) % total), 1500);
     return () => clearInterval(id);
-  }, [animated, inView, paused, set.items.length]);
+  }, [animated, inView, paused, total]);
 
   const bloomSrc = resolveCreativeAsset(set.items[frame]?.mdSrc ?? set.items[0].mdSrc);
 
@@ -35,33 +59,55 @@ function GifPrint({ set, index }: { set: PhotomodeSet; index: number }) {
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
     >
-      {/* chromatic + lens-blur bloom of the current frame — glows around the print */}
+      {/* chromatic + lens-blur bloom of the current frame — glows around the pile */}
       <span className="cw-graf__bloom" style={{ backgroundImage: `url(${bloomSrc})` }} aria-hidden="true" />
-      <div className="cw-graf__print">
+
+      <div
+        className="cw-graf__pile"
+        role="img"
+        aria-label={`${set.label} — ${total} frames from the @2kferg photomode set`}
+      >
+        {set.items.map((image, i) => {
+          const depth = (i - frame + total) % total;
+          const { rot, dx, dy } = pileGeometry(i);
+          return (
+            <figure
+              key={image.slug}
+              className="cw-graf__card"
+              style={{
+                zIndex: total - depth,
+                opacity: depth < PILE_DEPTH ? 1 : 0,
+                transform:
+                  `translate(${dx + depth * 5}px, ${dy + depth * 6}px) ` +
+                  `rotate(${rot}deg) scale(${(1 - depth * 0.016).toFixed(3)})`,
+              }}
+            >
+              <div className="cw-graf__photo">
+                <Image
+                  src={resolveCreativeAsset(image.mdSrc)}
+                  alt=""
+                  fill
+                  unoptimized
+                  sizes="(max-width: 760px) 80vw, 360px"
+                  placeholder={image.blurDataURL ? "blur" : "empty"}
+                  blurDataURL={image.blurDataURL}
+                  className="cw-graf__frame"
+                />
+                <span className="cw-graf__sheen" aria-hidden="true" />
+              </div>
+            </figure>
+          );
+        })}
+
+        {/* Chrome belongs to the pile, not to any one print, so it stays put
+            while the stack cycles underneath it. */}
         <span className="cw-graf__tape cw-graf__tape--tl" aria-hidden="true" />
         <span className="cw-graf__tape cw-graf__tape--br" aria-hidden="true" />
         <span className="cw-graf__gifbadge">{animated ? "GIF" : "STILL"}</span>
-        <div className="cw-graf__photo">
-          {set.items.map((image, i) => (
-            <Image
-              key={image.slug}
-              src={resolveCreativeAsset(image.mdSrc)}
-              alt={i === 0 ? `${set.label} — @2kferg photomode` : ""}
-              fill
-              unoptimized
-              sizes="(max-width: 760px) 80vw, 360px"
-              placeholder={image.blurDataURL ? "blur" : "empty"}
-              blurDataURL={image.blurDataURL}
-              className="cw-graf__frame"
-              style={{ opacity: i === frame ? 1 : 0 }}
-            />
-          ))}
-          <span className="cw-graf__chroma" aria-hidden="true" style={{ backgroundImage: `url(${bloomSrc})` }} />
-          <span className="cw-graf__sheen" aria-hidden="true" />
-        </div>
+        <span className="cw-graf__chroma" aria-hidden="true" style={{ backgroundImage: `url(${bloomSrc})` }} />
         <div className="cw-graf__caption">
           <span>@2kferg</span>
-          <span>{set.items.length} frames</span>
+          <span>{total} frames</span>
         </div>
       </div>
     </div>

@@ -1349,121 +1349,6 @@
   }
 }
 
-/* ---- SECTION 9 · director's notebook ---------------------------------- */
-.cw-notebook {
-  border-top: 1px solid var(--cw-line);
-}
-.cw-notebook__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: clamp(0.8rem, 1.6vw, 1.2rem);
-}
-.cw-scene {
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-  border: 1px solid var(--cw-line);
-  background: var(--cw-bg-2);
-  min-height: 310px;
-  display: flex;
-}
-.cw-scene__texture {
-  position: absolute;
-  inset: 0;
-  opacity: 0.18;
-}
-.cw-scene__texture .cw-video__poster {
-  filter: grayscale(0.3) contrast(1.05);
-}
-.cw-scene::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(6, 8, 7, 0.5), rgba(6, 8, 7, 0.93));
-}
-.cw-scene__content {
-  position: relative;
-  z-index: 2;
-  padding: 1.1rem 1.2rem 1.2rem;
-  display: grid;
-  gap: 0.5rem;
-  align-content: end;
-  width: 100%;
-}
-.cw-scene__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.cw-scene__status {
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 0.28rem 0.6rem;
-  border-radius: 999px;
-  border: 1px solid var(--cw-line-strong);
-  color: var(--cw-soft);
-}
-.cw-scene--concept .cw-scene__status {
-  color: var(--cw-teal);
-}
-.cw-scene--in-progress .cw-scene__status {
-  color: var(--cw-gold);
-}
-.cw-scene--shot .cw-scene__status {
-  color: var(--cw-brown);
-}
-.cw-scene--released .cw-scene__status {
-  color: var(--cw-red);
-}
-.cw-scene__runtime {
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  color: var(--cw-muted);
-  font-variant-numeric: tabular-nums;
-}
-.cw-scene__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
-  line-height: 0.95;
-  margin: 0.2rem 0 0;
-}
-.cw-scene__mood {
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--cw-teal);
-  margin: 0;
-}
-.cw-scene__note {
-  font-size: 0.86rem;
-  line-height: 1.5;
-  color: var(--cw-soft);
-  margin: 0;
-}
-.cw-scene__shot {
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: var(--cw-muted);
-  margin: 0;
-}
-.cw-scene__shot span {
-  display: block;
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--cw-muted);
-  margin-bottom: 0.2rem;
-}
-.cw-scene__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-top: 0.2rem;
-}
-
 /* ---- SECTION · photomode GRAFFITI wall -------------------------------- */
 .cw-graf {
   position: relative;
@@ -2105,5 +1990,119 @@
   .cw-featured__step:hover,
   .cw-featured__step:focus-visible {
     transform: none;
+  }
+}
+
+/* =====================================================================
+   NO CROPPED VIDEO  ·  appended (never reorder — see file header)
+
+   Every clip is shown whole. Two halves to this:
+   1. Each frame takes its aspect ratio from the clip's real dimensions
+      (--cw-ar, published by VideoPlayer), so the box is already the
+      shape of the film.
+   2. Media is `contain`, never `cover`. With (1) in place there are no
+      bars in practice — but if a clip ever lands in a frame it doesn't
+      match, it letterboxes instead of losing the top of someone's head.
+   ===================================================================== */
+
+/* The fallback is per-orientation, not a single 16/9: several components build
+   a .cw-frame themselves rather than letting VideoPlayer render it, so they
+   never receive --cw-ar. A shared landscape default would put every portrait
+   clip in a landscape box. */
+.cw-frame--portrait {
+  aspect-ratio: var(--cw-ar, 9 / 16);
+}
+.cw-frame--landscape {
+  aspect-ratio: var(--cw-ar, 16 / 9);
+}
+.cw-frame--square {
+  aspect-ratio: var(--cw-ar, 1 / 1);
+}
+
+.cw-video__media,
+.cw-video__poster {
+  object-fit: contain;
+  background: #000;
+}
+
+/* Full-bleed surfaces (page hero, reel panels, morph gallery) set their own
+   box, so the clip inside them is contained against black rather than
+   cropped to fill. */
+.cw-hero__media .cw-video,
+.cw-reel__media .cw-video,
+.cw-morph__stage .cw-video {
+  background: #000;
+}
+
+/* =====================================================================
+   PHOTOMODE PILE  ·  appended (never reorder — see file header)
+
+   Each frame is its own print, offset and rotated so the edges of the
+   ones beneath stay visible — a physical stack someone set down, not a
+   single window swapping its contents.
+   ===================================================================== */
+
+.cw-graf__pile {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  /* The pile needs intrinsic height: the print's photo is 3/4, plus the
+     paper matte above and below it. */
+  aspect-ratio: 3 / 4.32;
+}
+
+.cw-graf__card {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 12px 12px 44px;
+  background: var(--df-paper);
+  border-radius: 2px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), 0 2px 0 rgba(0, 0, 0, 0.18);
+  transition: transform var(--cw-med), opacity var(--cw-med);
+  will-change: transform;
+}
+
+/* The deepest print carries a slightly heavier shadow so the stack reads as
+   having weight rather than floating. */
+.cw-graf__card:first-child {
+  box-shadow: 0 26px 56px rgba(0, 0, 0, 0.62);
+}
+
+.cw-graf__pile .cw-graf__photo {
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.cw-graf__pile .cw-graf__frame {
+  object-fit: cover;
+  transition: filter var(--cw-med);
+}
+
+/* Hovering lifts and squares the whole pile, and pauses the cycle. */
+.cw-graf__printwrap:hover .cw-graf__card,
+.cw-graf__printwrap:focus-within .cw-graf__card {
+  box-shadow: 0 30px 64px rgba(0, 0, 0, 0.66);
+}
+
+.cw-graf__pile .cw-graf__caption,
+.cw-graf__pile .cw-graf__gifbadge,
+.cw-graf__pile .cw-graf__tape,
+.cw-graf__pile .cw-graf__chroma {
+  z-index: 40;
+}
+.cw-graf__pile .cw-graf__caption {
+  position: absolute;
+  right: 12px;
+  bottom: 0;
+  left: 12px;
+}
+.cw-graf__pile .cw-graf__chroma {
+  inset: 12px 12px 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-graf__card {
+    transition: none;
   }
 }

@@ -8,8 +8,10 @@ import { useCreativeLightbox } from "./CreativeLightbox";
 import { useCreativeMode } from "./creativeMode";
 import { ExpandIcon } from "./icons";
 
+// The page hero's clip is deliberately absent — it plays at the top of this
+// same page, and repeating it here reads as a mistake rather than a motif.
 const PANELS: { word: string; slug: string }[] = [
-  { word: "Shadow", slug: "the-threshold" },
+  { word: "Shadow", slug: "misc-creative-9" },
   { word: "Motion", slug: "modeling-4" },
   { word: "Pressure", slug: "misc-creative-6" },
   { word: "Style", slug: "misc-creative-4" },

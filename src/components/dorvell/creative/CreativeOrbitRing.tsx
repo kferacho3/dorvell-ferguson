@@ -5,8 +5,9 @@ import { resolveCreativeAsset } from "@/lib/creative-assets";
 import { getCreativeItem, type CreativeItem } from "@/content/creative";
 import { useCreativeLightbox } from "./CreativeLightbox";
 
+// Excludes the page hero's clip, which already plays at the top of this page.
 const RING_SLUGS = [
-  "the-threshold",
+  "unbraided",
   "modeling-1",
   "modeling-2",
   "misc-creative-4",

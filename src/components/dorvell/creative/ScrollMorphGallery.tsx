@@ -11,13 +11,15 @@ import { CreativeMediaCard } from "./CreativeMediaCard";
 import { useCreativeLightbox } from "./CreativeLightbox";
 import { useCreativeMode } from "./creativeMode";
 
+// Deliberately excludes the page hero's clip — it already plays at the top of
+// this page, and showing it again here reads as a bug, not a motif.
 const CLIP_SLUGS = [
-  "the-threshold",
   "modeling-1",
   "misc-creative-6",
   "music-event-swaelee",
   "modeling-2",
   "misc-creative-4",
+  "modeling-3",
 ];
 
 type Placement = { x: number; y: number; s: number; r: number; z?: number };

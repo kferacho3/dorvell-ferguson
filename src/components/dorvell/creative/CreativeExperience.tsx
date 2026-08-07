@@ -11,7 +11,6 @@ import { ScrollMorphGallery } from "./ScrollMorphGallery";
 import { ReelRunway } from "./ReelRunway";
 import { CreativePhotoshootGallery } from "./CreativePhotoshootGallery";
 import { CreativeArchive } from "./CreativeArchive";
-import { DirectorNotebook } from "./DirectorNotebook";
 import { PhotomodeGraffiti } from "./PhotomodeGraffiti";
 import { CreativeCTA } from "./CreativeCTA";
 
@@ -51,7 +50,6 @@ export function CreativeExperience() {
           <ReelRunway />
           <CreativePhotoshootGallery />
           <CreativeArchive />
-          <DirectorNotebook />
           <PhotomodeGraffiti />
           {cinematic ? <CreativeParticleWord word="WORLD" /> : null}
           {cinematic ? <CreativeOrbitRing /> : null}
