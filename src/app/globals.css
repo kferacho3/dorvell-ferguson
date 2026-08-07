@@ -6,6 +6,7 @@
 @import "../styles/portfolio.css";
 @import "../styles/services.css";
 @import "../styles/creative.css";
+@import "../styles/film.css";
 
 @tailwind base;
 @tailwind components;

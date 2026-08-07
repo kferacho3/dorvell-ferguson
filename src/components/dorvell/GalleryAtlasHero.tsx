@@ -8,6 +8,10 @@ import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes, type GalleryLane } from "@/lib/gallery-lanes";
 import { AtlasOrbitField } from "./AtlasOrbitField";
 import { useImageWarmup } from "./useImageWarmup";
+import { HeroMotionPortal } from "./HeroMotionPortal";
+import { useFilmViewer } from "./film/FilmViewer";
+import { FollowTheWork } from "./social/FollowTheWork";
+import { filmIndexItems, motionPortalFilm } from "@/content/creative";
 
 type LaneTotals = Partial<Record<GalleryLane["key"], number>>;
 
@@ -107,8 +111,22 @@ export function GalleryAtlasHero({
     [lanes],
   );
   const heroRef = useRef<HTMLElement | null>(null);
+  const watchButtonRef = useRef<HTMLButtonElement | null>(null);
+  const { open: openFilmViewer } = useFilmViewer();
 
   useImageWarmup(lanePreviewUrls, 8);
+
+  // The secondary CTA opens on the same film the portal is showing, so the
+  // button and the moving frame beside it always agree.
+  const watchLatestFilm = () => {
+    const film = motionPortalFilm ?? filmIndexItems[0];
+    if (!film) return;
+    openFilmViewer(film, {
+      list: filmIndexItems,
+      placement: "hero",
+      originRect: watchButtonRef.current?.getBoundingClientRect() ?? null,
+    });
+  };
 
   const selectLane = (key: GalleryLane["key"]) => {
     setActiveKey(key);
@@ -209,13 +227,28 @@ export function GalleryAtlasHero({
           <Link className="button-primary" href="/work">
             Open full archive
           </Link>
-          <Link className="button-secondary" href="/contact">
+          <button
+            type="button"
+            ref={watchButtonRef}
+            className="button-secondary"
+            onClick={watchLatestFilm}
+          >
+            Watch latest film
+          </button>
+          <Link className="button-secondary atlas-actions__quiet" href="/contact">
             Book Dorvell
           </Link>
         </div>
+        <FollowTheWork variant="rail" placement="hero" className="atlas-follow" />
       </div>
 
       <div className="atlas-stage" style={{ "--lane-accent": activeLane?.accent ?? "#35e0bb" } as CSSProperties}>
+        <HeroMotionPortal />
+
+        {/* The photo system is unchanged — it just gets its own containing block
+            now that the stage is a two-row grid, so the absolutely-positioned
+            meta / caption / carousel / minimap still anchor to the photograph. */}
+        <div className="atlas-stage__photo">
         <div className="atlas-stage__meta">
           <span>{summary?.imagesDownloaded ?? images.length} portfolio frames</span>
           <span>Portraits / Music / Sports / Fashion</span>
@@ -267,6 +300,7 @@ export function GalleryAtlasHero({
               style={{ "--lane-accent": lane.accent } as CSSProperties}
             />
           ))}
+        </div>
         </div>
       </div>
 

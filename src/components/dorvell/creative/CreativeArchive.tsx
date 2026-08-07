@@ -40,7 +40,8 @@ export function CreativeArchive() {
 
   const results = useMemo(() => {
     const filtered = creativeItems.filter((item) => {
-      if (category !== "all" && item.categoryKey !== category) return false;
+      // categoryKeys, not categoryKey — a piece can live in several rooms
+      if (category !== "all" && !item.categoryKeys.includes(category)) return false;
       if (format !== "all" && item.orientation !== format) return false;
       return true;
     });

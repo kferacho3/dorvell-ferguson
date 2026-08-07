@@ -1978,3 +1978,132 @@
     animation: none;
   }
 }
+
+/* =====================================================================
+   FEATURED FILM INDEX  ·  appended (never reorder — see file header)
+   The featured slot is now a manual 01/03 index over the distributed
+   films. Nothing here auto-advances.
+   ===================================================================== */
+
+.cw-featured__canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--cw-line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--cw-shadow);
+}
+/* A vertical film keeps its shape — never letterboxed into landscape. */
+.cw-featured__canvas:has(.fp--portrait) {
+  aspect-ratio: 4 / 5;
+  max-width: 520px;
+  margin-inline: auto;
+}
+
+.cw-featured__index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+}
+.cw-featured__step {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--cw-line);
+  background: transparent;
+  color: var(--cw-ink);
+  cursor: pointer;
+  transition: border-color var(--cw-fast), background var(--cw-fast), transform var(--cw-fast);
+}
+.cw-featured__step:hover,
+.cw-featured__step:focus-visible {
+  border-color: var(--cw-teal);
+  background: rgba(248, 241, 231, 0.06);
+  transform: translateY(-1px);
+}
+.cw-featured__step svg {
+  width: 17px;
+  height: 17px;
+}
+.cw-featured__dots {
+  display: flex;
+  gap: 0.3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cw-featured__dot {
+  min-width: 34px;
+  padding: 0.32rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--cw-muted);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: color var(--cw-fast), border-color var(--cw-fast), background var(--cw-fast);
+}
+.cw-featured__dot:hover,
+.cw-featured__dot:focus-visible {
+  color: var(--cw-ink);
+  border-color: var(--cw-line);
+}
+.cw-featured__dot.is-active {
+  color: var(--cw-ink-invert);
+  background: var(--cw-teal);
+  border-color: var(--cw-teal);
+}
+
+.cw-featured__count {
+  margin-left: 0.4rem;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cw-featured__runtime {
+  margin-left: 0.45rem;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+.cw-featured__synopsis {
+  margin: 0;
+}
+.cw-featured__follow {
+  margin-top: 0.2rem;
+}
+
+/* Film cards read as part of the numbered index, not loose archive clips. */
+.cw-card--film .cw-card__frame {
+  border-color: color-mix(in srgb, var(--cw-teal) 34%, var(--cw-line));
+}
+.cw-chip--film {
+  background: var(--cw-teal);
+  color: var(--cw-ink-invert);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .cw-featured__canvas:has(.fp--portrait) {
+    max-width: 340px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-featured__step,
+  .cw-featured__dot {
+    transition: none;
+  }
+  .cw-featured__step:hover,
+  .cw-featured__step:focus-visible {
+    transform: none;
+  }
+}

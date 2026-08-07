@@ -80,3 +80,18 @@ export function ExpandIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+export function CollapseIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 9h5V4M20 9h-5V4M20 15h-5v5M4 15h5v5" />
+    </svg>
+  );
+}
+export function ReplayIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base(props)}>
+      <path d="M20 12a8 8 0 1 1-2.4-5.7" />
+      <path d="M20 4v4.6h-4.6" />
+    </svg>
+  );
+}

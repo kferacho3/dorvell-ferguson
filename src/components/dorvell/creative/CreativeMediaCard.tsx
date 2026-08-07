@@ -8,6 +8,8 @@ import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import type { CreativeItem } from "@/content/creative";
 import { useCreativeLightbox } from "./CreativeLightbox";
 import { useCreativeMode } from "./creativeMode";
+import { useFilmViewer } from "@/components/dorvell/film/FilmViewer";
+import { filmIndexItems } from "@/content/creative";
 
 const ratioLabel: Record<CreativeItem["orientation"], string> = {
   portrait: "9:16",
@@ -34,20 +36,29 @@ export function CreativeMediaCard({
   hoverPreview?: boolean;
 }) {
   const { open } = useCreativeLightbox();
+  const { open: openFilm } = useFilmViewer();
   const { mode } = useCreativeMode();
   const reducedMotion = usePrefersReducedMotion();
   const [preview, setPreview] = useState(false);
 
   const canPreview = hoverPreview && mode === "cinematic" && !reducedMotion;
   const thumb = resolveCreativeAsset(item.thumbSrc);
-  // hover preview is desktop-only; use the lighter mobile cut so it loads fast
-  const previewSrc = resolveCreativeAsset(item.mobileSrc);
+  // Hover preview is desktop-only. Prefer the silent loop cut where one exists
+  // so hovering a 34-second film costs ~0.4MB rather than the whole film.
+  const previewSrc = resolveCreativeAsset(item.loopSrc ?? item.mobileSrc);
+  // The three distributed films get the film-grade viewer (completion, end
+  // state, social actions); everything else keeps the archive lightbox.
+  const isFilm = item.filmIndex !== undefined;
 
   return (
     <button
       type="button"
-      className={cn("cw-card", className)}
-      onClick={() => open(item, list)}
+      className={cn("cw-card", isFilm && "cw-card--film", className)}
+      onClick={() =>
+        isFilm
+          ? openFilm(item, { list: filmIndexItems, placement: "archive" })
+          : open(item, list)
+      }
       aria-label={`Open ${item.title} — ${item.category}`}
       onPointerEnter={() => {
         if (canPreview && typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
@@ -85,6 +96,11 @@ export function CreativeMediaCard({
 
         <div className="cw-card__scrim" />
         <div className="cw-card__top">
+          {isFilm ? (
+            <span className="cw-chip cw-chip--film">
+              Film {String(item.filmIndex).padStart(2, "0")}
+            </span>
+          ) : null}
           <span className="cw-chip">{durationLabel(item.duration)}</span>
           <span className="cw-chip">{ratioLabel[item.orientation]}</span>
         </div>

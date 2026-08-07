@@ -13141,3 +13141,290 @@ section,
     transition: none !important;
   }
 }
+
+/* =====================================================================
+   HERO MOTION PORTAL  ·  landing hero, inside .atlas-stage
+   Appended at the tail so these rules win by cascade order over the
+   earlier .atlas-stage block (see the never-reorder note at the top).
+
+   The stage becomes two rows: one contained film surface above the
+   existing photography system, which is otherwise untouched. Namespace
+   .atlas-portal- was verified unused before adoption.
+   ===================================================================== */
+
+.atlas-stage {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
+}
+
+/* Restores a containing block for the photo system's absolute children
+   (meta, figcaption, carousel, minimap) now that the stage is a grid. */
+.atlas-stage__photo {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.atlas-portal {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  gap: 8px;
+  padding: clamp(14px, 1.5vw, 20px) clamp(14px, 1.6vw, 22px) clamp(10px, 1.2vw, 14px);
+  border-bottom: 1px solid var(--df-line);
+  background: linear-gradient(180deg, rgba(5, 7, 6, 0.55), rgba(5, 7, 6, 0.16));
+}
+
+.atlas-portal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.atlas-portal__now {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--lane-accent, var(--df-teal));
+}
+.atlas-portal__now::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 0 currentColor;
+  animation: atlas-portal-pulse 2.6s ease-out infinite;
+}
+@keyframes atlas-portal-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--df-teal) 60%, transparent); }
+  70% { box-shadow: 0 0 0 7px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.atlas-portal__index {
+  color: var(--df-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The film surface itself — a real button, so it is keyboard-operable and
+   announces where it goes. */
+.atlas-portal__surface {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: clamp(150px, 21vh, 250px);
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--lane-accent, var(--df-teal)) 30%, var(--df-line));
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+  cursor: pointer;
+  isolation: isolate;
+  transition: border-color var(--df-fast), transform var(--df-fast), box-shadow var(--df-fast);
+}
+.atlas-portal__surface:hover,
+.atlas-portal__surface:focus-visible {
+  border-color: var(--lane-accent, var(--df-teal));
+  transform: translateY(-2px);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.5),
+    0 0 40px color-mix(in srgb, var(--lane-accent, var(--df-teal)) 22%, transparent);
+}
+
+/* Poster and video occupy the same box, so swapping one for the other can
+   never shift layout. */
+.atlas-portal__poster,
+.atlas-portal__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.atlas-portal__poster {
+  z-index: 1;
+}
+.atlas-portal__video {
+  z-index: 2;
+  opacity: 0;
+  animation: atlas-portal-fade 700ms ease 120ms forwards;
+}
+@keyframes atlas-portal-fade {
+  to { opacity: 1; }
+}
+
+.atlas-portal__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.66), transparent 46%),
+    linear-gradient(105deg, rgba(0, 0, 0, 0.34), transparent 40%);
+}
+
+.atlas-portal__meta {
+  position: absolute;
+  z-index: 4;
+  left: 14px;
+  bottom: 11px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.atlas-portal__title {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.9vw, 1.7rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.atlas-portal__runtime {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.7rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* "Watch film" stays out of the frame until intent is shown. */
+.atlas-portal__cue {
+  position: absolute;
+  z-index: 4;
+  right: 12px;
+  bottom: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px 5px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(5, 7, 6, 0.5);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity var(--df-fast), transform var(--df-fast);
+}
+.atlas-portal__surface:hover .atlas-portal__cue,
+.atlas-portal__surface:focus-visible .atlas-portal__cue {
+  opacity: 1;
+  transform: none;
+}
+.atlas-portal__cue-disc {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: var(--lane-accent, var(--df-teal));
+  color: var(--df-ink);
+}
+.atlas-portal__cue-disc svg {
+  width: 9px;
+  height: 9px;
+  margin-left: 1px;
+}
+
+.atlas-portal__live {
+  position: absolute;
+  z-index: 4;
+  top: 11px;
+  right: 12px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--df-red);
+  box-shadow: 0 0 10px var(--df-red);
+}
+
+.atlas-portal__optin,
+.atlas-portal__static {
+  justify-self: start;
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.atlas-portal__optin {
+  padding: 6px 12px;
+  border: 1px solid var(--df-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--df-text);
+  cursor: pointer;
+  transition: background var(--df-fast), border-color var(--df-fast);
+}
+.atlas-portal__optin:hover,
+.atlas-portal__optin:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--lane-accent, var(--df-teal));
+}
+.atlas-portal__static {
+  color: var(--df-muted);
+  letter-spacing: 0.1em;
+}
+
+/* The quiet third hero action — present, but never competing with Enter. */
+.atlas-actions__quiet {
+  opacity: 0.72;
+}
+.atlas-actions__quiet:hover,
+.atlas-actions__quiet:focus-visible {
+  opacity: 1;
+}
+
+.atlas-follow {
+  margin-top: 14px;
+}
+
+@media (max-width: 900px) {
+  .atlas-portal {
+    padding: 12px 12px 10px;
+  }
+  .atlas-portal__surface {
+    max-height: clamp(140px, 26vh, 210px);
+  }
+  /* Touch has no hover, so the affordance is always readable. */
+  .atlas-portal__cue {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-portal__now::before,
+  .atlas-portal__video {
+    animation: none;
+  }
+  .atlas-portal__video {
+    opacity: 1;
+  }
+  .atlas-portal__surface,
+  .atlas-portal__cue,
+  .atlas-portal__optin {
+    transition: none;
+  }
+  .atlas-portal__surface:hover,
+  .atlas-portal__surface:focus-visible {
+    transform: none;
+  }
+  .atlas-portal__cue {
+    opacity: 1;
+    transform: none;
+  }
+}

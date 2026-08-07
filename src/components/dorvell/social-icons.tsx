@@ -1,4 +1,4 @@
-import type { SocialKey } from "@/lib/social-links";
+import type { FilmPlatform, SocialKey } from "@/lib/social-links";
 
 /**
  * Shared inline social/contact glyphs. Single source so the footer, the
@@ -35,6 +35,15 @@ export function TikTokIcon() {
   );
 }
 
+export function FacebookIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="16" rx="4" />
+      <path d="M15.1 8.3h-1.3a1.7 1.7 0 0 0-1.7 1.7V20M10.1 13.1h4.3" />
+    </svg>
+  );
+}
+
 export function MailIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -56,5 +65,13 @@ export function PhoneIcon() {
 export function SocialGlyph({ social }: { social: SocialKey }) {
   if (social === "linkedin") return <LinkedInIcon />;
   if (social === "tiktok") return <TikTokIcon />;
+  if (social === "facebook") return <FacebookIcon />;
+  return <InstagramIcon />;
+}
+
+/** Maps a film distribution platform from `getFilmPlatforms()` to its glyph. */
+export function FilmPlatformGlyph({ platform }: { platform: FilmPlatform }) {
+  if (platform === "tiktok") return <TikTokIcon />;
+  if (platform === "facebook") return <FacebookIcon />;
   return <InstagramIcon />;
 }
