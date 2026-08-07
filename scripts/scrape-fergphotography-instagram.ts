@@ -639,9 +639,32 @@ async function main() {
   for (const candidate of uniqueCandidates) {
     try {
       const sourceKey = instagramImageKey(candidate.url);
-      if (existingSourceKeys.has(sourceKey)) {
-        const existingImage = existingBySourceKey.get(sourceKey);
-        if (existingImage && refreshKnownMetadata) {
+      const existingImage = existingBySourceKey.get(sourceKey);
+      if (existingImage) {
+        const existingPixels = existingImage.width * existingImage.height;
+        const candidatePixels = candidate.width * candidate.height;
+        // Same CDN filename already in the library — only replace when this
+        // candidate is a meaningfully sharper encode (e.g. full vs p1080x1080).
+        if (candidatePixels > existingPixels * 1.05) {
+          const result = await downloadCandidate(candidate);
+          if (result && result.width * result.height > existingPixels) {
+            existingHashes.delete(existingImage.hash);
+            existingHashes.add(result.hash);
+            existingImage.id = `ig-${result.hash.slice(0, 12)}`;
+            existingImage.sourceUrl = candidate.url;
+            existingImage.sourcePage = candidate.postUrl;
+            existingImage.localOriginal = result.localOriginal;
+            existingImage.localOptimized = { sm: "", md: "", lg: "" };
+            existingImage.width = result.width;
+            existingImage.height = result.height;
+            existingImage.aspectRatio = result.width / result.height;
+            existingImage.hash = result.hash;
+            applyCandidateMetadata(existingImage, candidate);
+            metadataRefreshed += 1;
+            continue;
+          }
+        }
+        if (refreshKnownMetadata) {
           applyCandidateMetadata(existingImage, candidate);
           metadataRefreshed += 1;
         }
