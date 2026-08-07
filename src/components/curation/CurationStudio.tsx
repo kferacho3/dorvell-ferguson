@@ -291,8 +291,8 @@ export function CurationStudio({ sitePhotos }: CurationStudioProps) {
 
   const handleKeep = useCallback((id: string) => act({ type: "keep", ids: [id], now: now() }), [act]);
   const handleScrap = useCallback((id: string) => act({ type: "scrap", ids: [id], now: now() }), [act]);
-  const handleSetCategory = useCallback(
-    (id: string, category: string | null) => act({ type: "set-category", ids: [id], category, now: now() }),
+  const handleToggleCategory = useCallback(
+    (id: string, category: string) => act({ type: "toggle-category", ids: [id], category, now: now() }),
     [act],
   );
   const handleScrapReason = useCallback(
@@ -315,7 +315,9 @@ export function CurationStudio({ sitePhotos }: CurationStudioProps) {
 
   const handleToggleDestination = useCallback(
     (id: string, destination: DestinationKey, value: boolean) => {
-      if (value && state.decisions[id]?.status === "scrapped") {
+      // Read via the ref so this callback keeps a stable identity — depending
+      // on state.decisions re-rendered every memoized grid card per keystroke.
+      if (value && latestState.current.state.decisions[id]?.status === "scrapped") {
         pushToast(
           `Moved back to KEEP because ${DESTINATION_LABEL[destination]} is a public-facing section.`,
           "warning",
@@ -323,7 +325,7 @@ export function CurationStudio({ sitePhotos }: CurationStudioProps) {
       }
       act({ type: "set-destination", ids: [id], destination, value, now: now() });
     },
-    [act, state.decisions, pushToast],
+    [act, pushToast],
   );
 
   const handleToggleSelect = useCallback((id: string) => {
@@ -784,7 +786,7 @@ export function CurationStudio({ sitePhotos }: CurationStudioProps) {
                       onToggleSelect={handleToggleSelect}
                       onKeep={handleKeep}
                       onScrap={handleScrap}
-                      onSetCategory={handleSetCategory}
+                      onToggleCategory={handleToggleCategory}
                       onSetScrapReason={handleScrapReason}
                       onToggleDestination={handleToggleDestination}
                       onOpenFocus={openFocus}
@@ -816,7 +818,7 @@ export function CurationStudio({ sitePhotos }: CurationStudioProps) {
                 categories={categories}
                 onKeep={handleKeep}
                 onScrap={handleScrap}
-                onSetCategory={handleSetCategory}
+                onToggleCategory={handleToggleCategory}
                 onSetScrapReason={handleScrapReason}
                 onToggleDestination={handleToggleDestination}
                 onAddTag={handleAddTag}

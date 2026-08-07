@@ -1,3 +1,4 @@
+import { withImpliedTags } from "@/lib/curation/autoTag";
 import {
   emptyDecision,
   syncDestinationMirrors,
@@ -16,6 +17,7 @@ export type CurationAction =
   | { type: "scrap"; ids: string[]; now: string }
   | { type: "reset-status"; ids: string[]; now: string }
   | { type: "set-category"; ids: string[]; category: string | null; now: string }
+  | { type: "toggle-category"; ids: string[]; category: string; now: string }
   | { type: "add-tag"; ids: string[]; tag: string; now: string }
   | { type: "remove-tag"; ids: string[]; tag: string; now: string }
   | { type: "set-notes"; id: string; notes: string; now: string }
@@ -117,27 +119,71 @@ export function createCurationReducer(env: ReducerEnv) {
         return applyToIds(state, env, action.ids, action.now, (d) => ({
           ...d,
           category_primary: action.category,
+          category_tags: withImpliedTags(action.category, d.category_tags),
           // Choosing a category is a keep signal for unreviewed photos.
           status: action.category && d.status === "unknown" ? "kept" : d.status,
           reviewed_at:
             action.category && d.status === "unknown" ? action.now : d.reviewed_at,
         }));
 
+      // Multi-category chip behavior: the first pick becomes the primary,
+      // further picks add tags, clicking an active chip removes it (the
+      // primary hands off to the first tag so kept photos stay categorized).
+      case "toggle-category":
+        return applyToIds(state, env, action.ids, action.now, (d) => {
+          if (d.category_primary === action.category) {
+            const [nextPrimary = null, ...rest] = d.category_tags;
+            return {
+              ...d,
+              category_primary: nextPrimary,
+              category_tags: withImpliedTags(nextPrimary, rest),
+            };
+          }
+          if (d.category_tags.includes(action.category)) {
+            // Re-expand implications so removing an implied tag (Event on a
+            // Music photo) is an honest no-op instead of a temporary lie.
+            return {
+              ...d,
+              category_tags: withImpliedTags(
+                d.category_primary,
+                d.category_tags.filter((t) => t !== action.category),
+              ),
+            };
+          }
+          if (!d.category_primary) {
+            return {
+              ...d,
+              category_primary: action.category,
+              category_tags: withImpliedTags(action.category, d.category_tags),
+              status: d.status === "unknown" ? "kept" : d.status,
+              reviewed_at: d.status === "unknown" ? action.now : d.reviewed_at,
+            };
+          }
+          return {
+            ...d,
+            category_tags: withImpliedTags(d.category_primary, [
+              ...d.category_tags,
+              action.category,
+            ]),
+          };
+        });
+
       case "add-tag": {
         const tag = action.tag.trim();
         if (!tag) return state;
         return applyToIds(state, env, action.ids, action.now, (d) => ({
           ...d,
-          category_tags: d.category_tags.includes(tag)
-            ? d.category_tags
-            : [...d.category_tags, tag],
+          category_tags: withImpliedTags(d.category_primary, [...d.category_tags, tag]),
         }));
       }
 
       case "remove-tag":
         return applyToIds(state, env, action.ids, action.now, (d) => ({
           ...d,
-          category_tags: d.category_tags.filter((t) => t !== action.tag),
+          category_tags: withImpliedTags(
+            d.category_primary,
+            d.category_tags.filter((t) => t !== action.tag),
+          ),
         }));
 
       case "set-notes":

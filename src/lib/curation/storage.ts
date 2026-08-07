@@ -73,6 +73,13 @@ function sanitizeDecision(raw: unknown): PhotoDecision | null {
   if (typeof raw.photo_id !== "string" || raw.photo_id.length === 0) return null;
   const destinations = isRecord(raw.destinations) ? raw.destinations : {};
   const status = raw.status === "kept" || raw.status === "scrapped" ? raw.status : "unknown";
+  const category_primary =
+    typeof raw.category_primary === "string" && raw.category_primary.length > 0
+      ? raw.category_primary
+      : null;
+  const category_tags = Array.isArray(raw.category_tags)
+    ? raw.category_tags.filter((t): t is string => typeof t === "string")
+    : [];
   const decision: PhotoDecision = {
     photo_id: raw.photo_id,
     filename: typeof raw.filename === "string" ? raw.filename : raw.photo_id,
@@ -80,13 +87,10 @@ function sanitizeDecision(raw: unknown): PhotoDecision | null {
     relativePath: typeof raw.relativePath === "string" ? raw.relativePath : undefined,
     batch: typeof raw.batch === "string" ? raw.batch : "site",
     status,
-    category_primary:
-      typeof raw.category_primary === "string" && raw.category_primary.length > 0
-        ? raw.category_primary
-        : null,
-    category_tags: Array.isArray(raw.category_tags)
-      ? raw.category_tags.filter((t): t is string => typeof t === "string")
-      : [],
+    category_primary,
+    // Hand-edited reports can duplicate the primary into the tags; the
+    // toggle/demote state machine assumes tags are unique and primary-free.
+    category_tags: Array.from(new Set(category_tags)).filter((t) => t !== category_primary),
     destinations: {
       portfolio: destinations.portfolio === true,
       modeling: destinations.modeling === true,

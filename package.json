@@ -25,6 +25,7 @@
     "verify:portfolio-data": "tsx scripts/verify-dorvell-data.ts",
     "dedupe:images": "tsx scripts/dedupe-dorvell-images.ts",
     "dedupe:images:dry-run": "tsx scripts/dedupe-dorvell-images.ts --dry-run",
+    "curation:autotag": "tsx scripts/curation/auto-tag-report.ts",
     "curation:build": "tsx scripts/curation/report-to-json.ts"
   },
   "dependencies": {

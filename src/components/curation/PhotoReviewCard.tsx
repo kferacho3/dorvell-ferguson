@@ -4,6 +4,7 @@ import Image from "next/image";
 import { memo } from "react";
 import type { CurationPhoto, PhotoDecision, ScrapReason } from "@/lib/curation/types";
 import { SCRAP_REASONS } from "@/lib/curation/types";
+import { CategoryChips } from "@/components/curation/CategoryChips";
 import type { DestinationKey } from "@/components/curation/curationReducer";
 
 type PhotoReviewCardProps = {
@@ -14,7 +15,7 @@ type PhotoReviewCardProps = {
   onToggleSelect: (id: string) => void;
   onKeep: (id: string) => void;
   onScrap: (id: string) => void;
-  onSetCategory: (id: string, category: string | null) => void;
+  onToggleCategory: (id: string, category: string) => void;
   onSetScrapReason: (id: string, reason: ScrapReason) => void;
   onToggleDestination: (id: string, destination: DestinationKey, value: boolean) => void;
   onOpenFocus: (id: string) => void;
@@ -34,7 +35,7 @@ function PhotoReviewCardInner({
   onToggleSelect,
   onKeep,
   onScrap,
-  onSetCategory,
+  onToggleCategory,
   onSetScrapReason,
   onToggleDestination,
   onOpenFocus,
@@ -158,25 +159,15 @@ function PhotoReviewCardInner({
         <div
           className={`studio-card__field${needsCategory ? " studio-card__field--warn" : ""}`}
           role="group"
-          aria-label={`Primary category for ${photo.filename}${isKept ? " (required)" : ""}`}
+          aria-label={`Categories for ${photo.filename}${isKept ? " (primary required)" : ""} — first pick is the primary`}
         >
-          <span>Primary category{isKept ? " (required)" : ""}</span>
-          <div className="studio-card__categories">
-            {categories.map((category) => {
-              const isActive = decision?.category_primary === category;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  className={`studio-cat${isActive ? " is-on" : ""}`}
-                  aria-pressed={isActive}
-                  onClick={() => onSetCategory(photo.photo_id, isActive ? null : category)}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
+          <span>Categories{isKept ? " (required)" : ""} — first pick is primary</span>
+          <CategoryChips
+            photoId={photo.photo_id}
+            decision={decision}
+            categories={categories}
+            onToggleCategory={onToggleCategory}
+          />
         </div>
       )}
 

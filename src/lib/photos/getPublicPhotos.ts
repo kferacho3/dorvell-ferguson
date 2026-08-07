@@ -120,7 +120,17 @@ export function modelingImages(images: DorvellImage[]): { images: DorvellImage[]
     const assigned = images.filter((image) => lookup.modelingIds.has(image.id));
     if (assigned.length > 0) return { images: assigned, curated: true };
   }
-  if (lookup.finalized) return { images: [], curated: true };
+  if (lookup.finalized) {
+    // No explicit MODELING destinations assigned — kept photos categorized
+    // Modeling (primary or tag) keep the Room filled.
+    const categorized = images.filter(
+      (image) =>
+        lookup.keptIds.has(image.id) &&
+        (lookup.categoryById.get(image.id) === "Modeling" ||
+          (lookup.tagsById.get(image.id) ?? []).includes("Modeling")),
+    );
+    return { images: categorized, curated: true };
+  }
   const fallback = images.filter(
     (image) =>
       image.category === "Modeling" ||

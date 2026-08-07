@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { CurationPhoto, PhotoDecision, ScrapReason } from "@/lib/curation/types";
 import { SCRAP_REASONS } from "@/lib/curation/types";
+import { withImpliedTags } from "@/lib/curation/autoTag";
+import { CategoryChips } from "@/components/curation/CategoryChips";
 import type { DestinationKey } from "@/components/curation/curationReducer";
 
 type FocusReviewProps = {
@@ -14,7 +16,7 @@ type FocusReviewProps = {
   categories: readonly string[];
   onKeep: (id: string) => void;
   onScrap: (id: string) => void;
-  onSetCategory: (id: string, category: string | null) => void;
+  onToggleCategory: (id: string, category: string) => void;
   onSetScrapReason: (id: string, reason: ScrapReason) => void;
   onToggleDestination: (id: string, destination: DestinationKey, value: boolean) => void;
   onAddTag: (id: string, tag: string) => void;
@@ -34,7 +36,7 @@ export function FocusReview({
   categories,
   onKeep,
   onScrap,
-  onSetCategory,
+  onToggleCategory,
   onSetScrapReason,
   onToggleDestination,
   onAddTag,
@@ -187,42 +189,45 @@ export function FocusReview({
           <div
             className={`studio-card__field${needsCategory ? " studio-card__field--warn" : ""}`}
             role="group"
-            aria-label={`Primary category for ${photo.filename}${isKept ? " (required)" : ""}`}
+            aria-label={`Categories for ${photo.filename}${isKept ? " (primary required)" : ""} — first pick is the primary`}
           >
             <span>
-              Primary category{isKept ? " (required)" : ""}
+              Categories{isKept ? " (required)" : ""} — first pick is primary
               {needsCategory ? <em className="studio-focus__warn"> — needs category</em> : null}
             </span>
-            <div className="studio-card__categories studio-card__categories--focus">
-              {categories.map((category) => {
-                const isActive = decision?.category_primary === category;
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    className={`studio-cat${isActive ? " is-on" : ""}`}
-                    aria-pressed={isActive}
-                    onClick={() => onSetCategory(photo.photo_id, isActive ? null : category)}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
-            </div>
+            <CategoryChips
+              photoId={photo.photo_id}
+              decision={decision}
+              categories={categories}
+              focus
+              onToggleCategory={onToggleCategory}
+            />
           </div>
         )}
 
         <div className="studio-focus__tags">
           <span className="studio-focus__label">Tags</span>
           <ul>
-            {(decision?.category_tags ?? []).map((tag) => (
-              <li key={tag}>
-                <span>{tag}</span>
-                <button type="button" onClick={() => onRemoveTag(photo.photo_id, tag)} aria-label={`Remove tag ${tag}`}>
-                  ×
-                </button>
-              </li>
-            ))}
+            {(decision?.category_tags ?? []).map((tag) => {
+              const locked = withImpliedTags(
+                decision?.category_primary ?? null,
+                (decision?.category_tags ?? []).filter((t) => t !== tag),
+              ).includes(tag);
+              return (
+                <li key={tag}>
+                  <span>{tag}</span>
+                  {locked ? (
+                    <span title="Auto-tag — follows the selected categories" aria-hidden="true">
+                      •
+                    </span>
+                  ) : (
+                    <button type="button" onClick={() => onRemoveTag(photo.photo_id, tag)} aria-label={`Remove tag ${tag}`}>
+                      ×
+                    </button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
           <form
             onSubmit={(event) => {

@@ -1140,7 +1140,27 @@
   color: var(--st-cream, #f8f1e7);
 }
 
-.studio-card__field--warn .studio-cat:not(.is-on) {
+/* The primary category reads distinctly from additional tags. */
+.studio-cat.is-primary {
+  background: var(--st-teal);
+  border-color: var(--st-teal);
+  color: var(--st-cream, #f8f1e7);
+}
+
+.studio-cat.is-primary::before {
+  /* Alt-text syntax keeps the glyph out of the accessible name. */
+  content: "★" / "";
+  margin-right: 4px;
+  font-size: 0.58rem;
+}
+
+/* Implied tags (Music ⇒ Event, Modeling ⇒ Portrait) can't be removed
+   while their trigger is selected — soften the click affordance. */
+.studio-cat.is-locked {
+  cursor: default;
+}
+
+.studio-card__field--warn .studio-cat:not(.is-on):not(.is-primary) {
   border-color: color-mix(in srgb, var(--st-warn) 55%, var(--st-line-strong));
 }
 

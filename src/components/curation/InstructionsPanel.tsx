@@ -5,8 +5,9 @@ import { useState } from "react";
 const STEPS = [
   "Every photo starts as “Unreviewed.”",
   "For each photo, choose KEEP or SCRAP.",
-  "If you KEEP a photo, choose one primary category.",
-  "Add optional tags or notes only when helpful.",
+  "If you KEEP a photo, tap every category it belongs to — the first pick is the primary (marked ★), the rest become tags.",
+  "Music photos are auto-tagged Event, and Modeling photos are auto-tagged Portrait.",
+  "Add free-text tags or notes only when helpful.",
   "Press MODELING for any photo that should appear in the Modeling section.",
   "Press PROJECTS for any college or project-related photo.",
   "Use the progress counters to track what is done and what is left.",
