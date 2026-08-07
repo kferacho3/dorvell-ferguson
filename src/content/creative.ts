@@ -17,6 +17,7 @@
 
 import mediaManifest from "./creative.media.generated.json";
 import photomodeManifest from "./creative.photomode.generated.json";
+import { getFilmPlatforms, type FilmPlatform } from "@/lib/social-links";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -57,16 +58,38 @@ export type CreativeOrientation = "portrait" | "landscape" | "square";
 
 export type CreativeStatus = "concept" | "in-progress" | "shot" | "released";
 
-/** The eight "Creative Rooms" / concept categories. */
+/** The nine "Creative Rooms" / concept categories. */
 export type CreativeCategoryKey =
   | "cinematic-shorts"
   | "creative-photoshoots"
   | "motion-studies"
+  | "editing-studies"
   | "liminal-suspense"
   | "city-night"
   | "nature-surreal"
   | "comedy-character"
   | "behind-the-scenes";
+
+// ---------------------------------------------------------------------------
+// Film social distribution
+// ---------------------------------------------------------------------------
+
+/**
+ * A film's action on one platform. `postUrl` is present ONLY when the exact
+ * cross-post is verified — that is what lets the UI say "Watch on Instagram"
+ * instead of "Follow on Instagram". Never send someone to a profile under a
+ * label that promises the film.
+ */
+export type CreativeSocialLink = {
+  platform: FilmPlatform;
+  /** Full platform name; always rendered as text, never icon-only. */
+  label: string;
+  handle: string;
+  profileUrl: string;
+  postUrl?: string;
+  /** True when `postUrl` exists — the "Watch on" vs "Follow on" switch. */
+  hasPost: boolean;
+};
 
 export type CreativeItem = {
   id: string;
@@ -77,11 +100,27 @@ export type CreativeItem = {
   categoryKey: CreativeCategoryKey;
   moods: CreativeMood[];
   tags: string[];
+  /** Every room this piece belongs to, primary first. `categoryKey` is [0]. */
+  categoryKeys: CreativeCategoryKey[];
   description: string;
   directorNote?: string;
+  /** Credited roles — what Dorvell actually did on this piece. */
+  roles?: string[];
+  /** One editorial line describing the shot language, for the meta panel. */
+  visualLanguage?: string;
+  /** Written visual description, for dialogue-free cinematic pieces (a11y). */
+  synopsis?: string;
+  /** Per-platform actions. Absent for archive pieces that were never posted. */
+  social?: CreativeSocialLink[];
+  /** Set when this piece is one of the numbered featured films (1-based). */
+  filmIndex?: number;
+  /** Landing-hero eligibility. Lower priority wins the portal. */
+  motionPortal?: { priority: number; objectPosition?: string };
   // media (raw public paths — resolve at render)
   mp4Src: string; // desktop / HD (near-original)
   mobileSrc: string; // mobile / compressed
+  /** Silent <=8s cut for hero/teaser autoplay. Never the full film. */
+  loopSrc?: string;
   posterSrc: string;
   posterWebpSrc: string;
   thumbSrc: string;
@@ -172,6 +211,13 @@ export const creativeCategories: CreativeCategory[] = [
     tags: ["walk", "silhouette", "reflection", "runway"],
   },
   {
+    key: "editing-studies",
+    label: "Editing Studies",
+    blurb: "Cuts, repetition, split frames, and social-first experiments.",
+    representativeSlug: "sunset-study",
+    tags: ["cut", "repetition", "split-frame", "experiment"],
+  },
+  {
     key: "liminal-suspense",
     label: "Liminal / Horror / Suspense",
     blurb: "Empty rooms, blinds, shadows, hallways, night streets.",
@@ -222,10 +268,24 @@ type Curation = {
   /** description shown on cards / lightbox */
   description: string;
   directorNote: string;
+  /** Primary room label. Extra rooms go in `alsoIn`. */
   category: string;
+  /** Additional room labels this piece also belongs to. */
+  alsoIn?: string[];
   moods: CreativeMood[];
   tags: string[];
   type: CreativeMediaType;
+  roles?: string[];
+  visualLanguage?: string;
+  synopsis?: string;
+  /**
+   * Verified exact cross-posts, per platform. Profile URLs are NOT declared
+   * here — they come from `getFilmPlatforms()` so a handle can never drift.
+   * A platform omitted here still renders, as "Follow on <Platform>".
+   */
+  posts?: Partial<Record<FilmPlatform, string>>;
+  filmIndex?: number;
+  motionPortal?: { priority: number; objectPosition?: string };
   featured?: boolean;
   hero?: boolean;
   location?: string;
@@ -237,6 +297,72 @@ type Curation = {
  * is the room. `surfaces` is derived from the slug below.
  */
 const curation: Curation[] = [
+  {
+    slug: "unbraided",
+    title: "Unbraided",
+    description:
+      "A self-directed study of release — hair, frame, light, rhythm, and movement loosening together.",
+    directorNote:
+      "It starts outside, braided and composed, then moves indoors and never leaves the warm room again. The camera stays close enough to make the hands the subject: fingers working a braid loose, the weight of it dropping, the shape of the head changing frame by frame. Backlight through the blinds keeps him a silhouette while the work is still private, and only once the hair is fully out does the key come around to the face. The last look into the lens is the whole point — nothing has been added, something has just been let go.",
+    category: "Cinematic Shorts",
+    alsoIn: ["Motion Studies"],
+    moods: ["cinematic", "documentary", "fashion", "reflection", "experimental"],
+    tags: ["hair", "portrait", "transformation", "warm light", "self-direction", "motion", "freedom"],
+    type: "short",
+    roles: ["Concept", "Performance", "Direction", "Shooting", "Editing"],
+    visualLanguage: "Window silhouette, warm interior key, hands in frame, macro on the braid, close-up eye, golden fall-off",
+    synopsis:
+      "A man stands outside in a red tank top, hair braided close to the scalp. The film moves indoors, where he works in front of a bright window — first as a backlit silhouette, then in close-up under warm lamplight. His hands take each braid apart in turn; the hair lifts and widens until it fills the frame. Macro shots hold on texture and on one eye. The final shot is a direct look into the lens with the hair fully loose. No dialogue; music-led throughout.",
+    posts: { instagram: "https://www.instagram.com/reel/DbJx1roxURw/" },
+    filmIndex: 1,
+    featured: true,
+    status: "released",
+  },
+  {
+    slug: "look-up",
+    title: "Look Up",
+    description:
+      "A held breath above the city — skyline, fading light, and a moment of stillness before the archive opens.",
+    directorNote:
+      "Eight seconds, two ideas. The skyline first, held long enough that the sky does the work: Tampa going magenta behind the Truist crown and the PNC tower, the whole grid dimming a stop at a time. Then the cut to the back of his head against a pale, emptied sky — no face, no eyeline, just the gesture of looking up. It was shot to be the smallest possible film, the kind you can put in the corner of a page and let breathe.",
+    category: "Motion Studies",
+    alsoIn: ["City / Rooftop / Night"],
+    moods: ["cinematic", "city", "rooftop", "nature"],
+    tags: ["skyline", "sunset", "breath", "rooftop", "silhouette", "Tampa", "atmosphere"],
+    type: "motion-study",
+    roles: ["Concept", "Shooting", "Editing"],
+    visualLanguage: "Locked wide on the skyline, long dusk hold, cut to a low back-of-head against open sky",
+    synopsis:
+      "The Tampa skyline at dusk, shot wide and static. The sky runs orange to magenta behind the towers; lit signage and windows pick out the buildings as the light drops. The film cuts to a low angle behind a man's head and shoulders, framed against a pale, near-empty sky, his face turned upward and away from camera. No dialogue; ambient and music-led.",
+    posts: { instagram: "https://www.instagram.com/reel/DbWgmR1JtlY/" },
+    filmIndex: 2,
+    motionPortal: { priority: 1 },
+    featured: true,
+    location: "Tampa, FL",
+    status: "released",
+  },
+  {
+    slug: "sunset-study",
+    title: "Sunset Study",
+    description:
+      "A vertical editing experiment built from a rooftop, a silhouette, repeating frames, and the last light of the day.",
+    directorNote:
+      "This one is about the cut, not the shot. Everything was captured on the same parking deck in the same twenty minutes, then taken apart in the edit: the same silhouette returning in different sizes, hard drops to black between beats, a defocus repeated until it reads as a rhythm instead of a mistake. It lives in a 9:16 canvas with the frame letterboxed inside it on purpose — built for the phone, framed like a film. This is the start of a lane, not a one-off.",
+    category: "Editing Studies",
+    alsoIn: ["Motion Studies", "City / Rooftop / Night"],
+    moods: ["experimental", "cinematic", "city", "rooftop", "reflection"],
+    tags: ["sunset", "editing study", "vertical", "frame repetition", "rooftop", "silhouette", "letterbox"],
+    type: "motion-study",
+    roles: ["Concept", "Performance", "Shooting", "Editing"],
+    visualLanguage: "9:16 canvas with letterboxed frame, hard cuts to black, repeated silhouette, deliberate defocus",
+    synopsis:
+      "A vertical piece whose image sits letterboxed inside the frame, with black above and below. On a parking-deck roof at sunset, a man stands and then sits against the low wall, silhouetted against an orange and pink sky with towers and palms behind him. The edit cuts hard to black between beats and returns to the same silhouette at different sizes, ending on repeated, deliberately defocused frames of the figure against the colour. No dialogue; music-led.",
+    posts: { instagram: "https://www.instagram.com/reel/Dbg1rEPxdJl/" },
+    filmIndex: 3,
+    featured: true,
+    location: "Tampa, FL",
+    status: "released",
+  },
   {
     slug: "the-threshold",
     title: "The Threshold",
@@ -520,6 +646,7 @@ type RawMedia = {
   publicDir: string;
   mp4Src: string;
   mobileSrc?: string;
+  loopSrc?: string;
   posterSrc: string;
   posterWebpSrc: string;
   thumbSrc: string;
@@ -537,6 +664,33 @@ function surfacesFor(slug: string): CreativeSurface[] {
   return ["creative"];
 }
 
+/** Resolve a room label to its key, failing loudly on a typo. */
+function categoryKeyFor(label: string, slug: string): CreativeCategoryKey {
+  const key = categoryKeyByLabel[label];
+  if (!key) throw new Error(`[creative.ts] Unknown category "${label}" for ${slug}`);
+  return key;
+}
+
+/**
+ * Build a film's per-platform actions. Profile destinations always come from
+ * `getFilmPlatforms()`; the curation entry contributes only verified post URLs.
+ * A platform with no post still renders — as "Follow on", never "Watch on".
+ */
+function buildSocial(c: Curation): CreativeSocialLink[] | undefined {
+  if (!c.posts && c.filmIndex === undefined) return undefined;
+  return getFilmPlatforms().map((source) => {
+    const postUrl = c.posts?.[source.platform];
+    return {
+      platform: source.platform,
+      label: source.label,
+      handle: source.handle,
+      profileUrl: source.profileUrl,
+      postUrl,
+      hasPost: Boolean(postUrl),
+    };
+  });
+}
+
 function buildItem(c: Curation): CreativeItem {
   const m = media[c.slug];
   if (!m) {
@@ -544,8 +698,10 @@ function buildItem(c: Curation): CreativeItem {
       `[creative.ts] No optimized media for "${c.slug}". Run: node scripts/optimize-dorvell-videos.mjs`,
     );
   }
-  const categoryKey = categoryKeyByLabel[c.category];
-  if (!categoryKey) throw new Error(`[creative.ts] Unknown category "${c.category}" for ${c.slug}`);
+  const categoryKeys = [c.category, ...(c.alsoIn ?? [])].map((label) =>
+    categoryKeyFor(label, c.slug),
+  );
+  const categoryKey = categoryKeys[0];
   return {
     id: c.slug,
     slug: c.slug,
@@ -553,12 +709,20 @@ function buildItem(c: Curation): CreativeItem {
     type: c.type,
     category: c.category,
     categoryKey,
+    categoryKeys,
     moods: c.moods,
     tags: c.tags,
     description: c.description,
     directorNote: c.directorNote,
+    roles: c.roles,
+    visualLanguage: c.visualLanguage,
+    synopsis: c.synopsis,
+    social: buildSocial(c),
+    filmIndex: c.filmIndex,
+    motionPortal: c.motionPortal,
     mp4Src: m.mp4Src,
     mobileSrc: m.mobileSrc ?? m.mp4Src,
+    loopSrc: m.loopSrc,
     posterSrc: m.posterSrc,
     posterWebpSrc: m.posterWebpSrc,
     thumbSrc: m.thumbSrc,
@@ -585,6 +749,50 @@ export const featuredCreativeItems: CreativeItem[] = creativeItems.filter((i) =>
 
 export const heroCreativeItem: CreativeItem =
   creativeItems.find((i) => i.hero) ?? creativeItems[0];
+
+// ---------------------------------------------------------------------------
+// Films — the numbered, socially-distributed pieces
+// ---------------------------------------------------------------------------
+
+/**
+ * The featured film index, ordered 01..N. This is what the Creative Hub's
+ * featured slot pages through and what the viewer uses as its playlist. It is
+ * deliberately small: everything else lives in the archive.
+ */
+export const filmIndexItems: CreativeItem[] = creativeItems
+  .filter((i) => i.filmIndex !== undefined)
+  .sort((a, b) => (a.filmIndex ?? 0) - (b.filmIndex ?? 0));
+
+/**
+ * Films eligible for the landing-page motion portal, best first. Only films
+ * with a silent `loopSrc` qualify — the hero must never be able to reach for a
+ * full film's bytes.
+ */
+export const motionPortalFilms: CreativeItem[] = creativeItems
+  .filter((i) => i.motionPortal && i.loopSrc)
+  .sort((a, b) => (a.motionPortal?.priority ?? 99) - (b.motionPortal?.priority ?? 99));
+
+/** The single film that quietly brings the landing hero to life. */
+export const motionPortalFilm: CreativeItem | undefined = motionPortalFilms[0];
+
+export function getFilmBySlug(slug: string): CreativeItem | undefined {
+  return filmIndexItems.find((i) => i.slug === slug);
+}
+
+/** Runtime as `m:ss` — one formatter, so no surface can disagree with another. */
+export function formatRuntime(seconds: number): string {
+  const safe = Number.isFinite(seconds) && seconds > 0 ? seconds : 0;
+  const m = Math.floor(safe / 60);
+  const s = Math.round(safe % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+/** Human label for an orientation, used in film metadata panels. */
+export function orientationLabel(orientation: CreativeOrientation): string {
+  if (orientation === "portrait") return "Vertical · 9:16";
+  if (orientation === "landscape") return "Landscape · 16:9";
+  return "Square · 1:1";
+}
 
 // ---------------------------------------------------------------------------
 // Director's Notebook — future scene concepts (worlds still being built)
@@ -758,8 +966,9 @@ export function getCreativeItemsForSurface(surface: CreativeSurface): CreativeIt
   return creativeItems.filter((i) => i.surfaces.includes(surface));
 }
 
+/** Every piece in a room — including pieces whose primary room is another one. */
 export function getCreativeItemsByCategory(key: CreativeCategoryKey): CreativeItem[] {
-  return creativeItems.filter((i) => i.categoryKey === key);
+  return creativeItems.filter((i) => i.categoryKeys.includes(key));
 }
 
 /** Related items — same category first, then shared moods, excluding self. */
@@ -770,8 +979,8 @@ export function getRelatedCreativeItems(slug: string, limit = 3): CreativeItem[]
     .filter((i) => i.slug !== slug)
     .map((i) => {
       const sharedMoods = i.moods.filter((m) => item.moods.includes(m)).length;
-      const sameCategory = i.categoryKey === item.categoryKey ? 3 : 0;
-      return { i, score: sameCategory + sharedMoods };
+      const sharedRooms = i.categoryKeys.filter((k) => item.categoryKeys.includes(k)).length;
+      return { i, score: sharedRooms * 3 + sharedMoods };
     })
     .sort((a, b) => b.score - a.score);
   return scored.slice(0, limit).map((s) => s.i);

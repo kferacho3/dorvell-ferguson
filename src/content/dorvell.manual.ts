@@ -12,6 +12,7 @@ export const dorvellManual = {
     linkedin: "https://www.linkedin.com/in/dorvell-ferguson-jr-bsa-a78a02194/",
     instagram: ["https://www.instagram.com/2kferg/", "https://www.instagram.com/fergphotography/"],
     tiktok: "https://www.tiktok.com/@2kferg",
+    facebook: "https://www.facebook.com/DJ.ferguson2",
     headline: "Photographer / Model / Multimedia Visual Storyteller",
     shortBio:
       "Tampa-based multimedia creative with a journalism-trained eye, a runway-aware sense of movement, and a photographer's patience for the exact frame.",

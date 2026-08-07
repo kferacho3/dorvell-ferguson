@@ -11,6 +11,7 @@
  *   public/dorvell/videos/dorvell-ferguson-videos/<slug>/
  *     video.mp4        H.264 / yuv420p / +faststart / AAC   (universal)
  *     video.webm       VP9 / Opus                            (bandwidth win; optional)
+ *     video-loop.mp4   SILENT <=8s hero/teaser cut (opt-in via --loop)
  *     poster.jpg       representative frame, <=1280 long edge
  *     poster.webp      same frame, webp
  *     thumb.webp       small card thumbnail, <=640 long edge
@@ -35,6 +36,16 @@
  *   node scripts/optimize-dorvell-videos.mjs "clip.mov" --trim=18 --force  # hard-cut output to 18s
  *   node scripts/optimize-dorvell-videos.mjs --concurrency=4
  *   node scripts/optimize-dorvell-videos.mjs path/to/one.mov # process specific files
+ *   node scripts/optimize-dorvell-videos.mjs film.mp4 --loop --poster-at=25 --force
+ *
+ * Hero/teaser loops
+ *   `--loop` adds a SILENT, <=LOOP_MAX_SECONDS cut (`video-loop.mp4` -> manifest
+ *   `loopSrc`). The landing hero plays this instead of the full film, so a hero
+ *   impression can never pull full-film bytes and never ships audio it can't use.
+ *
+ * Poster frames
+ *   Posters default to 15% in (clamped 1-3s). `--poster-at=<seconds>` overrides
+ *   that per clip so the frame is an editorial choice, not a heuristic.
  */
 
 import { execFile } from "node:child_process";
@@ -61,6 +72,13 @@ const THUMB_LONG_EDGE = 640;
 // lighter compressed cut. The player picks by viewport (see VideoPlayer).
 const HD_LONG_EDGE = 1920; // desktop — never upscaled, so most clips stay source res
 const MOBILE_LONG_EDGE = 854;
+// Silent hero/teaser loop: short enough to feel like a held moment, small enough
+// that the landing page can autoplay it without a meaningful transfer cost.
+// 1152 matches the hero portal's real render size at DPR 2; CRF 28 holds up on
+// the sunset gradients that dominate these clips (CRF 30 starts to band).
+const LOOP_LONG_EDGE = 1152;
+const LOOP_MAX_SECONDS = 8;
+const LOOP_CRF = 28;
 
 // ---- args -----------------------------------------------------------------
 const argv = process.argv.slice(2);
@@ -73,6 +91,8 @@ const FORCE = flag("force");
 const ONLY = opt("only", "all"); // posters | encode | all
 const CONCURRENCY = Math.max(1, Number(opt("concurrency", "3")) || 3);
 const TRIM = Math.max(0, Number(opt("trim", "0")) || 0); // hard-cut output to N seconds (0 = full)
+const LOOP = flag("loop"); // also emit the silent hero/teaser cut
+const POSTER_AT = Number(opt("poster-at", "")); // NaN → fall back to the 15% heuristic
 const explicitFiles = argv.filter((a) => !a.startsWith("--"));
 
 // ---- known-clip slug overrides (media only; editorial curation lives in creative.ts) ----
@@ -163,8 +183,10 @@ async function makePoster(input, dir, meta) {
     const buf = await readFile(blurJpg);
     return { skipped: true, blurDataURL: `data:image/jpeg;base64,${buf.toString("base64")}` };
   }
-  // representative frame: 15% in, clamped to [1.0s, 3.0s]
-  const t = Math.min(Math.max(meta.duration * 0.15, 1.0), 3.0);
+  // representative frame: an explicit --poster-at wins, else 15% in clamped to [1.0s, 3.0s]
+  const t = Number.isFinite(POSTER_AT)
+    ? Math.min(Math.max(POSTER_AT, 0), Math.max(meta.duration - 0.1, 0))
+    : Math.min(Math.max(meta.duration * 0.15, 1.0), 3.0);
   const tmp = path.join(dir, "_frame.png");
   await execFileP("ffmpeg", ["-y", "-ss", String(t), "-i", input, "-frames:v", "1", "-q:v", "2", tmp]);
 
@@ -210,6 +232,25 @@ async function encodeMp4Variant(input, out, longEdge, crf, audioBitrate) {
   return { skipped: false, path: out };
 }
 
+/**
+ * Silent hero/teaser loop. `-an` drops the audio stream entirely (an autoplaying
+ * hero is always muted, so those bytes are pure waste) and the cut is capped at
+ * LOOP_MAX_SECONDS so a long film still yields a short, loopable doorway.
+ */
+async function encodeLoop(input, out, duration) {
+  if (!FORCE && existsSync(out)) return { skipped: true, path: out };
+  await execFileP("ffmpeg", [
+    "-y", "-i", input,
+    "-t", String(Math.min(LOOP_MAX_SECONDS, duration || LOOP_MAX_SECONDS)),
+    "-map", "0:v:0", "-an",
+    "-vf", scaleFilter(LOOP_LONG_EDGE),
+    "-c:v", "libx264", "-preset", "slow", "-crf", String(LOOP_CRF), "-pix_fmt", "yuv420p",
+    "-movflags", "+faststart",
+    out,
+  ], { maxBuffer: 1024 * 1024 * 32 });
+  return { skipped: false, path: out };
+}
+
 async function processClip(input) {
   const originalFileName = path.basename(input);
   const stem = originalFileName.replace(/\.[^.]+$/, "");
@@ -232,6 +273,7 @@ async function processClip(input) {
   if (ONLY === "encode" || ONLY === "all") {
     await encodeMp4Variant(input, path.join(dir, "video.mp4"), HD_LONG_EDGE, 20, "128k"); // desktop / HD
     await encodeMp4Variant(input, path.join(dir, "video-mobile.mp4"), MOBILE_LONG_EDGE, 27, "96k"); // mobile
+    if (LOOP) await encodeLoop(input, path.join(dir, "video-loop.mp4"), effectiveDuration);
     await rm(path.join(dir, "video.webm"), { force: true }); // legacy — no longer served
     mp4Done = true;
   }
@@ -250,6 +292,9 @@ async function processClip(input) {
     mp4Src: `${pubDir}/video.mp4`, // desktop / HD (near-original)
     mobileSrc: `${pubDir}/video-mobile.mp4`, // mobile / compressed
     posterSrc: `${pubDir}/poster.jpg`,
+    // presence is probed from disk, not from the --loop flag, so re-running
+    // without --loop never silently drops a hero loop from the manifest
+    ...(existsSync(path.join(dir, "video-loop.mp4")) ? { loopSrc: `${pubDir}/video-loop.mp4` } : {}),
     posterWebpSrc: `${pubDir}/poster.webp`,
     thumbSrc: `${pubDir}/thumb.webp`,
     blurSrc: `${pubDir}/blur.jpg`,
@@ -271,6 +316,7 @@ async function processClip(input) {
   const sizes = {
     hd: await bytesOf(path.join(dir, "video.mp4")),
     mobile: await bytesOf(path.join(dir, "video-mobile.mp4")),
+    loop: await bytesOf(path.join(dir, "video-loop.mp4")),
   };
   return { record, sizes, mp4Done };
 }
@@ -350,11 +396,11 @@ async function main() {
   await writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
 
   // summary table
-  console.log(`\n  ${"slug".padEnd(22)} ${"orient".padEnd(9)} ${"dur".padStart(6)} ${"hd".padStart(8)} ${"mobile".padStart(8)}`);
-  console.log(`  ${"-".repeat(22)} ${"-".repeat(9)} ${"-".repeat(6)} ${"-".repeat(8)} ${"-".repeat(8)}`);
+  console.log(`\n  ${"slug".padEnd(22)} ${"orient".padEnd(9)} ${"dur".padStart(6)} ${"hd".padStart(8)} ${"mobile".padStart(8)} ${"loop".padStart(8)}`);
+  console.log(`  ${"-".repeat(22)} ${"-".repeat(9)} ${"-".repeat(6)} ${"-".repeat(8)} ${"-".repeat(8)} ${"-".repeat(8)}`);
   for (const { record, sizes } of ok) {
     console.log(
-      `  ${record.slug.padEnd(22)} ${record.orientation.padEnd(9)} ${String(record.duration).padStart(6)} ${mb(sizes.hd).padStart(8)} ${mb(sizes.mobile).padStart(8)}`
+      `  ${record.slug.padEnd(22)} ${record.orientation.padEnd(9)} ${String(record.duration).padStart(6)} ${mb(sizes.hd).padStart(8)} ${mb(sizes.mobile).padStart(8)} ${mb(sizes.loop).padStart(8)}`
     );
   }
   const secs = ((Date.now() - t0) / 1000).toFixed(0);
