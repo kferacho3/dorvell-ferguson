@@ -40,7 +40,7 @@ export function DorvellFooter() {
   return (
     <footer className="site-footer" id="closing-frame" data-studio-section="closing">
       <div className="footer-closing">
-        <Image src="/dorvell-ferguson-symbol-v2.png" alt="" width={52} height={52} />
+        <Image src="/dorvell-ferguson-mark.png" alt="" width={52} height={52} />
         <p className="eyebrow">DF Archive</p>
         <h2>Fashion, music, movement, and the exact second it becomes a frame.</h2>
         <a className="button-primary" href={bookingHref}>
@@ -64,7 +64,7 @@ export function DorvellFooter() {
       <div className="footer-grid">
         <div className="footer-identity">
           <div className="footer-identity__head">
-            <Image src="/dorvell-ferguson-symbol-v2.png" alt="" width={42} height={42} />
+            <Image src="/dorvell-ferguson-mark.png" alt="" width={42} height={42} />
             <div>
               <strong>Dorvell Ferguson Jr.</strong>
               <span>Tampa, Florida</span>

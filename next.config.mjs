@@ -43,6 +43,10 @@ const nextConfig = {
         headers: immutableAssetHeaders,
       },
       {
+        source: "/dorvell-ferguson-mark.png",
+        headers: immutableAssetHeaders,
+      },
+      {
         source: "/dorvell-ferguson-logo.png",
         headers: immutableAssetHeaders,
       },

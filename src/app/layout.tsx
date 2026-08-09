@@ -4,7 +4,7 @@ import { getPortfolioData } from "@/lib/portfolio-data";
 import { getSocialLinks } from "@/lib/social-links";
 
 const { generated, manual } = getPortfolioData();
-const ogImage = generated.images[0]?.localOptimized.lg || "/dorvell-ferguson-logo.png";
+const ogImage = generated.images[0]?.localOptimized.lg || "/dorvell-ferguson-mark.png";
 // Structured-data profiles flow through the shared module: LinkedIn + both
 // Instagram handles, and TikTok only when a verified URL exists.
 const socialProfiles = getSocialLinks().map((link) => link.href);
@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     "Tampa-based photographer, model, and multimedia visual storyteller creating authentic imagery across fashion, music, live events, athletics, and editorial portraiture.",
   icons: {
     icon: [
-      { url: "/dorvell-ferguson-favicon/favicon.ico", sizes: "any" },
-      { url: "/dorvell-ferguson-favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/dorvell-ferguson-favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/dorvell-ferguson-favicon/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/dorvell-ferguson-favicon/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/dorvell-ferguson-favicon/favicon.ico?v=df-mark", sizes: "any" },
+      { url: "/dorvell-ferguson-favicon/favicon-32x32.png?v=df-mark", sizes: "32x32", type: "image/png" },
+      { url: "/dorvell-ferguson-favicon/favicon-16x16.png?v=df-mark", sizes: "16x16", type: "image/png" },
+      { url: "/dorvell-ferguson-favicon/android-chrome-192x192.png?v=df-mark", sizes: "192x192", type: "image/png" },
+      { url: "/dorvell-ferguson-favicon/android-chrome-512x512.png?v=df-mark", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/dorvell-ferguson-favicon/apple-touch-icon.png",
+    apple: "/dorvell-ferguson-favicon/apple-touch-icon.png?v=df-mark",
   },
   manifest: "/dorvell-ferguson-favicon/site.webmanifest",
   openGraph: {

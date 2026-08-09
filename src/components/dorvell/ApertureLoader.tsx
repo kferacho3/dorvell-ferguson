@@ -19,7 +19,7 @@ export function ApertureLoader() {
   return (
     <div className="aperture-loader" aria-hidden="true">
       <div className="aperture-mark">
-        <Image src="/dorvell-ferguson-symbol-v2.png" alt="" width={76} height={76} priority />
+        <Image src="/dorvell-ferguson-mark.png" alt="" width={76} height={76} priority />
         <span />
       </div>
     </div>
