@@ -63,13 +63,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <DorvellShell>
         <div className="route-page project-route lane-route">
           <header className="lane-route__head" style={{ "--lane-accent": laneDefinition.accent } as CSSProperties}>
-            <p className="eyebrow">{laneDefinition.eyebrow}</p>
-            <h1>{laneDefinition.label}</h1>
-            <p className="lane-route__desc">
-              {laneDefinition.description} {laneImages.length} frames.
+            <div className="lane-route__title">
+              <p className="eyebrow">{laneDefinition.eyebrow}</p>
+              <h1>{laneDefinition.label}</h1>
+            </div>
+            <p className="lane-route__desc">{laneDefinition.description}</p>
+            <p className="lane-route__count">
+              {laneImages.length} {laneImages.length === 1 ? "frame" : "frames"}
             </p>
           </header>
-          <WorkArchive images={laneImages} scopeLabel={laneDefinition.label} variant="full" />
+          <WorkArchive images={laneImages} scopeLabel={laneDefinition.label} compact variant="full" />
         </div>
       </DorvellShell>
     );

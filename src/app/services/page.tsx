@@ -84,7 +84,7 @@ export default function ServicesPage() {
     <DorvellShell>
       <ServicesExperience
         introFrames={introFrames}
-        symbolSrc="/dorvell-ferguson-mark.png"
+        symbolSrc="/dorvell-ferguson-main.png"
         tiles={tiles}
         services={services}
         email={email}

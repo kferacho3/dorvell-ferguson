@@ -76,7 +76,7 @@ export function DorvellHeader() {
     <header className={navClassName}>
       <Link className="brand-mark" href="/" aria-label="Dorvell Ferguson Jr. home">
         <span className="brand-mark__seal">
-          <Image src="/dorvell-ferguson-mark.png" alt="" width={40} height={40} priority />
+          <Image src="/dorvell-ferguson-main.png" alt="" width={40} height={40} priority />
         </span>
         <span className="brand-mark__copy">
           <span className="brand-mark__kicker">DF Archive</span>

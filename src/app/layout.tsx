@@ -4,7 +4,7 @@ import { getPortfolioData } from "@/lib/portfolio-data";
 import { getSocialLinks } from "@/lib/social-links";
 
 const { generated, manual } = getPortfolioData();
-const ogImage = generated.images[0]?.localOptimized.lg || "/dorvell-ferguson-mark.png";
+const ogImage = generated.images[0]?.localOptimized.lg || "/dorvell-ferguson-main.png";
 // Structured-data profiles flow through the shared module: LinkedIn + both
 // Instagram handles, and TikTok only when a verified URL exists.
 const socialProfiles = getSocialLinks().map((link) => link.href);

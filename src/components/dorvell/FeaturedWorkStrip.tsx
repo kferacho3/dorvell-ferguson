@@ -7,6 +7,7 @@ import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
 import { buildGalleryLanes } from "@/lib/gallery-lanes";
 import { useImageWarmup } from "./useImageWarmup";
+import "@/styles/featured-strip.css";
 
 export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
   const lanes = useMemo(() => buildGalleryLanes(images), [images]);
@@ -17,7 +18,6 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
       ),
     [lanes],
   );
-  const scanFrames = useMemo(() => [...featured, ...featured], [featured]);
   const [activeIndex, setActiveIndex] = useState(0);
   const active = featured[activeIndex] ?? featured[0];
   const featuredPreviewUrls = useMemo(() => featured.map(({ image }) => image.localOptimized.md), [featured]);
@@ -55,23 +55,51 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
         className="featured-deck"
         style={{ "--lane-accent": active.lane.accent, "--lane-soft": active.lane.accentSoft } as CSSProperties}
       >
-        <div className="featured-deck__copy">
-          <p className="eyebrow">Signal Frames</p>
-          <h2 id="featured-title">Twelve frames. Four lanes.</h2>
-          <p>
-            A contact-sheet scanner for Dorvell&apos;s four worlds: portrait control, stage heat, athletic timing, and
-            styled direction.
-          </p>
-          <div className="featured-deck__meta" aria-label="Active featured frame">
-            <span>{String(activeIndex + 1).padStart(2, "0")} / {String(featured.length).padStart(2, "0")}</span>
-            <strong>{active.lane.label}</strong>
-            <em>{active.image.projectTitle ?? active.image.category}</em>
+        {/* Portrait leads — the photograph is the section. */}
+        <figure className="featured-deck__stage">
+          <div
+            className="featured-deck__stage-inner"
+            onPointerLeave={resetScanPosition}
+            onPointerMove={updateScanPosition}
+          >
+            <Image
+              key={active.image.id}
+              src={active.image.localOptimized.lg ?? active.image.localOptimized.md}
+              alt={imageAlt(active.image)}
+              width={active.image.width}
+              height={active.image.height}
+              sizes="(max-width: 760px) 96vw, (max-width: 1100px) 560px, 720px"
+              unoptimized
+              {...blurImageProps(active.image)}
+            />
+            <span className="featured-stage__grid" aria-hidden="true" />
+            <span className="featured-stage__beam" aria-hidden="true" />
+            <span className="featured-stage__reticle" aria-hidden="true" />
           </div>
+          <figcaption>
+            <span>
+              {String(activeIndex + 1).padStart(2, "0")} / {String(featured.length).padStart(2, "0")} ·{" "}
+              {active.lane.eyebrow}
+            </span>
+            <strong>{active.lane.label}</strong>
+          </figcaption>
+        </figure>
+
+        {/* One compact band: title, lane chips, CTAs. */}
+        <div className="featured-deck__copy">
+          <div className="featured-deck__intro">
+            <p className="eyebrow">Signal Frames</p>
+            <h2 id="featured-title">Twelve frames. Four lanes.</h2>
+            <p className="featured-deck__lede">
+              Portrait control, stage heat, athletic timing, and styled direction — hover a frame to scan.
+            </p>
+          </div>
+
           <div className="featured-deck__lanes" aria-label="Featured lane shortcuts">
             {lanes.map((lane, index) => (
               <Link
                 className={lane.key === active.lane.key ? "is-active" : ""}
-                href={`/work/${lane.slug}`}
+                href={lane.href}
                 key={lane.key}
                 onFocus={() => previewLane(lane.key)}
                 onMouseEnter={() => previewLane(lane.key)}
@@ -83,71 +111,22 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
               </Link>
             ))}
           </div>
+
           <div className="featured-deck__actions">
             <Link className="button-primary" href="/work">
               Open all work
             </Link>
-            <Link className="button-secondary" href={`/work/${active.lane.slug}`}>
+            <Link className="button-secondary" href={active.lane.href}>
               View this lane
             </Link>
           </div>
         </div>
 
-        <figure className="featured-deck__stage">
-          <div
-            className="featured-deck__stage-inner"
-            onPointerLeave={resetScanPosition}
-            onPointerMove={updateScanPosition}
-          >
-            <Image
-              key={active.image.id}
-              src={active.image.localOptimized.md}
-              alt={imageAlt(active.image)}
-              width={active.image.width}
-              height={active.image.height}
-              sizes="(max-width: 900px) 92vw, 48vw"
-              unoptimized
-              {...blurImageProps(active.image)}
-            />
-            <span className="featured-stage__grid" aria-hidden="true" />
-            <span className="featured-stage__beam" aria-hidden="true" />
-            <span className="featured-stage__reticle" aria-hidden="true" />
-          </div>
-          <figcaption>
-            <span>{active.lane.eyebrow}</span>
-            <strong>{active.lane.deckLabel}</strong>
-          </figcaption>
-        </figure>
-
-        <div className="featured-deck__scanner" aria-hidden="true">
-          <div className="featured-scanner__readout">
-            <span>active lane</span>
-            <strong>{active.lane.label}</strong>
-          </div>
-          <div className="featured-scanner__reel featured-scanner__reel--a">
-            {scanFrames.map(({ image, lane }, index) => (
-              <figure key={`${image.id}-scan-a-${index}`} style={{ "--lane-accent": lane.accent } as CSSProperties}>
-                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
-                <figcaption>{String((index % featured.length) + 1).padStart(2, "0")}</figcaption>
-              </figure>
-            ))}
-          </div>
-          <div className="featured-scanner__reel featured-scanner__reel--b">
-            {[...scanFrames].reverse().map(({ image, lane }, index) => (
-              <figure key={`${image.id}-scan-b-${index}`} style={{ "--lane-accent": lane.accent } as CSSProperties}>
-                <Image src={image.localOptimized.sm} alt="" width={image.width} height={image.height} unoptimized {...blurImageProps(image)} />
-                <figcaption>{lane.label}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-
         <div className="featured-deck__rail" tabIndex={0} aria-label="Horizontally scroll featured images">
           {featured.map(({ image, lane }, index) => {
-            // Legacy scrape slugs (home-2/work/about) are 404s — route those to the lane view.
             const isRealProject =
               image.projectSlug && !["home-2", "work", "about"].includes(image.projectSlug);
-            const href = isRealProject ? `/work/${image.projectSlug}` : `/work/${lane.slug}`;
+            const href = isRealProject ? `/work/${image.projectSlug}` : lane.href;
             return (
               <Link
                 aria-current={index === activeIndex ? "true" : undefined}

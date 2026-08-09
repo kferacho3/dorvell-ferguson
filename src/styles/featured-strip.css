@@ -1,0 +1,271 @@
+/* =====================================================================
+   FEATURED STRIP — portrait-first contact sheet
+   Overrides the tall left-rail copy + square stage in dorvell.css.
+   Big photograph leads; controls sit in one compact band underneath.
+   ===================================================================== */
+
+.featured-strip {
+  padding: clamp(36px, 5vw, 64px) 0 clamp(48px, 6vw, 80px);
+}
+
+.featured-strip::after {
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.28));
+}
+
+.featured-strip .featured-deck {
+  display: grid;
+  grid-template-areas:
+    "stage copy"
+    "rail rail";
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.8fr);
+  gap: clamp(14px, 2vw, 24px);
+  align-items: stretch;
+  width: min(1320px, calc(100% - 36px));
+  perspective: none;
+}
+
+/* ---- dominant portrait ---------------------------------------------- */
+
+.featured-strip .featured-deck__stage {
+  grid-area: stage;
+  width: 100%;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  min-height: min(72vh, 760px);
+  max-height: min(84vh, 880px);
+  border-radius: 10px;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px color-mix(in srgb, var(--lane-accent) 40%, transparent);
+}
+
+.featured-strip .featured-deck__stage-inner > img {
+  object-fit: cover;
+  object-position: center 20%;
+  transform: none;
+  scale: 1;
+}
+
+.featured-strip .featured-deck__stage figcaption {
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.featured-strip .featured-deck__stage figcaption strong {
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+}
+
+/* Soften the HUD chrome so the photo reads first. */
+.featured-strip .featured-stage__grid {
+  opacity: 0.16;
+}
+
+.featured-strip .featured-stage__beam {
+  opacity: 0.28;
+}
+
+.featured-strip .featured-stage__reticle {
+  width: 64px;
+  height: 64px;
+  opacity: 0.7;
+}
+
+/* ---- slim control rail (right) -------------------------------------- */
+
+.featured-strip .featured-deck__copy {
+  grid-area: copy;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-content: start;
+  align-self: start;
+  justify-items: stretch;
+  padding-top: 4px;
+  position: sticky;
+  top: 88px;
+}
+
+.featured-strip .featured-deck__intro {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.featured-strip .featured-deck__copy .eyebrow {
+  margin: 0;
+}
+
+.featured-strip .featured-deck__copy h2 {
+  max-width: 10ch;
+  font-size: clamp(1.55rem, 2.4vw, 2.15rem);
+  line-height: 0.94;
+}
+
+.featured-strip .featured-deck__lede {
+  max-width: 32ch;
+  margin: 0;
+  color: var(--df-text-soft);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.featured-strip .featured-deck__meta {
+  display: none;
+}
+
+.featured-strip .featured-deck__lanes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  width: 100%;
+}
+
+.featured-strip .featured-deck__lanes a {
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 48px;
+  padding: 8px 10px;
+  gap: 0 10px;
+}
+
+.featured-strip .featured-deck__lanes span {
+  font-size: 1.2rem;
+}
+
+.featured-strip .featured-deck__lanes strong {
+  font-size: 0.84rem;
+  line-height: 1.05;
+}
+
+.featured-strip .featured-deck__lanes small {
+  display: none;
+}
+
+.featured-strip .featured-deck__actions {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.featured-strip .featured-deck__actions a {
+  width: 100%;
+  justify-content: center;
+  min-height: 42px;
+  padding-inline: 14px;
+  font-size: 0.78rem;
+}
+
+/* Scanner strip was pure vertical filler under the copy — drop it. */
+.featured-strip .featured-deck__scanner {
+  display: none;
+}
+
+/* ---- frame rail ----------------------------------------------------- */
+
+.featured-strip .featured-deck__rail {
+  grid-area: rail;
+  grid-auto-columns: minmax(148px, 14vw);
+  gap: 8px;
+  padding: 0;
+}
+
+.featured-strip .featured-frame {
+  min-height: 210px;
+  aspect-ratio: 3 / 4;
+}
+
+.featured-strip .featured-frame span {
+  top: 10px;
+  left: 10px;
+  font-size: 1.5rem;
+}
+
+.featured-strip .featured-frame strong {
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  font-size: 1.05rem;
+}
+
+/* ---- tablet: stack — portrait still first --------------------------- */
+
+@media (max-width: 1100px) {
+  .featured-strip .featured-deck {
+    grid-template-areas:
+      "stage"
+      "copy"
+      "rail";
+    grid-template-columns: 1fr;
+  }
+
+  .featured-strip .featured-deck__stage {
+    width: min(100%, 560px);
+    margin-inline: auto;
+    min-height: 0;
+    max-height: min(70vh, 680px);
+  }
+
+  .featured-strip .featured-deck__copy {
+    position: static;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 12px;
+  }
+
+  .featured-strip .featured-deck__copy h2 {
+    max-width: none;
+  }
+
+  .featured-strip .featured-deck__lanes {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .featured-strip .featured-deck__actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* ---- mobile --------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .featured-strip {
+    padding: 28px 0 40px;
+  }
+
+  .featured-strip .featured-deck {
+    width: calc(100% - 20px);
+    gap: 12px;
+  }
+
+  .featured-strip .featured-deck__stage {
+    width: 100%;
+    max-height: min(72vh, 560px);
+  }
+
+  .featured-strip .featured-deck__copy {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-strip .featured-deck__lanes {
+    grid-column: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .featured-strip .featured-deck__actions {
+    grid-column: auto;
+    grid-row: auto;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .featured-strip .featured-deck__rail {
+    grid-auto-columns: minmax(132px, 42vw);
+  }
+
+  .featured-strip .featured-frame {
+    min-height: 180px;
+  }
+}

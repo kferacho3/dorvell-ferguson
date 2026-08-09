@@ -136,12 +136,14 @@
 .atlas-hero .atlas-copy {
   position: relative;
   z-index: 2;
-  align-self: stretch;
-  width: 100%;
-  max-width: none;
+  align-self: center;
+  justify-self: center;
+  width: min(1080px, 100%);
+  max-width: 1080px;
+  margin-inline: auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.35fr) minmax(220px, 0.9fr);
-  gap: clamp(16px, 2.2vw, 28px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.4vw, 32px);
   align-items: start;
   perspective: none;
   transform: none;
@@ -149,21 +151,21 @@
 
 .atlas-hero .atlas-copy__intro {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.4rem;
   align-content: start;
 }
 
 .atlas-hero .atlas-headline {
-  max-width: 22ch;
-  font-size: clamp(1.4rem, 2.1vw, 2.1rem);
+  max-width: 18ch;
+  font-size: clamp(1.3rem, 1.9vw, 1.85rem);
   line-height: 0.96;
   text-wrap: balance;
 }
 
 .atlas-hero .atlas-lede {
-  max-width: 46ch;
+  max-width: 36ch;
   margin-top: 0;
-  font-size: clamp(0.78rem, 1vw, 0.88rem);
+  font-size: clamp(0.76rem, 0.95vw, 0.84rem);
   line-height: 1.4;
 }
 
@@ -171,25 +173,41 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  width: 100%;
   max-width: none;
   margin: 0;
 }
 
 .atlas-hero .atlas-lane-dial a {
-  min-height: 58px;
+  min-height: 54px;
 }
 
 .atlas-hero .atlas-copy__cta {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   align-content: start;
+  justify-items: stretch;
 }
 
+/* One row for all three CTAs — never wrap "Book Dorvell". */
 .atlas-hero .atlas-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 6px;
   margin-top: 0;
+  width: 100%;
+}
+
+.atlas-hero .atlas-actions a,
+.atlas-hero .atlas-actions button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 10px;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 .atlas-hero .atlas-proof-rail {
@@ -219,12 +237,23 @@
   }
 
   .atlas-hero .atlas-copy {
+    width: min(920px, 100%);
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 18px;
   }
 
   .atlas-hero .atlas-copy__cta {
     grid-column: 1 / -1;
+  }
+
+  .atlas-hero .atlas-actions {
+    justify-content: center;
+  }
+
+  .atlas-hero .atlas-actions a,
+  .atlas-hero .atlas-actions button {
+    flex: 0 1 auto;
+    padding: 0 14px;
   }
 }
 
@@ -324,15 +353,16 @@
   }
 
   .atlas-hero .atlas-actions {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin-top: 0;
   }
 
   .atlas-hero .atlas-actions a,
   .atlas-hero .atlas-actions button {
-    width: 100%;
+    flex: 1 1 calc(50% - 8px);
+    width: auto;
   }
 
   .atlas-hero .atlas-portal__surface {

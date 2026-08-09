@@ -27,6 +27,8 @@ type PointerMap = { x: number; y: number };
 type WorkArchiveProps = {
   images: DorvellImage[];
   scopeLabel?: string;
+  /** Lane pages: drop the tall heading, flow strip, and dead filter chips. */
+  compact?: boolean;
   variant?: "full" | "preview";
 };
 
@@ -35,7 +37,7 @@ function originFromElement(element: Element): LightboxOrigin {
   return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
 }
 
-export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiveProps) {
+export function WorkArchive({ images, scopeLabel, compact = false, variant = "full" }: WorkArchiveProps) {
   const [filter, setFilter] = useState<ArchiveFilter>("All");
   const [mode, setMode] = useState<(typeof modes)[number]>("grid");
   const [density, setDensity] = useState<(typeof densityModes)[number]["key"]>("editorial");
@@ -223,42 +225,73 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
     .map((image, offset) => ({ image, index: railStart + offset }));
 
   return (
-    <section className="archive-section" aria-labelledby="archive-title" id="archive">
+    <section
+      className={cn("archive-section", compact && "archive-section--compact")}
+      aria-labelledby="archive-title"
+      id="archive"
+    >
       <div className="archive-hash-anchors" aria-hidden="true">
         {galleryLaneDefinitions.map((lane) => (
           <span id={lane.slug} key={lane.key} />
         ))}
       </div>
 
-      <div className="section-heading archive-heading">
-        <div>
-          <p className="eyebrow">Archive</p>
-          <h2 id="archive-title">{archiveTitle}</h2>
-          <p>{filtered.length} {frameLabel} in {filterLabel}.</p>
+      {compact ? (
+        <h2 id="archive-title" className="sr-only">
+          {archiveScopeLabel ?? "Archive"} — {filtered.length} {frameLabel}
+        </h2>
+      ) : (
+        <div className="section-heading archive-heading">
+          <div>
+            <p className="eyebrow">Archive</p>
+            <h2 id="archive-title">{archiveTitle}</h2>
+            <p>
+              {filtered.length} {frameLabel} in {filterLabel}.
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="archive-controls">
-        <div className="filter-row" aria-label="Filter archive">
-          <button
-            type="button"
-            className={filter === "All" ? "is-active" : ""}
-            onClick={() => selectFilter("All")}
-          >
-            {archiveScopeLabel ? "Full exhibit" : "All galleries"}
-          </button>
-          {lanes.map((lane) => (
+        {compact ? (
+          <nav className="filter-row filter-row--lanes" aria-label="Other portfolio lanes">
+            <Link href="/work" className="filter-row__link">
+              Full archive
+            </Link>
+            {galleryLaneDefinitions.map((lane) => (
+              <Link
+                key={lane.key}
+                href={lane.href}
+                className={cn("filter-row__link", lane.label === archiveScopeLabel && "is-active")}
+                style={{ "--lane-accent": lane.accent } as CSSProperties}
+                aria-current={lane.label === archiveScopeLabel ? "page" : undefined}
+              >
+                {lane.label}
+              </Link>
+            ))}
+          </nav>
+        ) : (
+          <div className="filter-row" aria-label="Filter archive">
             <button
-              key={lane.key}
               type="button"
-              className={filter === lane.key ? "is-active" : ""}
-              onClick={() => selectFilter(lane.key)}
-              style={{ "--lane-accent": lane.accent } as CSSProperties}
+              className={filter === "All" ? "is-active" : ""}
+              onClick={() => selectFilter("All")}
             >
-              {lane.label}
+              {archiveScopeLabel ? "Full exhibit" : "All galleries"}
             </button>
-          ))}
-        </div>
+            {lanes.map((lane) => (
+              <button
+                key={lane.key}
+                type="button"
+                className={filter === lane.key ? "is-active" : ""}
+                onClick={() => selectFilter(lane.key)}
+                style={{ "--lane-accent": lane.accent } as CSSProperties}
+              >
+                {lane.label}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="archive-view-switches">
           <div className="mode-toggle" aria-label="Archive view mode">
             {modes.map((nextMode) => (
@@ -280,16 +313,17 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
                 key={densityMode.key}
                 onClick={() => setDensity(densityMode.key)}
                 type="button"
+                title={densityMode.detail}
               >
                 <strong>{densityMode.label}</strong>
-                <span>{densityMode.detail}</span>
+                {compact ? null : <span>{densityMode.detail}</span>}
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      {flowFrames.length > 0 && mode !== "focus" ? (
+      {!compact && flowFrames.length > 0 && mode !== "focus" ? (
         <div className="archive-flow-register" key={`${filter}-${mode}-flow`} aria-hidden="true">
           {flowFrames.map((image, index) => {
             const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
@@ -320,7 +354,7 @@ export function WorkArchive({ images, scopeLabel, variant = "full" }: WorkArchiv
         </div>
       ) : null}
 
-      {previewImage && mode !== "focus" ? (
+      {!compact && previewImage && mode !== "focus" ? (
         <div
           className="archive-instrument"
           data-cursor-active={pointerMap ? "true" : "false"}
