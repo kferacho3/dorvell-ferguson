@@ -30,13 +30,14 @@ import { withImpliedTags } from "../../src/lib/curation/autoTag";
 import { exportMarkdownReport } from "../../src/lib/curation/exportMarkdown";
 import { siteManifest } from "../../src/lib/curation/manifest";
 import { parseCurationState } from "../../src/lib/curation/storage";
-import { CURATION_SCHEMA, type CurationState } from "../../src/lib/curation/types";
+import { CURATION_SCHEMA, emptyDecision, type CurationState } from "../../src/lib/curation/types";
 import { validateForFinalization } from "../../src/lib/curation/validation";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..", "..");
 
-const inputPath = path.resolve(process.argv[2] ?? path.join(rootDir, "photos_report.md"));
+const positionalArgs = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
+const inputPath = path.resolve(positionalArgs[0] ?? path.join(rootDir, "photos_report.md"));
 const syncedPath = path.join(rootDir, "src/content/dorvell-photo-curation-report.md");
 const generatedPath = path.join(rootDir, "src/content/dorvell.generated.json");
 
@@ -128,6 +129,28 @@ try {
 }
 if (images.length === 0) fail("dorvell.generated.json has no images.");
 
+const manifest = siteManifest(images);
+
+// --adopt=<prefix>: manifest photos with no decision yet whose id starts
+// with the prefix are adopted as kept Modeling frames. Built for the
+// fergusondorvell modeling-site imports (fd- ids) — every frame on that
+// site is a modeling gig, so review-by-default would only hide them.
+const adoptPrefix = process.argv.find((arg) => arg.startsWith("--adopt="))?.split("=")[1];
+let adopted = 0;
+if (adoptPrefix) {
+  for (const photo of manifest) {
+    if (!photo.photo_id.startsWith(adoptPrefix) || state.decisions[photo.photo_id]) continue;
+    const decision = emptyDecision(photo, now);
+    decision.status = "kept";
+    decision.category_primary = "Modeling";
+    decision.category_tags =
+      photo.scrapedCategory && photo.scrapedCategory !== "Modeling" ? [photo.scrapedCategory] : [];
+    decision.reviewed_at = now;
+    state.decisions[photo.photo_id] = decision;
+    adopted += 1;
+  }
+}
+
 const scrapedById = new Map<string, string[]>();
 for (const image of images) {
   const mapped = [image.category, ...(image.tags ?? [])]
@@ -180,7 +203,6 @@ for (const decision of Object.values(state.decisions)) {
   }
 }
 
-const manifest = siteManifest(images);
 const validation = validateForFinalization(manifest, state.decisions);
 if (validation.blockers.length > 0 || validation.unreviewed.length > 0) {
   fail(
@@ -196,11 +218,12 @@ const report = exportMarkdownReport(manifest, finalState, now);
 writeFileSync(inputPath, report, "utf8");
 writeFileSync(syncedPath, report, "utf8");
 
-const orphans = decisionCount - manifest.filter((p) => state.decisions[p.photo_id]).length;
+const orphans =
+  Object.keys(state.decisions).length - manifest.filter((p) => state.decisions[p.photo_id]).length;
 console.log(`\n✔ Auto-tagged and finalized the curation report.`);
 console.log(`  Report:   ${inputPath}`);
 console.log(`  Synced:   ${syncedPath}`);
-console.log(`  Kept photos: ${stats.kept} (${stats.changed} gained tags)`);
+console.log(`  Kept photos: ${stats.kept} (${stats.changed} gained tags${adopted > 0 ? `, ${adopted} newly adopted as Modeling` : ""})`);
 console.log(`  Tagged from source page: ${stats.fromPage} · from scraped sets: ${stats.fromScrape}`);
 console.log(`  Music ⇒ Event applied: ${stats.musicToEvent} · Modeling ⇒ Portrait applied: ${stats.modelingToPortrait}`);
 console.log(`  Decisions preserved for ${orphans} photos no longer in the site manifest.`);

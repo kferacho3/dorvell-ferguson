@@ -1,6 +1,6 @@
 {
   "source": "https://dorvellferguson.myportfolio.com/home-2",
-  "scrapedAt": "2026-07-02T20:41:19.997Z",
+  "scrapedAt": "2026-08-07T23:37:13.123Z",
   "pages": [
     {
       "url": "https://dorvellferguson.myportfolio.com/home-2",
@@ -53168,6 +53168,604 @@
       "projectSlug": "fashion-shoots-2023",
       "projectTitle": "Ferg Photography / Portraits",
       "blur": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAwBACdASocABAAPwlur0+rpiQiMAgBcCEJaQAAW+gotryCXYrVr8ox3MAA/vDH3o5bUkIa6nw1TkZ0cxe7/9Djqw3MXtFWKbRAtFgJ+D5vhGcacYqytk3U3oRCe5U+WfGk7oHdsxbAsE+0GSIbH+p+VSu1V7JOT+YUtUfkhS3VzgnW9mATta8tbyap5f0HTTE8yHeAAAA="
+    },
+    {
+      "id": "fd-3f9737e2aaa9",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/f3023e2b-6a82-420c-8777-8b5431f8a98c_rw_1200.jpg?h=39a9868644d2241d79fa1072f6812b6d",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/brand-recognitions",
+      "localOriginal": "/dorvell/originals/3f9737e2aaa9095a-fd-brand-recognitions.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-3f9737e2aaa9-sm.webp",
+        "md": "/dorvell/optimized/fd-3f9737e2aaa9-md.webp",
+        "lg": "/dorvell/optimized/fd-3f9737e2aaa9-lg.webp"
+      },
+      "width": 1170,
+      "height": 1930,
+      "aspectRatio": 0.6062176165803109,
+      "alt": "Dorvell Ferguson Jr. modeling — brand recognitions",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "3f9737e2aaa9095a7baae3a568f04945362e611f9f10c824ca5cfa116cc8a232",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-brand-recognitions",
+      "projectTitle": "Modeling — brand recognitions",
+      "blur": "data:image/webp;base64,UklGRqwBAABXRUJQVlA4IKABAACwCACdASocAC4APwlqrU+rpaQiNVgIAXAhCWIAqSd1e2K1z5051cQKu28ArhJ8sRUdOPmnfj6aaolqMVl+hzVlbS1Xn2GPECglbDLwshAA/ukwmgwPKuM/8hFH2sYj4OYTDXxNVrLm34RnT50KcDrhrNnxPPIHHOUdCRmhehlbh6dGxRN8T8z19iQ0JMZD+0xBuAz5YSJSt1SSP6hK3zb5ENiCJzHBIqE9ZH1Zwhd72QYufDKVtKm6tt638PgGAf9dUvwvng1/6eUZbTpXKSjaE6ZP3LNyJA9MqpA4fBwKIAy4bX/yEkjtpuK8GHI+OPzUD7bYHtnsB/pQX90gCVPX/PN9ZCPui7JJNovpu4JksBonlc9Z52ScttJVz+wdSUA98AS9Zavsf4gJquyzTqtpc+orEECK/u+Hg5iuhdN0vjXNSBIn8RqIn51DAi9TNAk31Mn53xVM9s0/GLDq7b/GRovW83cIxP2UB3mRvFRU9U5gXoAhN+HjdTiqos2gH6yadDIe18AIYt7R5KK4bfHuWjcNq7rAHry2w4wt7IUAAA=="
+    },
+    {
+      "id": "fd-67e09f573bb6",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/4f24a0f9-97f3-4612-b100-1cc1e03e6388_rw_1200.jpg?h=1c70ed354ed6ca6019f4e307cc24645b",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/brand-recognitions",
+      "localOriginal": "/dorvell/originals/67e09f573bb6bf63-fd-brand-recognitions.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-67e09f573bb6-sm.webp",
+        "md": "/dorvell/optimized/fd-67e09f573bb6-md.webp",
+        "lg": "/dorvell/optimized/fd-67e09f573bb6-lg.webp"
+      },
+      "width": 1170,
+      "height": 1919,
+      "aspectRatio": 0.6096925482021887,
+      "alt": "Dorvell Ferguson Jr. modeling — brand recognitions",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "67e09f573bb6bf63972e9d2aab6a3a7ccfc8a2b30118d7a675dcc6410f71efb6",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-brand-recognitions",
+      "projectTitle": "Modeling — brand recognitions",
+      "blur": "data:image/webp;base64,UklGRk4BAABXRUJQVlA4IEIBAADQBgCdASocAC4APwl2tVSrpqSjKrgIAXAhCUAXYN5c+iYAC8gUwRFpQIH52Uqx548I3SjDuIiUwftpWROUpTAA/uxEjQA6xaKRHEZxOL74N5XWMh09WbwJDWJjmaJZhQoUCWRDaCkykKW1g+b3/UoYOe4SKOgQlRtKW1Ee99eDfsOwP8/oD6G8j6XcSLUWm7SKT4dp5eo5XV3ZveHBFfJPVNvopHLzJMSYt3TSvhXxvQ6P3J0Hsma/V+1EV/oiGI/nRmcYDuhAXaOM6T99V/OgFGEwWaTkferOvkY94eEmtnGJAaBu+lkE8kjy0NztK17gygTU1HN83AT6JhfkzwlkI0JWqqsQX7nPXShTfO0HcNFpPS/BylGyKa46SeVGXMqqo1ELQoTx/ht+lbUcOAviMpqPw60a8X4Fk7dV6/IcAAAA"
+    },
+    {
+      "id": "fd-43ddbed44340",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/10842ac7-960b-483f-953f-3edd8eca3cfd_rw_1920.png?h=c0aa7c683a3358aa29455703c91b01a9",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/digitals",
+      "localOriginal": "/dorvell/originals/43ddbed44340b023-fd-digitals.png",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-43ddbed44340-sm.webp",
+        "md": "/dorvell/optimized/fd-43ddbed44340-md.webp",
+        "lg": "/dorvell/optimized/fd-43ddbed44340-lg.webp"
+      },
+      "width": 1294,
+      "height": 2000,
+      "aspectRatio": 0.647,
+      "alt": "Dorvell Ferguson Jr. modeling — digitals",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "43ddbed44340b023c0eb97c17ca35326d713e60ebe85df3d4b1fe12b606fff08",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-digitals",
+      "projectTitle": "Modeling — digitals",
+      "blur": "data:image/webp;base64,UklGRiIBAABXRUJQVlA4IBYBAAAQBwCdASocACsAPwlwrk+rpqQiMAgBcCEJaACsMz4DT5kvvdpfjbaw6nLz0FQ1LMwtpJrZg1fdS6TjUWVhnROlAAD+017nTxKgKyCxNYj5AUQtf+I4Q/+Abpy3gQXT422XLXK5bUyD7yBQ2V8pE1wzyLA8YPrGjgQir2w9jG20LBuckMOyeILaAwx823FtSaj0BEgVUu4fuMn02NeIHmqPPegiKbFOhfrpUGTY1QihxnAHNtUQ8vXeTpWY43Lh9RXooD4ybe0tLerDpCL5cYF9al7qcImmnDvdGL/lNLL2X6GBoMgdxQf/zqR2V+84IroVRC7o51NNGl/jkq6LMc2VmbgoY2BMaYN5chVDwh22azIGYaAAAA=="
+    },
+    {
+      "id": "fd-3c80fa823860",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/37637787-1367-4079-b80c-cb4ff5a3d948_rw_1920.png?h=1e4a2ad1d6e67b6b5849a01915fc5c68",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/digitals",
+      "localOriginal": "/dorvell/originals/3c80fa823860bab2-fd-digitals.png",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-3c80fa823860-sm.webp",
+        "md": "/dorvell/optimized/fd-3c80fa823860-md.webp",
+        "lg": "/dorvell/optimized/fd-3c80fa823860-lg.webp"
+      },
+      "width": 1294,
+      "height": 2000,
+      "aspectRatio": 0.647,
+      "alt": "Dorvell Ferguson Jr. modeling — digitals",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "3c80fa823860bab2cbd3a97a524648b8b31c0d24618bb70bc53c230c6c3399a5",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-digitals",
+      "projectTitle": "Modeling — digitals",
+      "blur": "data:image/webp;base64,UklGRlABAABXRUJQVlA4IEQBAACwBwCdASocACsAPwFusE+rJqUiMAqpYCAJQBgb5eLACqi24pPI5J61ymoftP2DTwkOIoRz6f+cOS4tgFfrfWI1ZM8dIgLgAP7rJGJBi+JTmyegZm5tpPw+yd4NG7bHTvrkB8Q+c/OK4jZ4heRVv7uIhrek6WA/Mn4Jwjjm7zEfWQg7Kh1iEzym3/fdF+OsbwWTt3LaWxVhHSlOf/7KENbhoAHfG4ANwPD/X6wzq3VMxfZwXhVcOx3d6JwL/+zRxvPJGA32k5HAGkWenJ7WOvZUHi+x2alpSTG9Iz6jxLJvVuOuftuCPR6ect88Y1xhtNg8VhgIH5SILg2K4NkdCdmqyE53Zy6rn0foWFx4pLk5Kgk4m53Z15oc1FZWGqL9Lv38l95APmfL5FnNkTckI//A9sa+KQ2C3lSzFuj6yljlez3gAAA="
+    },
+    {
+      "id": "fd-793e0b1df407",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/6e10a112-2f33-4da2-9157-59efb59df03a_rwc_0x384x3840x3002x3840.jpg?h=cb7d35c73d9097cc4130baafb4e43473",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/",
+      "localOriginal": "/dorvell/originals/793e0b1df4076249-fd-home.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-793e0b1df407-sm.webp",
+        "md": "/dorvell/optimized/fd-793e0b1df407-md.webp",
+        "lg": "/dorvell/optimized/fd-793e0b1df407-lg.webp"
+      },
+      "width": 3840,
+      "height": 3002,
+      "aspectRatio": 1.279147235176549,
+      "alt": "Dorvell Ferguson Jr. modeling — home",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "793e0b1df4076249fc121c494fbb3dea440bfaaff3f63e6943970fc7bdb36b14",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-home",
+      "projectTitle": "Modeling — home",
+      "blur": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAADwBACdASocABYAPwl6sVOrp6QiqAqpcCEJZwDE2Ao9cNFOVgW84zQ1v7gsI8M2VmAA/oRvodlXUXX9bbMgKwz/7yM6BATmFndJ58pK2mYWEe38GQXQz6r+GQudXuxTR/kMx45Np5dQ6U2QIoYanOIg+pY4ED9hYjj0ktCa9IkmGJwJCZl4+MhONcon22GoKjSGQAAA"
+    },
+    {
+      "id": "fd-f4d1a11ab5c3",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/11dec230-1a0f-45fb-b279-5d20edcc74a0_car_202x158.JPEG?h=c2d4e69d750a18614df9144c5f17f4a3",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/",
+      "localOriginal": "/dorvell/originals/f4d1a11ab5c38af7-fd-home.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-f4d1a11ab5c3-sm.webp",
+        "md": "/dorvell/optimized/fd-f4d1a11ab5c3-md.webp",
+        "lg": "/dorvell/optimized/fd-f4d1a11ab5c3-lg.webp"
+      },
+      "width": 4374,
+      "height": 3421,
+      "aspectRatio": 1.2785735165156387,
+      "alt": "Dorvell Ferguson Jr. modeling — home",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "f4d1a11ab5c38af77b26300ca6476567c4bc91b37b9fddf0f7416c0ced1d51ab",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-home",
+      "projectTitle": "Modeling — home",
+      "blur": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAADQBACdASocABYAPwlwsE+rpqSiMAgBcCEJaQAAWlNH4XMKXXuHaqLK5mgi1ooxgAD9zS19Eypy5p53VQhSAjGxhtc+rxGfsz/a3oQwd/SOtYPNwiHmooU08JGnPt9bOe51vCNYCx7Me9pEiVLAy8lhm1NVWx7YOAAAAA=="
+    },
+    {
+      "id": "fd-0c65675a6b42",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/94d26ea8-dc5c-478f-9f94-e4d2974a5232_car_202x158.png?h=bb66c63451d855acf54f344c750678aa",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/",
+      "localOriginal": "/dorvell/originals/0c65675a6b42256d-fd-home.png",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-0c65675a6b42-sm.webp",
+        "md": "/dorvell/optimized/fd-0c65675a6b42-md.webp",
+        "lg": "/dorvell/optimized/fd-0c65675a6b42-lg.webp"
+      },
+      "width": 1294,
+      "height": 1012,
+      "aspectRatio": 1.2786561264822134,
+      "alt": "Dorvell Ferguson Jr. modeling — home",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "0c65675a6b42256d911e741b385fae2310f90a05915604ca9dab65d0e6d9d731",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-home",
+      "projectTitle": "Modeling — home",
+      "blur": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABwBQCdASocABYAPwlwslIrpiSisBgIAXAhCWgAnTLQfuAV225s4CubVZ9fBfrPWjhYrdVAAP7ql8daHMmDH6783XFPSATCtaNXoDjJcttk8nlatQbSKhLZw20u8yqWxyiVV8zxOwBx60dnI3zbHr5QXVg6+iZow2nWzZsiw7XWwWNx1qZaMPgOKiuIn79hQv9nRaCHXFmotZQ45MScvm8G7m2/Pv9kGMI8Gt5y6JdecGf1peAAAA=="
+    },
+    {
+      "id": "fd-54f0ec3405b5",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/332c3fe5-c46c-4485-bdf4-e9f0633be1f0_car_202x158.jpg?h=a4e78da9f76f68f88aecddc7f783cdd5",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/",
+      "localOriginal": "/dorvell/originals/54f0ec3405b5cb13-fd-home.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-54f0ec3405b5-sm.webp",
+        "md": "/dorvell/optimized/fd-54f0ec3405b5-md.webp",
+        "lg": "/dorvell/optimized/fd-54f0ec3405b5-lg.webp"
+      },
+      "width": 1170,
+      "height": 915,
+      "aspectRatio": 1.278688524590164,
+      "alt": "Dorvell Ferguson Jr. modeling — home",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "54f0ec3405b5cb13ba926caf991cfff21bb405a643762743f918393f160421ce",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-home",
+      "projectTitle": "Modeling — home",
+      "blur": "data:image/webp;base64,UklGRgQBAABXRUJQVlA4IPgAAACwBgCdASocABYAPwlyr0+rpyQiMAgBcCEJaACsM48OWZANbChxv07es997GB1nO/Fc2t++UdjgCETG9XX+AAD+pW1715+RCFsam2qXYv7N1ZNLvycr2pbFjr7g1mZCtffAIHVrdB99lEVrwDD6LSfXOApnvR2Ug09anGiV8nnktZNH0j8Y/F7l1zK1Ignxp4ZUmWWQpV0zTmgE6iseDj36FW2sAf+JBpbUSz/I/saVCB+caF2eSz3feaHJKVLE6AFikBeuO6U4iIAFWCUcohKeLlu375nrl3ft9R47n8Kf94fhkldR/2WMrQ6o/iLj8k2aqX2Td4wAAA=="
+    },
+    {
+      "id": "fd-52d257da4be0",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/e3c43f48-fe86-45b9-97c7-4d6a6e471d73_rw_3840.JPEG?h=1a86decefc733b03f5c0704ff855fe76",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/52d257da4be05e6f-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-52d257da4be0-sm.webp",
+        "md": "/dorvell/optimized/fd-52d257da4be0-md.webp",
+        "lg": "/dorvell/optimized/fd-52d257da4be0-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "52d257da4be05e6fcbcd205fcf01bb5f607b560ae752740561a9c930760cf112",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRtAAAABXRUJQVlA4IMQAAADQBQCdASocACoAPwlwrk+rpqQiMAgBcCEJZwAFF1jYaPTUG3M4ji+tGgFElBcl8AiWw8Z+R9fAAPnaP5GTb63a6a+96hs5X2kIzpa3Sawv2bok8PZQVNTNZ9wK6s1CYi1Utgx/nY80aWWguInwqFwPtyJZSSyEAa4p6jK/Xs1SVrsTAKEofAgBevZN9LzupTWqLr22YMaYr0on26VGcuGICF1D16nP8xCqsVQRsr53oG8eUzXRK5zfmK6uRpzTsO1MAAAA"
+    },
+    {
+      "id": "fd-cf44da10bd4e",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/e4a83dcf-fd01-43e9-8fac-5975682c2977_rw_3840.JPG?h=02bf15a274b74f9039bd717f2fe07177",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/cf44da10bd4e248f-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-cf44da10bd4e-sm.webp",
+        "md": "/dorvell/optimized/fd-cf44da10bd4e-md.webp",
+        "lg": "/dorvell/optimized/fd-cf44da10bd4e-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "cf44da10bd4e248fbdd2a6fa00dad9faf20428a9d7ea9d932e49cf8dfc16fe8c",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABwBQCdASocACoAPwlwq0+rpqOiMBqqqXAhCWkAAD2PfJS0LaIQ8rkp1ebgQEyz3EEoMPAAAP7Dgxr+O26hCjpVt8dt1JNUcEh1ADwUCCOKYZQSNYvWs1DiwYGevAfZtVcC9aBXKgzr1m0dI4T+QnjR3+Uj0XQOYb1vLOcq1Q9wZ5y+1craX8gl6Qj2IjK1sk3VAAAA"
+    },
+    {
+      "id": "fd-7e9beb5b4e79",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/9aefc726-1d70-4e12-a862-020a549be1d4_rw_3840.jpg?h=217843f57ffce0af869437bcdddfbb35",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/7e9beb5b4e79083b-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-7e9beb5b4e79-sm.webp",
+        "md": "/dorvell/optimized/fd-7e9beb5b4e79-md.webp",
+        "lg": "/dorvell/optimized/fd-7e9beb5b4e79-lg.webp"
+      },
+      "width": 3840,
+      "height": 4800,
+      "aspectRatio": 0.8,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "7e9beb5b4e79083b43862d9b2cc036586132cea14932c5bfd3d1ec6da7f50e2b",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAACQBgCdASocACMAPwlwsE+rpqSiMBqqqXAhCWcAxcgW6boAsORBY+1jTlzpY3yS04OuO88x/kdvnmUN1T4AAP6Ec3s6CBQ2jBzlReB2wbUOoYvo/xVaINuaMn38Qy1OroCOjLFoFVo55uG2S3ydKRGSo0uaz/iEZ+p7nfumk80Ihg+Fr3gx12Ue4Jdh/3kjPuLje/aWzvKSdwyOXNygtSQLVVE4Qy/Z2eItG6YqJsYAAA=="
+    },
+    {
+      "id": "fd-75c33f182857",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/d02a8723-afe2-49e8-833a-57692ec6997f_rw_3840.JPG?h=fa9a76d45c2bc2c9941f338db18dda27",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/75c33f182857362a-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-75c33f182857-sm.webp",
+        "md": "/dorvell/optimized/fd-75c33f182857-md.webp",
+        "lg": "/dorvell/optimized/fd-75c33f182857-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "75c33f182857362a4c993799ee9b2d27b883f19b3764da32d0978ccac381d9f1",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRtAAAABXRUJQVlA4IMQAAAAQBgCdASocACoAPwFwrE+rJyQiMBqtUWAgCWkAEUeHVtFVAhqp/Enjzmsm9lp+15JrECk/M751/wAA/vYIDgZ9Sli4thvujFCVx8LeeeyzJnTvxcHyJ0FdW5excG2B9dpMf8ofNCpZMYTc/d6c7N6ZNofhHEZ+GUrF7sH1100wXM8RBg253dAi/ARgLDJMkp6WR+hIztKo+nz0/5fe5WIyN98t1rEzcwzKlT26F94hmnhw7xbxcTNTUFwNqUTInWnfIgAA"
+    },
+    {
+      "id": "fd-d17c518c3d44",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/d7fb90ed-3372-4f26-bd74-d97b3d16fbb5_rw_3840.JPEG?h=ff14fee0a0d57a07b66c75ec59af212a",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/d17c518c3d4488fc-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-d17c518c3d44-sm.webp",
+        "md": "/dorvell/optimized/fd-d17c518c3d44-md.webp",
+        "lg": "/dorvell/optimized/fd-d17c518c3d44-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "d17c518c3d4488fcd019b97358ba3bd26cac25c2bedf44b86bd8ee3be961f240",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAwBgCdASocACoAPwlyr1CrpqQiqqwBcCEJYgBWwBp0VJruUZ8eNehf/slSE92Mccm5c0rFi0rNuD8AAP0/URJvVR4ZTxkEd1yvQ6qbhTIhoKqu/eG7/4YqPRnIU/XpR8V9cnhbSvlKqi/hkZoSPxW3IKr8u9rIThxx5B+ijXkg20Kc/07lVIc0okuGNk5vglsoA5r1IsF3NKepATecDfk4E8ct/+ImN0GdYnQANs/HTAycfGYDwvzMNvd7RwBYgwAAAA=="
+    },
+    {
+      "id": "fd-c616be4d3d55",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/ad02623a-b681-4a0e-aa42-b0a7db3e3676_rw_3840.JPG?h=5d548551710a6b204d24bd8706a38cab",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/c616be4d3d55573e-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-c616be4d3d55-sm.webp",
+        "md": "/dorvell/optimized/fd-c616be4d3d55-md.webp",
+        "lg": "/dorvell/optimized/fd-c616be4d3d55-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "c616be4d3d55573effcd9377faf17ef4153c9de570b37a9ad852ec71c0558d6e",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRvAAAABXRUJQVlA4IOQAAAAQBgCdASocACoAPwl8uFUrpyUjJWmZcCEJQBgbgXe3iHqi50EqL4gv77lveXxRnLlAumWK9hmBIIAA/pYQKaRbBgUB3GSOSACypPmerGlE3fpQViXD+abnNB5sMBQ9D6RutvWmGnLUJKBv+hdAP5UeKtu8H3U2JuRP1wGwIB3XxgtvDYhL8dOBbP1AXL1BmZAdniyYizxbPgzIR5qcHvUR1GdXo7JFHLmwIaW67VXf/LWan+toVdXvxeWTJUpKDUBoz0WbMnoZwQ67U9XFcA9yq6fuOJh0ecm+9FdbqGRgWE/gAAA="
+    },
+    {
+      "id": "fd-d0d3598a5f43",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/1575c9d2-54ac-4ace-8419-82f3d9d00af2_rw_3840.jpg?h=fd23416683cca8f5e0aae80a93c7f072",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/d0d3598a5f43991c-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-d0d3598a5f43-sm.webp",
+        "md": "/dorvell/optimized/fd-d0d3598a5f43-md.webp",
+        "lg": "/dorvell/optimized/fd-d0d3598a5f43-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "d0d3598a5f43991c1131131c21f919c33e86426002182d6a8be585ed70feecfc",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRiQBAABXRUJQVlA4IBgBAAAQBwCdASocACoAPwlwslKrpaSiqrgMAXAhCUATpm0h0YGgLeq/n5pysSvd6XpiaAQEUgOgEDiv6j0OQnS/3wIN4AD+7DRiM3v1ctG+57qsdhkds6UV+qZ5cBkDuQAduR2dAt29iY6baB9IcnoLQnss3ogCER+FI5fw5jwZdHlrDPyU1ECxR9t0nHA5eJxFFijxgLeN4NhNZ/9O5cwmb/u3Rkw5YCJUZ2R+Kp9Z3voq61Wzwmc4ni9f2OY8eFm81rHD3Zu8ALJthmOaTbH+Jtpis/GT21qh0cO8YKTTJ0UeDA3tERQlD5dtQAQgtsMhCOgVnkT5fHA0RRExde25erj6voK00XOalYAfgeXPLKXQXXmX3Q8sVEAA"
+    },
+    {
+      "id": "fd-fee326b4cf48",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/99a3bd02-ef6a-4898-abc0-b7da64e9cab8_rw_3840.jpg?h=5f76585f9e442046aeece12b017f9101",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/fee326b4cf486736-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-fee326b4cf48-sm.webp",
+        "md": "/dorvell/optimized/fd-fee326b4cf48-md.webp",
+        "lg": "/dorvell/optimized/fd-fee326b4cf48-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "fee326b4cf48673668c17acf9047737fd168650792c74d7ccd69bc2df212a9ed",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRhYBAABXRUJQVlA4IAoBAACQBwCdASocACoAPwl6sFIrqCQiqrgMAXAhCWwArDM0OMWzMCgubqLhnYzin0jL6W9jUUb7qeOUpgQrkfrf9a5fsw5oHAAA/uvsQYx+9/o/3xWChHFhm9B6dgUCq6NIgYUvws8D3bzyWaF87zmEBiTAgzj4NIKiY/KTBa1julTsF/jsxXLrfoZjBR5d8dAe26Nv8UAsXmQWvzr2AVsId8DWWLT8obBu0LjpuPaCbiYiNVY4rYhu6t/JpEh28MwsWJ4FZEiXpmB5b6MHPeQLBiip4ox+Z9b2gujSBPxh/EkjDl7TSmZ/+6Cm5TzdGnc274eVlZ82W4NQ8frhmM5ctfliCB+jw8ihHhAAAA=="
+    },
+    {
+      "id": "fd-9a5754435f55",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/04a75a37-6cef-4d99-96e2-1511b0091f22_rw_1200.jpg?h=aa938d82cdaabd7eac3a73643325e82b",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/9a5754435f556fb8-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-9a5754435f55-sm.webp",
+        "md": "/dorvell/optimized/fd-9a5754435f55-md.webp",
+        "lg": "/dorvell/optimized/fd-9a5754435f55-lg.webp"
+      },
+      "width": 1170,
+      "height": 1331,
+      "aspectRatio": 0.879038317054846,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "9a5754435f556fb8c1b181103c7a24af23a6a6c72010588f5fff586ed8fc710b",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRiYBAABXRUJQVlA4IBoBAADQBgCdASocACAAPwlsrFCrpaQisBgMAXAhCWwAnTLrrpzUS3ftoYhyVg2pg0HHrUy7iSV1+GJRc2H2ohQLsoAA/o/gAWta7dvnbzeqACu/LglwE3/Sg7FWA0jh6GFLs4Pfdny9YJDxGAQsaYG652igOM+0aBntZgJZRLM7FLa7Om30z7AQy923uEIWUfMHzpWRZSnxdacv62RQe0wtNkCOWx94zCoEqyzvF7XLhg4DfTEALp42f1zw9ovZg163XHW1bEax9FwATKx67YuXo1SQW7MCfXJM8q9aWt77upxFllobQRDxgcy6Qk32eE2hXUFED4yOm7bHoWOkyFBHyY37RuuMs/PootUgdj8iBeotQ+br1ktRjPv9oAA="
+    },
+    {
+      "id": "fd-2a9dcf511e8f",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/e64d1cc6-ff58-41d7-9e6d-c7a3b3f4545a_rw_1920.jpg?h=a69e1734aa89f9027b4ac9c6ef360340",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/photos",
+      "localOriginal": "/dorvell/originals/2a9dcf511e8fa020-fd-photos.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-2a9dcf511e8f-sm.webp",
+        "md": "/dorvell/optimized/fd-2a9dcf511e8f-md.webp",
+        "lg": "/dorvell/optimized/fd-2a9dcf511e8f-lg.webp"
+      },
+      "width": 1920,
+      "height": 2880,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — photos",
+      "category": "Modeling",
+      "tags": [
+        "Modeling",
+        "Gigs"
+      ],
+      "detectedFrom": "img",
+      "hash": "2a9dcf511e8fa020357faf92f22125f4df8c70f453cfcc2ad38b8bfcc2912a0c",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-photos",
+      "projectTitle": "Modeling — photos",
+      "blur": "data:image/webp;base64,UklGRhoBAABXRUJQVlA4IA4BAABQBwCdASocACoAPwl+tlarp6SjpWgBcCEJZwDMlYyWFYcYptIi/sM/LZzxF4X6pO3Mcw9kBvWEUUWMDd5ZvmWxDsigAP3LJTYCVaFEmu4uM9PKLukLVUDLnO6BypKbvCUbw7c/YqesjfRdJWJAd+nenfkVr42VoWZ0mpQB+z7M42IwnlplGs/z2oDejb2FG3oe7AGEIhj9cT41hDJkdBa3hcHvrPp5HmbbgorX7U5Fna5IOew4tfIOGAw0/eqSiCtVK+DWexJla7XJR1yYJmrTde4m54loJ7OiCT6iQOu5HbCxT1200bZHBY4CznKdPPU96xE/rXRVQysmH5FzM31roJyNBGRTnY9AcYdSAAA="
+    },
+    {
+      "id": "fd-e845976d09bd",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/94b6c232-3aae-48f5-802e-66e188e08e3f_rw_3840.JPEG?h=05252412ed983ef2c7e8197b89a65db6",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/runway",
+      "localOriginal": "/dorvell/originals/e845976d09bd399e-fd-runway.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-e845976d09bd-sm.webp",
+        "md": "/dorvell/optimized/fd-e845976d09bd-md.webp",
+        "lg": "/dorvell/optimized/fd-e845976d09bd-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — runway",
+      "category": "Runway",
+      "tags": [
+        "Modeling",
+        "Gigs",
+        "Runway"
+      ],
+      "detectedFrom": "img",
+      "hash": "e845976d09bd399e8c2d58dc582924e1b9d4ce678aa4ba2dd9fee8ffe9384a15",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-runway",
+      "projectTitle": "Modeling — runway",
+      "blur": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAACQBQCdASocACoAPv1qsE+rJiUiNVgMAWAfiWkAAKQi529a9Fvu/jbbH+Ms09MxFMNgMv9rgADWhaAWLPqBiX294dVaB6TGLpNzbEJiW/KSTrODTeeKS4uBE/PmyJD8jjXFt2f6xoDMJB3YS1anofeOB1zqt6AVlMPOLD0Uw5lnXcXO1Omi0mPYeQtB7wjUTUA/+RoTw82fvKaXAAA="
+    },
+    {
+      "id": "fd-f09d978dd8bb",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/6a891082-7f8d-48a9-b26d-b58fd22230ab_rw_3840.jpg?h=f90c1f18a20c83919058f81f5c0fd627",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/runway",
+      "localOriginal": "/dorvell/originals/f09d978dd8bb4ccf-fd-runway.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-f09d978dd8bb-sm.webp",
+        "md": "/dorvell/optimized/fd-f09d978dd8bb-md.webp",
+        "lg": "/dorvell/optimized/fd-f09d978dd8bb-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — runway",
+      "category": "Runway",
+      "tags": [
+        "Modeling",
+        "Gigs",
+        "Runway"
+      ],
+      "detectedFrom": "img",
+      "hash": "f09d978dd8bb4ccf88c7bdc77c626fc44f1829f759c39f8e674a71a8b7bae478",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-runway",
+      "projectTitle": "Modeling — runway",
+      "blur": "data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAABQBQCdASocACoAPwl2sFIrpySiqqoBcCEJQBlAB0514UPEREsTKRNQk4EoB1BTNVPUPgAAynHBgx4twGiLyMSXH1iR3qnfrqY3CpY7R8CsHWXolL57ivT4D+V4Bt8ymLMbGPh9EunxwJwM0JTs7AFHZXixuiaC8oVnEPLUjqOdqDA0is6twCBATrkHjLDfN+goUpqynZe5edAv133oM9DPhq7+IDToIW4k5dowa4WRa46tibIGsvTs8wR6UyAA"
+    },
+    {
+      "id": "fd-84ac8f68a505",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/4b76235c-a525-4172-8ab3-e2d8a82e356c_rw_3840.jpg?h=c5ecc35efc6cb15953275c19a31e9e95",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/runway",
+      "localOriginal": "/dorvell/originals/84ac8f68a505073c-fd-runway.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-84ac8f68a505-sm.webp",
+        "md": "/dorvell/optimized/fd-84ac8f68a505-md.webp",
+        "lg": "/dorvell/optimized/fd-84ac8f68a505-lg.webp"
+      },
+      "width": 3840,
+      "height": 5760,
+      "aspectRatio": 0.6666666666666666,
+      "alt": "Dorvell Ferguson Jr. modeling — runway",
+      "category": "Runway",
+      "tags": [
+        "Modeling",
+        "Gigs",
+        "Runway"
+      ],
+      "detectedFrom": "img",
+      "hash": "84ac8f68a505073c6b6b193f0fe13dfdf060f9d839e393677ba9e200b3413b36",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-runway",
+      "projectTitle": "Modeling — runway",
+      "blur": "data:image/webp;base64,UklGRu4AAABXRUJQVlA4IOIAAADQBgCdASocACoAPwlssU+rpaSiMBqqqXAhCWUAz9w6gNEeNIUcxgMVTyTC11rY4Y0H1oMsPA56jupHP5+ZtTgA8aOkqz8HCk5RJx2iEsgy0es2vDwVUuA8mC71FXL88LUJ1iYAapNKxnm5NTqBYXCMzn3NWevJgWdFg3cCWZqmVjoj1vWQc0+DUFAb8J6XeP2DBPyb86sRl4+dnNmcdW2SFNssZzBN8DGPjWtsPHoSa2YELrKlemHjQKaBvtw+aqACK6Gzbi72QhIVK0TjD4HDrOQ5e5rAybZPTVXV9IF/5xgA"
+    },
+    {
+      "id": "fd-e8e98c1c8194",
+      "sourceUrl": "https://cdn.myportfolio.com/eb25dba4-e46b-4790-ac2b-29d835a59177/d0e5aa18-6ffb-424e-a794-ae1db8648bbd_rw_3840.jpg?h=a04925166c1afa8a16bfe20db360acb1",
+      "sourcePage": "https://fergusondorvell.myportfolio.com/runway",
+      "localOriginal": "/dorvell/originals/e8e98c1c8194de05-fd-runway.jpg",
+      "localOptimized": {
+        "sm": "/dorvell/optimized/fd-e8e98c1c8194-sm.webp",
+        "md": "/dorvell/optimized/fd-e8e98c1c8194-md.webp",
+        "lg": "/dorvell/optimized/fd-e8e98c1c8194-lg.webp"
+      },
+      "width": 3840,
+      "height": 2560,
+      "aspectRatio": 1.5,
+      "alt": "Dorvell Ferguson Jr. modeling — runway",
+      "category": "Runway",
+      "tags": [
+        "Modeling",
+        "Gigs",
+        "Runway"
+      ],
+      "detectedFrom": "img",
+      "hash": "e8e98c1c8194de0536ede092a3940ee1287807e0f3484466ce2038688d65ee43",
+      "needsAltReview": true,
+      "needsCreditReview": true,
+      "projectSlug": "fd-runway",
+      "projectTitle": "Modeling — runway",
+      "blur": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABwBQCdASocABMAPwl4s1MrpySiqAqpcCEJZwDMWBDyjEfSgG8jGbMjC5Ai7mkA9ljWB0DAAN1pnkjGANxVmVxFLcjgqRN6RpOqVxn7nDZp2EVRQkRQ+PTLcynAZ3IGpJ8xwiwDXdGNinNnSsOoAj/L02eN4+CabGFxN9gjktoU7zYlfGL14P+VnDwkZXcjoS0mIAAA"
     }
   ],
   "contacts": {

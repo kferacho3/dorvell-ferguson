@@ -1,8 +1,8 @@
 {
   "schema": "dorvell-photo-curation-public/v1",
-  "generatedAt": "2026-08-07T21:59:53.597Z",
+  "generatedAt": "2026-08-08T03:45:36.379Z",
   "finalized": true,
-  "sourceReportExportedAt": "2026-08-07T21:59:53.297Z",
+  "sourceReportExportedAt": "2026-08-08T03:45:35.990Z",
   "photos": [
     {
       "photo_id": "df-8d31d917c7b9",
@@ -20360,6 +20360,274 @@
       "category_tags": [
         "Portrait",
         "Event"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-3f9737e2aaa9",
+      "filename": "3f9737e2aaa9095a-fd-brand-recognitions.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-67e09f573bb6",
+      "filename": "67e09f573bb6bf63-fd-brand-recognitions.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-43ddbed44340",
+      "filename": "43ddbed44340b023-fd-digitals.png",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-3c80fa823860",
+      "filename": "3c80fa823860bab2-fd-digitals.png",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-793e0b1df407",
+      "filename": "793e0b1df4076249-fd-home.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-f4d1a11ab5c3",
+      "filename": "f4d1a11ab5c38af7-fd-home.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-0c65675a6b42",
+      "filename": "0c65675a6b42256d-fd-home.png",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-54f0ec3405b5",
+      "filename": "54f0ec3405b5cb13-fd-home.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-52d257da4be0",
+      "filename": "52d257da4be05e6f-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-cf44da10bd4e",
+      "filename": "cf44da10bd4e248f-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-7e9beb5b4e79",
+      "filename": "7e9beb5b4e79083b-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-75c33f182857",
+      "filename": "75c33f182857362a-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-d17c518c3d44",
+      "filename": "d17c518c3d4488fc-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-c616be4d3d55",
+      "filename": "c616be4d3d55573e-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-d0d3598a5f43",
+      "filename": "d0d3598a5f43991c-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-fee326b4cf48",
+      "filename": "fee326b4cf486736-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-9a5754435f55",
+      "filename": "9a5754435f556fb8-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-2a9dcf511e8f",
+      "filename": "2a9dcf511e8fa020-fd-photos.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-e845976d09bd",
+      "filename": "e845976d09bd399e-fd-runway.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-f09d978dd8bb",
+      "filename": "f09d978dd8bb4ccf-fd-runway.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-84ac8f68a505",
+      "filename": "84ac8f68a505073c-fd-runway.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
+      ],
+      "portfolio": false,
+      "modeling": false,
+      "projects": false
+    },
+    {
+      "photo_id": "fd-e8e98c1c8194",
+      "filename": "e8e98c1c8194de05-fd-runway.jpg",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
       ],
       "portfolio": false,
       "modeling": false,

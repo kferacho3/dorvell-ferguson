@@ -1,16 +1,16 @@
 # Dorvell Ferguson Photo Curation Report
 
-Exported: 2026-08-07T21:59:53.297Z
+Exported: 2026-08-08T03:45:35.990Z
 Schema: dorvell-photo-curation-report/v1
 
 ## Summary
 
-Total photos: 1754
-Reviewed: 1754
+Total photos: 1776
+Reviewed: 1776
 Remaining: 0
-Kept: 1716
+Kept: 1738
 Scrapped: 38
-Categorized: 1716
+Categorized: 1738
 Added to Portfolio: 0
 Added to Modeling: 0
 Added to Projects: 0
@@ -28,7 +28,7 @@ Notes: Kept photos must have a primary category before finalization.
 - Music: 332
 - Athletics: 192
 - Landscape: 96
-- Modeling: 59
+- Modeling: 81
 - Headshots: 9
 - Street: 5
 - Fashion: 3
@@ -1802,6 +1802,28 @@ Notes: Kept photos must have a primary category before finalization.
 | ig-00502ed855cb | 00502ed855cb0abf-instagram-CaTW8JvlShb.jpg | scrapped |  |  | no | no | no |  |  | 2026-08-07T16:38:03.662Z |
 | ig-b713674498dc | b713674498dcf24e-instagram-CZ2Ozq6lgMV.jpg | kept | Landscape | Portrait, Music, Event | no | no | no |  |  | 2026-08-07T16:38:07.341Z |
 | ig-bce6074fa6a8 | bce6074fa6a820c4-instagram-CXXDanKF1v4.jpg | kept | Music | Portrait, Event | no | no | no |  |  | 2026-08-07T16:38:12.879Z |
+| fd-3f9737e2aaa9 | 3f9737e2aaa9095a-fd-brand-recognitions.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-67e09f573bb6 | 67e09f573bb6bf63-fd-brand-recognitions.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-43ddbed44340 | 43ddbed44340b023-fd-digitals.png | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-3c80fa823860 | 3c80fa823860bab2-fd-digitals.png | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-793e0b1df407 | 793e0b1df4076249-fd-home.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-f4d1a11ab5c3 | f4d1a11ab5c38af7-fd-home.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-0c65675a6b42 | 0c65675a6b42256d-fd-home.png | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-54f0ec3405b5 | 54f0ec3405b5cb13-fd-home.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-52d257da4be0 | 52d257da4be05e6f-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-cf44da10bd4e | cf44da10bd4e248f-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-7e9beb5b4e79 | 7e9beb5b4e79083b-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-75c33f182857 | 75c33f182857362a-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-d17c518c3d44 | d17c518c3d4488fc-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-c616be4d3d55 | c616be4d3d55573e-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-d0d3598a5f43 | d0d3598a5f43991c-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-fee326b4cf48 | fee326b4cf486736-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-9a5754435f55 | 9a5754435f556fb8-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-2a9dcf511e8f | 2a9dcf511e8fa020-fd-photos.jpg | kept | Modeling | Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-e845976d09bd | e845976d09bd399e-fd-runway.jpg | kept | Modeling | Runway, Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-f09d978dd8bb | f09d978dd8bb4ccf-fd-runway.jpg | kept | Modeling | Runway, Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-84ac8f68a505 | 84ac8f68a505073c-fd-runway.jpg | kept | Modeling | Runway, Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
+| fd-e8e98c1c8194 | e8e98c1c8194de05-fd-runway.jpg | kept | Modeling | Runway, Portrait | no | no | no |  |  | 2026-08-08T03:45:35.990Z |
 | df-4a550f65f8f8 | 4a550f65f8f8f396-home-2.jpg | kept | Athletics |  | no | no | no |  |  | 2026-08-02T14:22:27.361Z |
 | df-5b0cbdaa1428 | 5b0cbdaa14280c64-home-2.jpg | kept | Athletics |  | no | no | no |  |  | 2026-08-02T14:22:28.941Z |
 | ig-e41125d2f598 | e41125d2f5981680-instagram-DTtc9YNDQnz.jpg | kept | Music | Event | no | no | no |  |  | 2026-08-02T14:23:56.313Z |
@@ -1901,15 +1923,15 @@ Notes: Kept photos must have a primary category before finalization.
 ```json
 {
   "schema": "dorvell-photo-curation-report/v1",
-  "exportedAt": "2026-08-07T21:59:53.297Z",
+  "exportedAt": "2026-08-08T03:45:35.990Z",
   "finalized": true,
   "summary": {
-    "total": 1754,
-    "reviewed": 1754,
+    "total": 1776,
+    "reviewed": 1776,
     "remaining": 0,
-    "kept": 1716,
+    "kept": 1738,
     "scrapped": 38,
-    "categorized": 1716,
+    "categorized": 1738,
     "needsCategory": 0,
     "portfolio": 0,
     "modeling": 0,
@@ -1925,7 +1947,7 @@ Notes: Kept photos must have a primary category before finalization.
     "Landscape": 96,
     "Street": 5,
     "Event": 1,
-    "Modeling": 59,
+    "Modeling": 81,
     "Photojournalism": 1,
     "Editorial": 1
   },
@@ -46847,6 +46869,538 @@ Notes: Kept photos must have a primary category before finalization.
       "reviewed_at": "2026-08-07T16:38:12.879Z",
       "updated_at": "2026-08-07T21:35:05.019Z",
       "imported_from_report": false
+    },
+    {
+      "photo_id": "fd-3f9737e2aaa9",
+      "filename": "3f9737e2aaa9095a-fd-brand-recognitions.jpg",
+      "src": "/dorvell/optimized/fd-3f9737e2aaa9-md.webp",
+      "relativePath": "/dorvell/originals/3f9737e2aaa9095a-fd-brand-recognitions.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-67e09f573bb6",
+      "filename": "67e09f573bb6bf63-fd-brand-recognitions.jpg",
+      "src": "/dorvell/optimized/fd-67e09f573bb6-md.webp",
+      "relativePath": "/dorvell/originals/67e09f573bb6bf63-fd-brand-recognitions.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-43ddbed44340",
+      "filename": "43ddbed44340b023-fd-digitals.png",
+      "src": "/dorvell/optimized/fd-43ddbed44340-md.webp",
+      "relativePath": "/dorvell/originals/43ddbed44340b023-fd-digitals.png",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-3c80fa823860",
+      "filename": "3c80fa823860bab2-fd-digitals.png",
+      "src": "/dorvell/optimized/fd-3c80fa823860-md.webp",
+      "relativePath": "/dorvell/originals/3c80fa823860bab2-fd-digitals.png",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-793e0b1df407",
+      "filename": "793e0b1df4076249-fd-home.jpg",
+      "src": "/dorvell/optimized/fd-793e0b1df407-md.webp",
+      "relativePath": "/dorvell/originals/793e0b1df4076249-fd-home.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-f4d1a11ab5c3",
+      "filename": "f4d1a11ab5c38af7-fd-home.jpg",
+      "src": "/dorvell/optimized/fd-f4d1a11ab5c3-md.webp",
+      "relativePath": "/dorvell/originals/f4d1a11ab5c38af7-fd-home.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-0c65675a6b42",
+      "filename": "0c65675a6b42256d-fd-home.png",
+      "src": "/dorvell/optimized/fd-0c65675a6b42-md.webp",
+      "relativePath": "/dorvell/originals/0c65675a6b42256d-fd-home.png",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-54f0ec3405b5",
+      "filename": "54f0ec3405b5cb13-fd-home.jpg",
+      "src": "/dorvell/optimized/fd-54f0ec3405b5-md.webp",
+      "relativePath": "/dorvell/originals/54f0ec3405b5cb13-fd-home.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-52d257da4be0",
+      "filename": "52d257da4be05e6f-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-52d257da4be0-md.webp",
+      "relativePath": "/dorvell/originals/52d257da4be05e6f-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-cf44da10bd4e",
+      "filename": "cf44da10bd4e248f-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-cf44da10bd4e-md.webp",
+      "relativePath": "/dorvell/originals/cf44da10bd4e248f-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-7e9beb5b4e79",
+      "filename": "7e9beb5b4e79083b-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-7e9beb5b4e79-md.webp",
+      "relativePath": "/dorvell/originals/7e9beb5b4e79083b-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-75c33f182857",
+      "filename": "75c33f182857362a-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-75c33f182857-md.webp",
+      "relativePath": "/dorvell/originals/75c33f182857362a-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-d17c518c3d44",
+      "filename": "d17c518c3d4488fc-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-d17c518c3d44-md.webp",
+      "relativePath": "/dorvell/originals/d17c518c3d4488fc-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-c616be4d3d55",
+      "filename": "c616be4d3d55573e-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-c616be4d3d55-md.webp",
+      "relativePath": "/dorvell/originals/c616be4d3d55573e-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-d0d3598a5f43",
+      "filename": "d0d3598a5f43991c-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-d0d3598a5f43-md.webp",
+      "relativePath": "/dorvell/originals/d0d3598a5f43991c-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-fee326b4cf48",
+      "filename": "fee326b4cf486736-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-fee326b4cf48-md.webp",
+      "relativePath": "/dorvell/originals/fee326b4cf486736-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-9a5754435f55",
+      "filename": "9a5754435f556fb8-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-9a5754435f55-md.webp",
+      "relativePath": "/dorvell/originals/9a5754435f556fb8-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-2a9dcf511e8f",
+      "filename": "2a9dcf511e8fa020-fd-photos.jpg",
+      "src": "/dorvell/optimized/fd-2a9dcf511e8f-md.webp",
+      "relativePath": "/dorvell/originals/2a9dcf511e8fa020-fd-photos.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-e845976d09bd",
+      "filename": "e845976d09bd399e-fd-runway.jpg",
+      "src": "/dorvell/optimized/fd-e845976d09bd-md.webp",
+      "relativePath": "/dorvell/originals/e845976d09bd399e-fd-runway.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-f09d978dd8bb",
+      "filename": "f09d978dd8bb4ccf-fd-runway.jpg",
+      "src": "/dorvell/optimized/fd-f09d978dd8bb-md.webp",
+      "relativePath": "/dorvell/originals/f09d978dd8bb4ccf-fd-runway.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-84ac8f68a505",
+      "filename": "84ac8f68a505073c-fd-runway.jpg",
+      "src": "/dorvell/optimized/fd-84ac8f68a505-md.webp",
+      "relativePath": "/dorvell/originals/84ac8f68a505073c-fd-runway.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
+    },
+    {
+      "photo_id": "fd-e8e98c1c8194",
+      "filename": "e8e98c1c8194de05-fd-runway.jpg",
+      "src": "/dorvell/optimized/fd-e8e98c1c8194-md.webp",
+      "relativePath": "/dorvell/originals/e8e98c1c8194de05-fd-runway.jpg",
+      "batch": "site",
+      "status": "kept",
+      "category_primary": "Modeling",
+      "category_tags": [
+        "Runway",
+        "Portrait"
+      ],
+      "destinations": {
+        "portfolio": false,
+        "modeling": false,
+        "projects": false
+      },
+      "model_assigned": false,
+      "project_assigned": false,
+      "portfolio_assigned": false,
+      "notes": "",
+      "scrap_reason": "",
+      "updated_at": "2026-08-08T03:45:35.990Z",
+      "reviewed_at": "2026-08-08T03:45:35.990Z"
     },
     {
       "photo_id": "df-4a550f65f8f8",

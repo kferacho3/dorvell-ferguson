@@ -42,6 +42,9 @@ const REEL_PATHS = [
 const argv = process.argv.slice(2);
 const DRY_RUN = argv.includes("--dry-run");
 const ONLY = argv.find((a) => a.startsWith("--only="))?.split("=")[1] ?? "all";
+// --match=fd- uploads only paths containing the substring — for pushing a
+// fresh scrape batch without re-copying the whole 480MB library.
+const MATCH = argv.find((a) => a.startsWith("--match="))?.split("=")[1] ?? "";
 const BUCKET = process.env.DORVELL_ASSET_BUCKET ?? DEFAULT_BUCKET;
 const REGION = process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION ?? DEFAULT_REGION;
 
@@ -121,7 +124,8 @@ async function uploadOne(publicPath) {
 }
 
 async function main() {
-  const paths = await collectUsedPaths();
+  let paths = await collectUsedPaths();
+  if (MATCH) paths = new Set([...paths].filter((p) => p.includes(MATCH)));
   const sorted = [...paths].sort();
   const { missing, bytes } = await validatePaths(paths);
 

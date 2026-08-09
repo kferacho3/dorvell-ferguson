@@ -685,6 +685,208 @@
 }
 
 /* ------------------------------------------------------------
+   Motion strip — Creative Worlds clips, staged for the Room
+   (overrides .cw-modstrip baseline so this page stays immersive)
+   ------------------------------------------------------------ */
+
+.modeling-route .cw-modstrip {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: clamp(5rem, 12vh, 9rem);
+  background:
+    radial-gradient(90% 70% at 50% 0%, rgba(184, 146, 90, 0.1), transparent 62%),
+    radial-gradient(70% 55% at 50% 100%, rgba(184, 146, 90, 0.06), transparent 60%),
+    var(--room-bg-2);
+  border-top: 1px solid var(--room-line);
+  color: var(--room-bone);
+}
+
+.modeling-route .cw-modstrip__glow {
+  position: absolute;
+  inset: 16% 8% auto;
+  height: 44%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(184, 146, 90, 0.16), transparent 70%);
+  filter: blur(30px);
+  opacity: 0.75;
+}
+
+.modeling-route .cw-modstrip__head {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  gap: 0.85rem;
+  max-width: 46ch;
+  margin-inline: auto;
+  margin-bottom: clamp(2.4rem, 6vw, 4rem);
+  text-align: center;
+}
+
+.modeling-route .cw-modstrip__head > div {
+  display: contents;
+}
+
+.modeling-route .cw-modstrip__head .cw-eyebrow {
+  color: var(--room-brass);
+}
+
+.modeling-route .cw-modstrip__head .cw-eyebrow::before {
+  display: none;
+}
+
+.modeling-route .cw-modstrip__head .cw-eyebrow::after {
+  content: "";
+  width: 1.6rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.modeling-route .cw-modstrip__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 7.5vw, 5.4rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--room-bone);
+  text-wrap: balance;
+}
+
+.modeling-route .cw-modstrip__head .cw-lede {
+  color: var(--room-bone-soft);
+}
+
+.modeling-route .cw-modstrip__count {
+  margin: 0.2rem 0 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--room-bone-faint);
+}
+
+.modeling-route .cw-modstrip__head .cw-btn {
+  margin-top: 0.35rem;
+  color: var(--room-bone);
+  border-color: rgba(236, 231, 221, 0.28);
+  background: rgba(236, 231, 221, 0.04);
+}
+
+.modeling-route .cw-modstrip__head .cw-btn:hover {
+  border-color: var(--room-brass-soft);
+  box-shadow: 0 12px 36px rgba(184, 146, 90, 0.14);
+}
+
+.modeling-route .cw-modstrip__stage {
+  position: relative;
+  z-index: 1;
+  padding-inline: clamp(20px, 4vw, 48px);
+}
+
+.modeling-route .cw-modstrip__bento {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(0.85rem, 1.6vw, 1.25rem);
+  width: min(100%, 1120px);
+  margin-inline: auto;
+  align-items: stretch;
+}
+
+.modeling-route .cw-modstrip__lead {
+  min-width: 0;
+}
+
+.modeling-route .cw-modstrip__lead .cw-card,
+.modeling-route .cw-modstrip__lead-card {
+  height: 100%;
+}
+
+.modeling-route .cw-modstrip__lead .cw-frame,
+.modeling-route .cw-modstrip__lead-card .cw-frame {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 22px;
+  border-color: var(--room-line);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(184, 146, 90, 0.16);
+}
+
+.modeling-route .cw-modstrip__lead .cw-card__title {
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+}
+
+.modeling-route .cw-modstrip__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.85rem, 1.6vw, 1.25rem);
+  min-width: 0;
+  height: 100%;
+}
+
+.modeling-route .cw-modstrip__cell {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: none;
+}
+
+.modeling-route .cw-modstrip__cell .cw-card {
+  width: 100%;
+  height: 100%;
+}
+
+.modeling-route .cw-modstrip__cell .cw-frame {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 18px;
+  border-color: var(--room-line);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+}
+
+.modeling-route .cw-modstrip__cell .cw-video__poster,
+.modeling-route .cw-modstrip__lead .cw-video__poster {
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .modeling-route .cw-modstrip__bento {
+    grid-template-columns: 1fr;
+    width: min(100%, 560px);
+  }
+
+  .modeling-route .cw-modstrip__grid {
+    height: auto;
+    grid-template-rows: auto;
+  }
+
+  .modeling-route .cw-modstrip__cell .cw-frame {
+    aspect-ratio: 3 / 4;
+    height: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .modeling-route .cw-modstrip__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+
+  .modeling-route .cw-modstrip__cell .cw-card__title {
+    font-size: 0.95rem;
+  }
+}
+
+/* ------------------------------------------------------------
    Reduced motion — the Room stands still, fully lit
    ------------------------------------------------------------ */
 
