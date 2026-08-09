@@ -42,6 +42,14 @@ const nextConfig = {
         source: "/dorvell-ferguson-symbol-v2.png",
         headers: immutableAssetHeaders,
       },
+      {
+        source: "/dorvell-ferguson-logo.png",
+        headers: immutableAssetHeaders,
+      },
+      {
+        source: "/dorvell-ferguson-favicon/:path*",
+        headers: immutableAssetHeaders,
+      },
     ];
   },
 };

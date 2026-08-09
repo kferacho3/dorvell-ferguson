@@ -12,6 +12,7 @@ import { HeroMotionPortal } from "./HeroMotionPortal";
 import { useFilmViewer } from "./film/FilmViewer";
 import { FollowTheWork } from "./social/FollowTheWork";
 import { filmIndexItems, motionPortalFilm } from "@/content/creative";
+import "@/styles/atlas-hero.css";
 
 type LaneTotals = Partial<Record<GalleryLane["key"], number>>;
 
@@ -181,13 +182,78 @@ export function GalleryAtlasHero({
         ))}
       </div>
 
+      {/* Media first — full-width stage. Copy sits underneath as a horizontal band. */}
+      <div className="atlas-stage" style={{ "--lane-accent": activeLane?.accent ?? "#35e0bb" } as CSSProperties}>
+        <HeroMotionPortal />
+
+        <div className="atlas-stage__photo">
+          <div className="atlas-stage__meta">
+            <span>{summary?.imagesDownloaded ?? images.length} portfolio frames</span>
+            <span>Portraits / Music / Sports / Fashion</span>
+          </div>
+          {activeImage ? (
+            <figure className="atlas-preview">
+              <Image
+                key={activeImage.id}
+                src={activeImage.localOptimized.md}
+                alt={imageAlt(activeImage)}
+                width={activeImage.width}
+                height={activeImage.height}
+                priority
+                sizes="(max-width: 900px) 92vw, 40vw"
+                unoptimized
+                {...blurImageProps(activeImage)}
+              />
+              <figcaption>
+                <span>
+                  {String((activeFrameIndex % Math.max(activeFrames.length, 1)) + 1).padStart(2, "0")} /{" "}
+                  {String(activeFrames.length || 1).padStart(2, "0")} {activeLane?.eyebrow}
+                </span>
+                <strong>{activeLane?.label}</strong>
+              </figcaption>
+            </figure>
+          ) : null}
+          <div className="atlas-slide-carousel" aria-label="Featured image carousel">
+            <button
+              type="button"
+              className="atlas-slide-carousel__active"
+              onClick={advanceHeroCarousel}
+              aria-label={`Show next portfolio lane: ${nextLane?.label ?? "next lane"}`}
+            >
+              <span>Next frame</span>
+              <strong>{activeLane?.label}</strong>
+              <small>{nextLane?.label ?? "frame"} queued</small>
+              <span className="atlas-slide-carousel__ticks" aria-hidden="true">
+                {lanes.map((lane) => (
+                  <i key={lane.key} className={lane.key === activeKey ? "is-active" : ""} />
+                ))}
+              </span>
+            </button>
+          </div>
+          <div className="atlas-minimap" aria-hidden="true">
+            {lanes.map((lane) => (
+              <span
+                key={lane.key}
+                className={lane.key === activeKey ? "is-active" : ""}
+                style={{ "--lane-accent": lane.accent } as CSSProperties}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="atlas-copy">
-        <p className="atlas-kicker">Dorvell Ferguson Jr. / Tampa</p>
-        <h1 className="atlas-headline" id="hero-title">Portraits first. Movement everywhere.</h1>
-        <p className="atlas-lede">
-          A living archive of faces, stage heat, athletic timing, and fashion direction, led by the photograph before
-          the interface gets a word in.
-        </p>
+        <div className="atlas-copy__intro">
+          <p className="atlas-kicker">Dorvell Ferguson Jr. / Tampa</p>
+          <h1 className="atlas-headline" id="hero-title">
+            Portraits first. Movement everywhere.
+          </h1>
+          <p className="atlas-lede">
+            A living archive of faces, stage heat, athletic timing, and fashion direction, led by the photograph before
+            the interface gets a word in.
+          </p>
+        </div>
+
         <nav className="atlas-lane-dial" aria-label="Jump to portfolio lanes">
           {lanes.map((lane, index) => {
             const lead = lanePreview(lane, index + 1);
@@ -215,95 +281,22 @@ export function GalleryAtlasHero({
             );
           })}
         </nav>
-        <div className="atlas-proof-rail" aria-label="Creative proof points">
-          {heroProofs.map((proof) => (
-            <span key={proof.value}>
-              <strong>{proof.value}</strong>
-              <small>{proof.label}</small>
-            </span>
-          ))}
-        </div>
-        <div className="atlas-actions">
-          <Link className="button-primary" href="/work">
-            Open full archive
-          </Link>
-          <button
-            type="button"
-            ref={watchButtonRef}
-            className="button-secondary"
-            onClick={watchLatestFilm}
-          >
-            Watch latest film
-          </button>
-          <Link className="button-secondary atlas-actions__quiet" href="/contact">
-            Book Dorvell
-          </Link>
-        </div>
-        <FollowTheWork variant="rail" placement="hero" className="atlas-follow" />
-      </div>
 
-      <div className="atlas-stage" style={{ "--lane-accent": activeLane?.accent ?? "#35e0bb" } as CSSProperties}>
-        <HeroMotionPortal />
-
-        {/* The photo system is unchanged — it just gets its own containing block
-            now that the stage is a two-row grid, so the absolutely-positioned
-            meta / caption / carousel / minimap still anchor to the photograph. */}
-        <div className="atlas-stage__photo">
-        <div className="atlas-stage__meta">
-          <span>{summary?.imagesDownloaded ?? images.length} portfolio frames</span>
-          <span>Portraits / Music / Sports / Fashion</span>
-        </div>
-        {activeImage ? (
-          <figure className="atlas-preview">
-            <Image
-              key={activeImage.id}
-              src={activeImage.localOptimized.md}
-              alt={imageAlt(activeImage)}
-              width={activeImage.width}
-              height={activeImage.height}
-              priority
-              sizes="(max-width: 900px) 92vw, 46vw"
-              unoptimized
-              {...blurImageProps(activeImage)}
-            />
-            <figcaption>
-              <span>
-                {String((activeFrameIndex % Math.max(activeFrames.length, 1)) + 1).padStart(2, "0")} /{" "}
-                {String(activeFrames.length || 1).padStart(2, "0")} {activeLane?.eyebrow}
-              </span>
-              <strong>{activeLane?.label}</strong>
-            </figcaption>
-          </figure>
-        ) : null}
-        <div className="atlas-slide-carousel" aria-label="Featured image carousel">
-          <button
-            type="button"
-            className="atlas-slide-carousel__active"
-            onClick={advanceHeroCarousel}
-            aria-label={`Show next portfolio lane: ${nextLane?.label ?? "next lane"}`}
-          >
-            <span>Next frame</span>
-            <strong>{activeLane?.label}</strong>
-            <small>{nextLane?.label ?? "frame"} queued</small>
-            <span className="atlas-slide-carousel__ticks" aria-hidden="true">
-              {lanes.map((lane) => (
-                <i key={lane.key} className={lane.key === activeKey ? "is-active" : ""} />
-              ))}
-            </span>
-          </button>
-        </div>
-        <div className="atlas-minimap" aria-hidden="true">
-          {lanes.map((lane) => (
-            <span
-              key={lane.key}
-              className={lane.key === activeKey ? "is-active" : ""}
-              style={{ "--lane-accent": lane.accent } as CSSProperties}
-            />
-          ))}
-        </div>
+        <div className="atlas-copy__cta">
+          <div className="atlas-actions">
+            <Link className="button-primary" href="/work">
+              Open full archive
+            </Link>
+            <button type="button" ref={watchButtonRef} className="button-secondary" onClick={watchLatestFilm}>
+              Watch latest film
+            </button>
+            <Link className="button-secondary atlas-actions__quiet" href="/contact">
+              Book Dorvell
+            </Link>
+          </div>
+          <FollowTheWork variant="rail" placement="hero" className="atlas-follow" />
         </div>
       </div>
-
     </section>
   );
 }
