@@ -1,0 +1,224 @@
+/* =====================================================================
+   SITE NAV — beefed cinematic chrome
+   Overrides the thin floating pill in dorvell.css. Tokens stay on --df-*.
+   ===================================================================== */
+
+.site-nav {
+  top: 18px;
+  gap: 28px;
+  width: min(1320px, calc(100% - 32px));
+  min-height: 68px;
+  padding: 10px 12px 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--df-line-strong) 80%, transparent);
+  border-radius: 18px;
+  background:
+    linear-gradient(115deg, color-mix(in srgb, var(--df-teal) 10%, transparent), transparent 42%),
+    linear-gradient(300deg, color-mix(in srgb, var(--df-gold) 8%, transparent), transparent 38%),
+    color-mix(in srgb, var(--df-bg) 78%, transparent);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(22px) saturate(1.15);
+}
+
+.site-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--df-teal) 12%, transparent);
+}
+
+.site-nav.is-scrolled {
+  min-height: 60px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-color: color-mix(in srgb, var(--df-line-strong) 92%, var(--df-teal));
+  background:
+    linear-gradient(115deg, color-mix(in srgb, var(--df-teal) 8%, transparent), transparent 40%),
+    color-mix(in srgb, var(--df-bg) 94%, transparent);
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.brand-mark {
+  position: relative;
+  z-index: 1;
+  gap: 12px;
+  min-width: 0;
+}
+
+.brand-mark__seal {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--df-gold) 34%, var(--df-line));
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.12), transparent 55%),
+    rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--df-teal) 18%, transparent);
+}
+
+.brand-mark__seal img,
+.site-nav .brand-mark img,
+.site-nav.is-scrolled .brand-mark img {
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 0 12px rgba(53, 224, 187, 0.28));
+}
+
+.brand-mark__copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.brand-mark__kicker {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--df-gold);
+  line-height: 1;
+}
+
+.brand-mark__name {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--df-text);
+}
+
+.nav-links {
+  position: relative;
+  z-index: 1;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+@media (min-width: 761px) {
+  .nav-links a {
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 10px;
+    color: var(--df-text-soft);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition:
+      color var(--df-fast),
+      background var(--df-fast),
+      box-shadow var(--df-fast),
+      transform var(--df-fast);
+  }
+
+  .nav-links a:hover {
+    color: var(--df-text);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: none;
+  }
+
+  .nav-links a[aria-current="page"] {
+    color: var(--df-text);
+    background: color-mix(in srgb, var(--df-teal) 16%, transparent);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--df-teal) 55%, transparent),
+      0 0 20px color-mix(in srgb, var(--df-teal) 12%, transparent);
+  }
+
+  .nav-links .nav-cta {
+    min-height: 42px;
+    margin-left: 6px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    color: #06100d;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--df-teal) 92%, white), var(--df-teal-deep, var(--df-teal)));
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    box-shadow: 0 0 28px color-mix(in srgb, var(--df-teal) 34%, transparent);
+  }
+
+  .nav-links .nav-cta:hover,
+  .nav-links .nav-cta:focus-visible {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px color-mix(in srgb, var(--df-teal) 40%, transparent);
+  }
+}
+
+@media (max-width: 980px) and (min-width: 761px) {
+  .brand-mark__name {
+    font-size: 0.9rem;
+  }
+
+  .nav-links a {
+    padding: 0 10px;
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-nav {
+    top: max(12px, env(safe-area-inset-top));
+    right: 12px;
+    left: auto;
+    width: auto;
+    min-height: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .site-nav::before {
+    display: none;
+  }
+
+  .site-nav.is-scrolled {
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .brand-mark {
+    display: none;
+  }
+
+  .nav-links {
+    padding: 12px;
+    gap: 8px;
+    border-radius: 22px;
+    background:
+      linear-gradient(135deg, rgba(240, 179, 90, 0.12), transparent 36%),
+      color-mix(in srgb, var(--df-bg) 88%, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-links a,
+  .nav-links .nav-cta {
+    transition: none;
+  }
+}

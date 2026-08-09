@@ -5,16 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FollowTheWork } from "./social/FollowTheWork";
+import "@/styles/site-nav.css";
 
 const navItems = [
   { label: "Portfolio", href: "/work" },
   { label: "Modeling", href: "/modeling" },
   { label: "Creative", href: "/creative" },
-  { label: "Projects", href: "/projects" },
+  // Hidden for now — page still exists at /projects.
+  { label: "Projects", href: "/projects", hidden: true },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
-];
+] as const;
 
 function isActiveRoute(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -27,10 +29,9 @@ export function DorvellHeader() {
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // Direction-aware chrome: the bar condenses to solid glass once you leave the
-  // top, slides up out of the way while scrolling down, and snaps back the
-  // instant you scroll up. Auto-hide is suppressed under reduced-motion so the
-  // header simply stays pinned.
+  // Direction-aware chrome: the bar condenses once you leave the top, slides
+  // up while scrolling down, and returns on scroll-up. Auto-hide is off under
+  // reduced-motion so the header stays pinned.
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let lastY = window.scrollY;
@@ -69,11 +70,18 @@ export function DorvellHeader() {
     .filter(Boolean)
     .join(" ");
 
+  const visibleItems = navItems.filter((item) => !("hidden" in item && item.hidden));
+
   return (
     <header className={navClassName}>
       <Link className="brand-mark" href="/" aria-label="Dorvell Ferguson Jr. home">
-        <Image src="/dorvell-ferguson-symbol-v2.png" alt="" width={34} height={34} priority />
-        <span>Dorvell Ferguson Jr.</span>
+        <span className="brand-mark__seal">
+          <Image src="/dorvell-ferguson-symbol-v2.png" alt="" width={40} height={40} priority />
+        </span>
+        <span className="brand-mark__copy">
+          <span className="brand-mark__kicker">DF Archive</span>
+          <span className="brand-mark__name">Dorvell Ferguson Jr.</span>
+        </span>
       </Link>
       <button
         className="nav-toggle"
@@ -89,7 +97,7 @@ export function DorvellHeader() {
         <span className="sr-only">Menu</span>
       </button>
       <nav id="primary-navigation" className={open ? "nav-links is-open" : "nav-links"} aria-label="Primary">
-        {navItems.map((item) => (
+        {visibleItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
@@ -102,9 +110,8 @@ export function DorvellHeader() {
         <Link className="nav-cta" href="/contact" onClick={() => setOpen(false)}>
           Book
         </Link>
-        {/* Follow group — full text links inside the drawer. The top nav is
-            already seven items, so /social lives here and in the footer rather
-            than adding an eighth. */}
+        {/* Follow group — full text links inside the drawer. Desktop keeps the
+            top bar lean; /social lives here and in the footer. */}
         <div className="nav-follow">
           <Link className="nav-follow__hub" href="/social" onClick={() => setOpen(false)}>
             Follow the work
