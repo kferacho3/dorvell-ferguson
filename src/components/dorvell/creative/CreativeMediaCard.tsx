@@ -28,12 +28,15 @@ export function CreativeMediaCard({
   list,
   className,
   hoverPreview = true,
+  compact = false,
 }: {
   item: CreativeItem;
   /** The list this card belongs to, so lightbox prev/next walks it. */
   list?: CreativeItem[];
   className?: string;
   hoverPreview?: boolean;
+  /** Media-first: quieter chrome, title/meta reveal on hover/focus. */
+  compact?: boolean;
 }) {
   const { open } = useCreativeLightbox();
   const { open: openFilm } = useFilmViewer();
@@ -53,7 +56,7 @@ export function CreativeMediaCard({
   return (
     <button
       type="button"
-      className={cn("cw-card", isFilm && "cw-card--film", className)}
+      className={cn("cw-card", isFilm && "cw-card--film", compact && "cw-card--compact", className)}
       onClick={() =>
         isFilm
           ? openFilm(item, { list: filmIndexItems, placement: "archive" })
@@ -102,18 +105,20 @@ export function CreativeMediaCard({
             </span>
           ) : null}
           <span className="cw-chip">{durationLabel(item.duration)}</span>
-          <span className="cw-chip">{ratioLabel[item.orientation]}</span>
+          {compact ? null : <span className="cw-chip">{ratioLabel[item.orientation]}</span>}
         </div>
         <div className="cw-card__body">
           <span className="cw-card__title">{item.title}</span>
-          <span className="cw-card__meta">{item.category}</span>
-          <div className="cw-card__tags">
-            {item.moods.slice(0, 4).map((mood) => (
-              <span key={mood} className="cw-tag">
-                {mood}
-              </span>
-            ))}
-          </div>
+          {compact ? null : <span className="cw-card__meta">{item.category}</span>}
+          {compact ? null : (
+            <div className="cw-card__tags">
+              {item.moods.slice(0, 4).map((mood) => (
+                <span key={mood} className="cw-tag">
+                  {mood}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </button>

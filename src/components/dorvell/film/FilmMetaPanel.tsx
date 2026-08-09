@@ -18,20 +18,36 @@ const TYPE_LABELS: Record<string, string> = {
  * The editorial spine beside a film: what it is, how it was made, and who did
  * what. Rendered identically in the viewer and on the film route so the two can
  * never disagree — every value is derived from the film record, none retyped.
+ *
+ * `compact` keeps only the short facts (type / runtime / format / location) for
+ * surfaces where the film must stay visually dominant.
  */
-export function FilmMetaPanel({ film }: { film: CreativeItem }) {
+export function FilmMetaPanel({
+  film,
+  compact = false,
+}: {
+  film: CreativeItem;
+  compact?: boolean;
+}) {
   const specs: { label: string; value: string }[] = [
     { label: "Type", value: TYPE_LABELS[film.type] ?? film.type },
     { label: "Runtime", value: formatRuntime(film.duration) },
     { label: "Format", value: orientationLabel(film.orientation) },
-    { label: "Mood", value: film.moods.map((m) => m[0].toUpperCase() + m.slice(1)).join(" · ") },
   ];
-  if (film.visualLanguage) specs.push({ label: "Visual language", value: film.visualLanguage });
+  if (!compact) {
+    specs.push({
+      label: "Mood",
+      value: film.moods.map((m) => m[0].toUpperCase() + m.slice(1)).join(" · "),
+    });
+    if (film.visualLanguage) specs.push({ label: "Visual language", value: film.visualLanguage });
+  }
   if (film.location) specs.push({ label: "Location", value: film.location });
-  if (film.roles?.length) specs.push({ label: "Roles", value: film.roles.join(" · ") });
+  if (!compact && film.roles?.length) {
+    specs.push({ label: "Roles", value: film.roles.join(" · ") });
+  }
 
   return (
-    <dl className="fv-specs">
+    <dl className={compact ? "fv-specs fv-specs--compact" : "fv-specs"}>
       {specs.map((spec) => (
         <div key={spec.label} className="fv-specs__row">
           <dt>{spec.label}</dt>

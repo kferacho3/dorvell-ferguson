@@ -3,6 +3,7 @@
 import { getCreativeItemsByCategory } from "@/content/creative";
 import { CreativeMediaCard } from "./CreativeMediaCard";
 import { Reveal } from "./Reveal";
+import "@/styles/creative-shoot.css";
 
 const CONCEPT_TAGS = [
   "silhouette",
@@ -74,7 +75,7 @@ export function CreativePhotoshootGallery() {
       <div className="cw-shoot__strip" role="list" aria-label="Photoshoot contact sheet">
         {strip.map((item) => (
           <div key={item.slug} className="cw-shoot__stripcell" role="listitem">
-            <CreativeMediaCard item={item} list={strip} />
+            <CreativeMediaCard item={item} list={strip} compact />
           </div>
         ))}
       </div>
