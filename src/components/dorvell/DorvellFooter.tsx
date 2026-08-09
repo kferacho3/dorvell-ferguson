@@ -7,6 +7,7 @@ import { getSocialLinks } from "@/lib/social-links";
 import { PhoneIcon } from "@/components/dorvell/social-icons";
 import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
 import { FollowTheWork } from "@/components/dorvell/social/FollowTheWork";
+import "@/styles/footer-reel.css";
 
 const footerRoutes = [
   { href: "/work", label: "Portfolio" },
@@ -25,11 +26,16 @@ export function DorvellFooter() {
   const bookingHref = `mailto:${manual.profile.email}?subject=${encodeURIComponent("Dorvell Ferguson Jr. booking inquiry")}`;
   const year = new Date().getFullYear();
 
-  // A short, cinematic closing reel drawn from the live gallery lanes — the
-  // single visual artifact of the footer.
-  const closingReel = lanes.flatMap((lane) =>
-    lane.images.slice(0, 3).map((image) => ({ image, lane })),
-  );
+  // Closing reel cells are 4:5 — prefer portrait / square frames so landscape
+  // sports stills don't sit as letterboxed bands inside the strip.
+  const closingReel = lanes.flatMap((lane) => {
+    const ranked = [...lane.images].sort((a, b) => {
+      const aScore = a.aspectRatio <= 1 ? 0 : a.aspectRatio;
+      const bScore = b.aspectRatio <= 1 ? 0 : b.aspectRatio;
+      return aScore - bScore;
+    });
+    return ranked.slice(0, 3).map((image) => ({ image, lane }));
+  });
 
   return (
     <footer className="site-footer" id="closing-frame" data-studio-section="closing">
