@@ -51,7 +51,7 @@ export function ProjectExhibitHero({
         <h1 id="project-title">{displayTitle}</h1>
         <p>{exhibitSentence}</p>
         <div className="project-exhibit__actions">
-          <Link className="button-primary" href={`/work#${projectLane.slug}`}>
+          <Link className="button-primary" href={`/work/${projectLane.slug}`}>
             Open {projectLane.label}
           </Link>
           <a className="button-secondary" href={`mailto:${dorvellManual.profile.email}?subject=${encodeURIComponent(`${displayTitle} booking inquiry`)}`}>

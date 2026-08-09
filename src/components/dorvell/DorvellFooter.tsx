@@ -51,7 +51,7 @@ export function DorvellFooter() {
       <div className="footer-reel" aria-label="Closing portfolio reel">
         {closingReel.concat(closingReel.slice(0, 6)).map(({ image, lane }, index) => (
           <Link
-            href={`/work#${lane.slug}`}
+            href={`/work/${lane.slug}`}
             key={`${image.id}-${index}`}
             style={{ "--lane-accent": lane.accent } as CSSProperties}
           >

@@ -193,23 +193,33 @@ export function GalleryAtlasHero({
           </div>
           {activeImage ? (
             <figure className="atlas-preview">
-              <Image
-                key={activeImage.id}
-                src={activeImage.localOptimized.md}
-                alt={imageAlt(activeImage)}
-                width={activeImage.width}
-                height={activeImage.height}
-                priority
-                sizes="(max-width: 900px) 92vw, 40vw"
-                unoptimized
-                {...blurImageProps(activeImage)}
-              />
+              {/* The photograph is the doorway: clicking it opens the full lane. */}
+              <Link
+                className="atlas-preview__link"
+                href={activeLane?.href ?? "/work"}
+                aria-label={`Open every ${activeLane?.label ?? "portfolio"} frame`}
+              >
+                <Image
+                  key={activeImage.id}
+                  src={activeImage.localOptimized.md}
+                  alt={imageAlt(activeImage)}
+                  width={activeImage.width}
+                  height={activeImage.height}
+                  priority
+                  sizes="(max-width: 900px) 92vw, 40vw"
+                  unoptimized
+                  {...blurImageProps(activeImage)}
+                />
+              </Link>
               <figcaption>
                 <span>
                   {String((activeFrameIndex % Math.max(activeFrames.length, 1)) + 1).padStart(2, "0")} /{" "}
                   {String(activeFrames.length || 1).padStart(2, "0")} {activeLane?.eyebrow}
                 </span>
                 <strong>{activeLane?.label}</strong>
+                <Link className="atlas-preview__cta" href={activeLane?.href ?? "/work"}>
+                  View all {activeLane?.label} →
+                </Link>
               </figcaption>
             </figure>
           ) : null}

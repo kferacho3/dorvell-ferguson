@@ -71,7 +71,7 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
             {lanes.map((lane, index) => (
               <Link
                 className={lane.key === active.lane.key ? "is-active" : ""}
-                href={`/work#${lane.slug}`}
+                href={`/work/${lane.slug}`}
                 key={lane.key}
                 onFocus={() => previewLane(lane.key)}
                 onMouseEnter={() => previewLane(lane.key)}
@@ -87,7 +87,7 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
             <Link className="button-primary" href="/work">
               Open all work
             </Link>
-            <Link className="button-secondary" href={`/work#${active.lane.slug}`}>
+            <Link className="button-secondary" href={`/work/${active.lane.slug}`}>
               View this lane
             </Link>
           </div>
@@ -147,7 +147,7 @@ export function FeaturedWorkStrip({ images }: { images: DorvellImage[] }) {
             // Legacy scrape slugs (home-2/work/about) are 404s — route those to the lane view.
             const isRealProject =
               image.projectSlug && !["home-2", "work", "about"].includes(image.projectSlug);
-            const href = isRealProject ? `/work/${image.projectSlug}` : `/work#${lane.slug}`;
+            const href = isRealProject ? `/work/${image.projectSlug}` : `/work/${lane.slug}`;
             return (
               <Link
                 aria-current={index === activeIndex ? "true" : undefined}

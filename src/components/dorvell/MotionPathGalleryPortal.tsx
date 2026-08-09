@@ -214,7 +214,7 @@ export function MotionPathGalleryPortal({ images }: { images: DorvellImage[] }) 
               </span>
             ))}
           </div>
-          <Link className="button-primary" href={`/work#${activeLane.slug}`}>
+          <Link className="button-primary" href={`/work/${activeLane.slug}`}>
             Enter {activeLane.label}
           </Link>
         </aside>

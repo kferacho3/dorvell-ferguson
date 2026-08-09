@@ -59,7 +59,7 @@ export function GalleryWorlds({ images }: { images: DorvellImage[] }) {
               </h2>
               <p>{lane.description}</p>
               <div className="world-actions">
-                <Link href={`/work#${lane.slug}`}>View gallery</Link>
+                <Link href={`/work/${lane.slug}`}>View gallery</Link>
                 <span>{lane.images.length} frames</span>
               </div>
             </div>

@@ -115,7 +115,7 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
                 <Link
                   key={lane.key}
                   className="contact-lane-chip"
-                  href={`/work#${lane.slug}`}
+                  href={`/work/${lane.slug}`}
                   style={{ "--lane-accent": lane.accent } as CSSProperties}
                 >
                   {preview ? (

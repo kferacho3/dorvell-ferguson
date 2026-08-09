@@ -120,7 +120,7 @@ export function KineticGalleryDeck({ images }: { images: DorvellImage[] }) {
               <span>{String(resolvedFrameIndex + 1).padStart(2, "0")} / {String(frames.length).padStart(2, "0")}</span>
               <strong>{activeLane.label}</strong>
               <p>{activeLane.description}</p>
-              <Link className="button-primary" href={`/work#${activeLane.slug}`}>
+              <Link className="button-primary" href={`/work/${activeLane.slug}`}>
                 Enter {activeLane.label}
               </Link>
             </div>

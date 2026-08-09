@@ -117,7 +117,7 @@ export function LaneSequenceLab({ images }: { images: DorvellImage[] }) {
           </div>
 
           <div className="sequence-lab__actions">
-            <Link className="button-primary" href={`/work#${activeLane.slug}`}>
+            <Link className="button-primary" href={`/work/${activeLane.slug}`}>
               Enter {activeLane.label}
             </Link>
             <span>{activeLane.description}</span>
