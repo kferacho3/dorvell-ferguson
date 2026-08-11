@@ -131,6 +131,30 @@ function imagePool(lanes: GalleryLane[], countPerLane: number, usedIds: Set<stri
   return lanes.flatMap((lane, laneIndex) => selectLaneImages(lane, countPerLane, usedIds, usedPosts, salt + laneIndex * 3));
 }
 
+function isLandscapeImage(image: DorvellImage) {
+  if (image.width > 0 && image.height > 0) return image.width / image.height >= 1.05;
+  return image.aspectRatio >= 1.05;
+}
+
+/**
+ * Entry gate cards are wide landscape frames — pick one landscape still per
+ * lane so portraits never pillarbox into the preview strip.
+ */
+function selectEntryPreviewImages(lanes: GalleryLane[], usedIds: Set<string>, usedPosts: Set<string>) {
+  return lanes.map((lane, laneIndex) => {
+    const candidates = orderedLaneImages(lane, 83 + laneIndex * 3).filter(
+      (image) => !usedIds.has(image.id) && isLandscapeImage(image),
+    );
+    const fallback = orderedLaneImages(lane, 83 + laneIndex * 3).filter((image) => !usedIds.has(image.id));
+    const pool = candidates.length > 0 ? candidates : fallback;
+    const image = pool[0];
+    if (!image) return null;
+    usedIds.add(image.id);
+    usedPosts.add(sourcePostKey(image));
+    return image;
+  }).filter((image): image is DorvellImage => Boolean(image));
+}
+
 export function buildHomeImageCollections(lanes: GalleryLane[]): HomeImageCollections {
   const usedIds = new Set<string>();
   const usedPosts = new Set<string>();
@@ -145,7 +169,7 @@ export function buildHomeImageCollections(lanes: GalleryLane[]): HomeImageCollec
     images: lane.images.filter((image) => !homeScrappedIds.has(image.id)),
   }));
   const heroImages = imagePool(homeLanes, 10, usedIds, usedPosts, 0);
-  const entryImages = imagePool(homeLanes, 1, usedIds, usedPosts, 83);
+  const entryImages = selectEntryPreviewImages(homeLanes, usedIds, usedPosts);
   const collections = { entryImages, heroImages } as HomeImageCollections;
 
   sectionPlan.forEach(([key, countPerLane], sectionIndex) => {

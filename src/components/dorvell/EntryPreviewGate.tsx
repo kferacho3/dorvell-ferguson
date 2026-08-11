@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { blurImageProps, imageAlt } from "@/lib/images";
+import { galleryLaneDefinitions, laneKeyForImage } from "@/lib/gallery-lanes";
+import "@/styles/entry-gate.css";
 
 const ENTRY_SEEN_KEY = "df-entry-gate-seen";
 
@@ -26,11 +28,20 @@ function writeEntrySeen() {
   }
 }
 
+function shortLaneLabel(image: DorvellImage) {
+  const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
+  if (!lane) return image.category;
+  if (lane.key === "music-live") return "Music";
+  if (lane.key === "sports-athletics") return "Athletics";
+  if (lane.key === "fashion-creative") return "Modeling";
+  return lane.label;
+}
+
 export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage[]; totalFrames: number }) {
   const [entered, setEntered] = useState(false);
   const enterButtonRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const previewImages = images.slice(0, 4);
+  const previewImages = useMemo(() => images.slice(0, 4), [images]);
 
   // Skip the gate before paint for returning visitors and hash deep links.
   useIsomorphicLayoutEffect(() => {
@@ -107,8 +118,7 @@ export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage
             <Image
               src={image.localOptimized.md}
               alt={imageAlt(image)}
-              width={image.width}
-              height={image.height}
+              fill
               sizes="(max-width: 760px) 78vw, 25vw"
               unoptimized
               priority={index < 2}
@@ -116,7 +126,7 @@ export function EntryPreviewGate({ images, totalFrames }: { images: DorvellImage
             />
             <figcaption>
               <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{image.category}</strong>
+              <strong>{shortLaneLabel(image)}</strong>
             </figcaption>
           </figure>
         ))}
