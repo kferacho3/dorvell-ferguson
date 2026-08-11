@@ -1,15 +1,85 @@
 /* =====================================================================
    ENTRY GATE — landscape preview strip
-   Wide cards only. Images are selected as landscape stills and filled
-   with cover so portraits never pillarbox the frame.
+   Wide cards in a clean 4-up row. No fan, no stagger, no overflow stack.
+   Images are landscape stills filled with cover.
    ===================================================================== */
+
+/* Keep the title block clear of the bottom strip. */
+.entry-gate .entry-gate__copy {
+  transform: translateY(clamp(-96px, -12svh, -48px));
+  padding-bottom: clamp(12px, 2svh, 24px);
+}
+
+.entry-gate .entry-gate__preview {
+  position: absolute;
+  right: clamp(20px, 4vw, 72px);
+  bottom: clamp(24px, 4svh, 48px);
+  left: clamp(20px, 4vw, 72px);
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 22px);
+  align-items: stretch;
+  height: auto;
+  /* Cap strip height so the Enter CTA never sits on the frames. */
+  max-height: min(22svh, 220px);
+  opacity: 0.78;
+  pointer-events: none;
+  overflow: visible;
+  mask-image: none;
+}
 
 .entry-gate .entry-gate__frame {
   position: relative;
-  aspect-ratio: 16 / 10;
+  width: 100%;
+  min-width: 0;
+  /* Height from the strip cap — never from aspect-ratio (that was the overlap). */
+  height: min(22svh, 220px);
+  aspect-ratio: auto;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: #030403;
+  transform: none;
+}
+
+/* Kill dorvell's staggered vertical offsets — they read as a mess. */
+.entry-gate .entry-gate__frame:nth-child(n) {
+  transform: none;
 }
 
 .entry-gate .entry-gate__frame img {
   object-fit: cover;
   object-position: center;
+}
+
+.entry-gate .entry-gate__frame figcaption {
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.entry-gate .entry-gate__frame figcaption span,
+.entry-gate .entry-gate__frame figcaption strong {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .entry-gate .entry-gate__preview {
+    right: 12px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    opacity: 0.6;
+  }
+
+  .entry-gate .entry-gate__frame:nth-child(n + 3) {
+    display: none;
+  }
 }
