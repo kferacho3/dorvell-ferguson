@@ -13,7 +13,7 @@ import { dorvellManual } from "@/content/dorvell.manual";
  */
 const { profile } = dorvellManual;
 
-// manual.profile.instagram = [personal (@2kferg), photography (@fergphotography)]
+// manual.profile.instagram = [personal (@dorvellfergusonjr), photography (@fergphotography)]
 const [instagramPersonalUrl, instagramPhotographyUrl] = profile.instagram;
 
 export const socialLinks = {
@@ -43,10 +43,10 @@ export type SocialLink = {
 };
 
 /**
- * Ordered, render-ready social links (LinkedIn, @fergphotography, @2kferg,
- * then TikTok and Facebook only when a verified URL exists). Returns plain
- * serializable data so it can cross the server/client boundary and be reused
- * in any component.
+ * Ordered, render-ready social links (LinkedIn, @fergphotography,
+ * @dorvellfergusonjr, then TikTok and Facebook only when a verified URL
+ * exists). Returns plain serializable data so it can cross the server/client
+ * boundary and be reused in any component.
  */
 export function getSocialLinks(): SocialLink[] {
   const links: SocialLink[] = [
@@ -67,7 +67,7 @@ export function getSocialLinks(): SocialLink[] {
     {
       key: "instagramPersonal",
       platform: "Personal / creative world",
-      handle: "@2kferg",
+      handle: "@dorvellfergusonjr",
       href: socialLinks.instagramPersonal,
       label: "Open Dorvell on Instagram",
     },
@@ -125,7 +125,7 @@ export function getFilmPlatforms(): FilmPlatformSource[] {
     {
       platform: "instagram",
       label: "Instagram",
-      handle: "@2kferg",
+      handle: "@dorvellfergusonjr",
       profileUrl: socialLinks.instagramPersonal,
     },
   ];

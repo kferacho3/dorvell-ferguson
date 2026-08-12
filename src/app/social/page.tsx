@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Follow the work | Dorvell Ferguson Jr.",
     description:
-      "Every distribution channel in one place: @2kferg, @fergphotography, TikTok, Facebook, and the films behind them.",
+      "Every distribution channel in one place: @dorvellfergusonjr, @fergphotography, TikTok, Facebook, and the films behind them.",
   },
 };
 
@@ -25,7 +25,7 @@ const ACCOUNTS = [
   {
     key: "instagram-personal",
     platform: "instagram" as const,
-    name: "@2kferg",
+    name: "@dorvellfergusonjr",
     role: "Creative world",
     blurb:
       "The films, the experiments, and the person behind the camera. Every piece below is posted here first.",

@@ -27,9 +27,57 @@ export const CREATIVE_MODES: readonly {
 ];
 
 const STORAGE_KEY = "df-creative-mode";
+const DOCK_KEY = "df-creative-mode-docked";
 
 function isMode(value: unknown): value is CreativeMode {
   return value === "cinematic" || value === "calm";
+}
+
+let docked = false;
+let dockInitialized = false;
+const dockListeners = new Set<() => void>();
+
+function emitDock() {
+  for (const listener of dockListeners) listener();
+}
+
+function ensureDockInitialized() {
+  if (dockInitialized || typeof window === "undefined") return;
+  dockInitialized = true;
+  try {
+    // Returning visitors who already picked a mode keep the compact corner chip.
+    docked =
+      window.sessionStorage.getItem(DOCK_KEY) === "1" ||
+      window.localStorage.getItem(STORAGE_KEY) !== null ||
+      window.matchMedia("(max-width: 760px)").matches;
+  } catch {
+    docked = window.matchMedia("(max-width: 760px)").matches;
+  }
+}
+
+export function subscribeCreativeModeDock(listener: () => void): () => void {
+  ensureDockInitialized();
+  dockListeners.add(listener);
+  return () => {
+    dockListeners.delete(listener);
+  };
+}
+
+export function isCreativeModeDocked() {
+  ensureDockInitialized();
+  return docked;
+}
+
+export function dockCreativeModeSwitch() {
+  ensureDockInitialized();
+  if (docked) return;
+  docked = true;
+  try {
+    window.sessionStorage.setItem(DOCK_KEY, "1");
+  } catch {
+    /* session storage unavailable — dock still applies for this page life */
+  }
+  emitDock();
 }
 
 const SERVER_MODE: CreativeMode = "cinematic";

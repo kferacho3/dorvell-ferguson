@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FollowTheWork } from "./social/FollowTheWork";
+import { CreativeNavModeControl } from "./creative/CreativeNavModeControl";
 import "@/styles/site-nav.css";
 
 const navItems = [
@@ -71,6 +72,7 @@ export function DorvellHeader() {
     .join(" ");
 
   const visibleItems = navItems.filter((item) => !("hidden" in item && item.hidden));
+  const onCreative = pathname === "/creative" || pathname.startsWith("/creative/");
 
   return (
     <header className={navClassName}>
@@ -83,6 +85,7 @@ export function DorvellHeader() {
           <span className="brand-mark__name">Dorvell Ferguson Jr.</span>
         </span>
       </Link>
+      {onCreative ? <CreativeNavModeControl /> : null}
       <button
         className="nav-toggle"
         type="button"

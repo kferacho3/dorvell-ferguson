@@ -2,12 +2,17 @@
 
 import { cn } from "@/lib/cn";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
-import { CREATIVE_MODES, useCreativeMode, type CreativeMode } from "./creativeMode";
+import {
+  CREATIVE_MODES,
+  dockCreativeModeSwitch,
+  useCreativeMode,
+  type CreativeMode,
+} from "./creativeMode";
 
 /**
  * Cinematic / Calm toggle. Picking a mode from the hero variant smooth-scrolls
- * to the gallery body so the change is unmistakable; the bar variant lives in
- * the sticky control rail.
+ * to the gallery body so the change is unmistakable, then docks the chrome
+ * control into the corner so it stops covering the work.
  */
 export function CreativeModeSwitch({
   className,
@@ -21,6 +26,7 @@ export function CreativeModeSwitch({
 
   const onSelect = (next: CreativeMode) => {
     setMode(next);
+    dockCreativeModeSwitch();
     if (variant === "hero" && typeof document !== "undefined") {
       document.getElementById("cw-body")?.scrollIntoView({
         behavior: reducedMotion ? "auto" : "smooth",

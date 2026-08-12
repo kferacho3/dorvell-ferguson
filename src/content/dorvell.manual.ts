@@ -10,7 +10,7 @@ export const dorvellManual = {
     phone: "251-623-4376",
     portfolio: "https://dorvellferguson.myportfolio.com/home-2",
     linkedin: "https://www.linkedin.com/in/dorvell-ferguson-jr-bsa-a78a02194/",
-    instagram: ["https://www.instagram.com/2kferg/", "https://www.instagram.com/fergphotography/"],
+    instagram: ["https://www.instagram.com/dorvellfergusonjr/", "https://www.instagram.com/fergphotography/"],
     tiktok: "https://www.tiktok.com/@2kferg",
     facebook: "https://www.facebook.com/DJ.ferguson2",
     headline: "Photographer / Model / Multimedia Visual Storyteller",

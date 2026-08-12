@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { CreativeLightboxProvider } from "./CreativeLightbox";
-import { CreativeModeSwitch } from "./CreativeModeSwitch";
 import { useCreativeMode } from "./creativeMode";
 import { CreativeHeroVideo } from "./CreativeHeroVideo";
 import { CreativeManifesto } from "./CreativeManifesto";
@@ -23,17 +22,6 @@ const CreativeOrbitRing = dynamic(() => import("./CreativeOrbitRing").then((m) =
   ssr: false,
 });
 
-function CreativeControlRail() {
-  return (
-    <div className="cw-controlbar">
-      <div className="cw-container cw-container--wide cw-controlbar__inner">
-        <span className="cw-controlbar__brand">Creative Worlds</span>
-        <CreativeModeSwitch variant="bar" />
-      </div>
-    </div>
-  );
-}
-
 export function CreativeExperience() {
   const { mode } = useCreativeMode();
   const cinematic = mode === "cinematic";
@@ -43,7 +31,6 @@ export function CreativeExperience() {
       <div className="cw-experience">
         <CreativeHeroVideo />
         <div id="cw-body">
-          <CreativeControlRail />
           <CreativeManifesto />
           <FeaturedCreativeFilm />
           <ScrollMorphGallery />

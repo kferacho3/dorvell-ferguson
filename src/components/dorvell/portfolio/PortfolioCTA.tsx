@@ -4,7 +4,7 @@ import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
 
 /**
  * Closing CTA — calm, professional, echoing the Contact page language. Booking
- * routes plus the shared social links (LinkedIn, @fergphotography, @2kferg, and
+ * routes plus the shared social links (LinkedIn, @fergphotography, @dorvellfergusonjr, and
  * TikTok only when a verified URL is configured).
  */
 export function PortfolioCTA() {
