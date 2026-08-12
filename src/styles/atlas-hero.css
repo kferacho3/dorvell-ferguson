@@ -141,6 +141,16 @@
   object-fit: cover;
 }
 
+/* Drop the diagonal left vignette — it reads as a broken shadow on the portrait. */
+.atlas-hero .atlas-preview::after {
+  background: linear-gradient(180deg, transparent 48%, rgba(0, 0, 0, 0.42));
+}
+
+/* Film scrim: keep the bottom title readable, kill the left wash. */
+.atlas-hero .atlas-portal__scrim {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.66), transparent 46%);
+}
+
 /* ---- copy band under the media --------------------------------------- */
 
 .atlas-hero .atlas-copy {

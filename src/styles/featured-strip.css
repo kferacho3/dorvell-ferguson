@@ -39,6 +39,15 @@
     0 0 0 1px color-mix(in srgb, var(--lane-accent) 40%, transparent);
 }
 
+/* Kill dorvell's inset double-frame + left vignette wash on the portrait. */
+.featured-strip .featured-deck__stage::before {
+  display: none;
+}
+
+.featured-strip .featured-deck__stage::after {
+  background: linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.72));
+}
+
 .featured-strip .featured-deck__stage-inner > img {
   object-fit: cover;
   object-position: center 20%;
@@ -58,19 +67,19 @@
   font-size: clamp(1.4rem, 2.8vw, 2.2rem);
 }
 
-/* Soften the HUD chrome so the photo reads first. */
+/* Soften / kill HUD chrome so the photo reads first — no left wash, no scan beam. */
 .featured-strip .featured-stage__grid {
-  opacity: 0.16;
+  opacity: 0.1;
 }
 
 .featured-strip .featured-stage__beam {
-  opacity: 0.28;
+  display: none;
 }
 
 .featured-strip .featured-stage__reticle {
-  width: 64px;
-  height: 64px;
-  opacity: 0.7;
+  width: 56px;
+  height: 56px;
+  opacity: 0.55;
 }
 
 /* ---- slim control rail (right) -------------------------------------- */
