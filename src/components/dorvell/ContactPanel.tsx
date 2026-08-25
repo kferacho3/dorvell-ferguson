@@ -97,9 +97,6 @@ export function ContactPanel({ profile, images = [] }: { profile: Profile; image
           <a className="button-primary" href={`mailto:${profile.email}?subject=Booking%20Inquiry%20for%20Dorvell`}>
             {profile.email}
           </a>
-          <a className="button-secondary" href={`tel:${profile.phone.replace(/[^0-9+]/g, "")}`}>
-            {profile.phone}
-          </a>
           <button className="contact-copy-email" type="button" onClick={copyEmailAddress}>
             {copied ? "Copied" : "Copy email address"}
           </button>

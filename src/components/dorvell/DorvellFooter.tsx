@@ -4,7 +4,6 @@ import type { CSSProperties } from "react";
 import { buildGalleryLanes } from "@/lib/gallery-lanes";
 import { getPortfolioData } from "@/lib/portfolio-data";
 import { getSocialLinks } from "@/lib/social-links";
-import { PhoneIcon } from "@/components/dorvell/social-icons";
 import { SocialLinks } from "@/components/dorvell/contact/SocialLinks";
 import { FollowTheWork } from "@/components/dorvell/social/FollowTheWork";
 import "@/styles/footer-reel.css";
@@ -91,10 +90,6 @@ export function DorvellFooter() {
             <SocialLinks links={getSocialLinks()} />
             <FollowTheWork variant="rail" placement="footer" className="footer-follow" />
           </div>
-          <a className="footer-phone" href={`tel:${manual.profile.phone.replace(/\D/g, "")}`}>
-            <PhoneIcon />
-            {manual.profile.phone}
-          </a>
         </div>
 
         <div className="footer-meta-line">

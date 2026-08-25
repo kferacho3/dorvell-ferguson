@@ -8096,31 +8096,6 @@ section,
   align-content: start;
 }
 
-.footer-phone {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  width: fit-content;
-  color: var(--df-text-soft);
-  font-weight: 700;
-  transition: color var(--df-fast);
-}
-
-.footer-phone svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.footer-phone:hover,
-.footer-phone:focus-visible {
-  color: var(--df-teal);
-}
-
 .footer-grid {
   position: relative;
   z-index: 1;

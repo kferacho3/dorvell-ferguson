@@ -471,7 +471,6 @@ async function main() {
 
   const contacts = {
     email: "fergusondorvell2@gmail.com",
-    phone: "251-623-4376",
     instagram: ["https://www.instagram.com/2kferg/", "https://www.instagram.com/fergphotography/"],
   };
 

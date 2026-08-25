@@ -50,7 +50,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     name: manual.profile.name,
     jobTitle: ["Photographer", "Graphic Designer", "Runway / Fashion Model", "Visual Storyteller"],
     email: manual.profile.email,
-    telephone: manual.profile.phone,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Tampa",

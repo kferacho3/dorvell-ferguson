@@ -68,7 +68,6 @@ export const dorvellSiteContentSchema = z.object({
   images: z.array(dorvellImageSchema),
   contacts: z.object({
     email: z.string().optional(),
-    phone: z.string().optional(),
     instagram: z.array(z.string()).optional(),
   }),
   scrapeSummary: z
