@@ -37,4 +37,4 @@ Raw downloaded originals live in `public/dorvell/originals` locally and are inte
 npm run build:content
 ```
 
-The homepage includes a TikTok creator embed for `https://www.tiktok.com/@2kferg` in `SocialMotionSpotlight`.
+The Follow the Work page at `/social` includes Dorvell’s TikTok feed.

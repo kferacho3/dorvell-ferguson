@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
-import type { CSSProperties } from "react";
+import Link from "next/link";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
 import { ProjectExhibitHero } from "@/components/dorvell/ProjectExhibitHero";
 import { WorkArchive } from "@/components/dorvell/WorkArchive";
-import { buildGalleryLanes, galleryLaneDefinitions } from "@/lib/gallery-lanes";
+import { PhotoGallery } from "@/components/dorvell/portfolio/PhotoGallery";
+import { PhotographyCollections } from "@/components/dorvell/portfolio/PhotographyCollections";
+import { toPhotoGalleryImage } from "@/components/dorvell/portfolio/photoGalleryImage";
+import { galleryLaneDefinitions, laneKeyForImage } from "@/lib/gallery-lanes";
 import { getPortfolioData, getProject } from "@/lib/portfolio-data";
 import { portfolioImages } from "@/lib/photos/getPublicPhotos";
-import "@/styles/lane-route.css";
 
 // Legacy scrape artifacts that should never resolve as exhibits.
 const hiddenProjectSlugs = new Set(["home-2", "work", "about"]);
@@ -24,11 +26,17 @@ export function generateStaticParams() {
     .projects.filter((project) => !hiddenProjectSlugs.has(project.slug))
     .map((project) => ({ slug: project.slug }));
   // Lane pages share this route: /work/portraits, /work/music-live, ...
-  const laneParams = galleryLaneDefinitions.map((lane) => ({ slug: lane.slug }));
+  const laneParams = galleryLaneDefinitions.map((lane) => ({
+    slug: lane.slug,
+  }));
   return [...laneParams, ...projectParams];
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   if (hiddenProjectSlugs.has(slug)) return { title: "Work Archive" };
   const lane = laneForSlug(slug);
@@ -48,7 +56,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   if (hiddenProjectSlugs.has(slug)) notFound();
   const data = getPortfolioData();
@@ -56,23 +68,33 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   // Lane pages first: one URL per category, every frame in that lane.
   const laneDefinition = laneForSlug(slug);
   if (laneDefinition) {
-    const archive = portfolioImages(data.generated.images);
-    const lane = buildGalleryLanes(archive).find((entry) => entry.key === laneDefinition.key);
-    const laneImages = lane?.images ?? [];
+    const images = portfolioImages(data.generated.images)
+      .filter((image) => laneKeyForImage(image) === laneDefinition.key)
+      .map(toPhotoGalleryImage);
     return (
       <DorvellShell>
-        <div className="route-page project-route lane-route">
-          <header className="lane-route__head" style={{ "--lane-accent": laneDefinition.accent } as CSSProperties}>
-            <div className="lane-route__title">
-              <p className="eyebrow">{laneDefinition.eyebrow}</p>
-              <h1>{laneDefinition.label}</h1>
+        <div className="bg-[var(--df-bg)]">
+          <div className="mx-auto max-w-[84rem] px-4 pb-16 pt-7 sm:px-8 sm:pt-10 lg:px-12">
+            <header className="mb-5 flex flex-wrap items-end justify-between gap-x-8 gap-y-2 sm:mb-7">
+              <h1 className="text-[clamp(2.75rem,7vw,5.75rem)] font-bold leading-[0.96] tracking-tight [font-family:var(--font-display)]">
+                {laneDefinition.label}
+              </h1>
+              <Link
+                href="/work"
+                className="inline-flex min-h-11 items-center text-sm font-medium text-[var(--df-text-soft)] underline decoration-[var(--df-line-strong)] underline-offset-4 hover:text-[var(--df-text)]"
+                prefetch={false}
+              >
+                All photography
+              </Link>
+            </header>
+            <div id="archive">
+              <PhotoGallery
+                images={images}
+                label={`${laneDefinition.label} gallery`}
+              />
             </div>
-            <p className="lane-route__desc">{laneDefinition.description}</p>
-            <p className="lane-route__count">
-              {laneImages.length} {laneImages.length === 1 ? "frame" : "frames"}
-            </p>
-          </header>
-          <WorkArchive images={laneImages} scopeLabel={laneDefinition.label} compact variant="full" />
+            <PhotographyCollections current={laneDefinition.key} />
+          </div>
         </div>
       </DorvellShell>
     );
@@ -80,13 +102,22 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const project = data.projects.find((entry) => entry.slug === slug);
   if (!project) notFound();
-  const projectLane = galleryLaneDefinitions.find((lane) => lane.projectSlugs.includes(project.slug));
+  const projectLane = galleryLaneDefinitions.find((lane) =>
+    lane.projectSlugs.includes(project.slug),
+  );
 
   return (
     <DorvellShell>
       <div className="route-page project-route">
-        <ProjectExhibitHero project={project} allImages={data.generated.images} />
-        <WorkArchive images={project.images} scopeLabel={projectLane?.label ?? project.title} variant="full" />
+        <ProjectExhibitHero
+          project={project}
+          allImages={data.generated.images}
+        />
+        <WorkArchive
+          images={project.images}
+          scopeLabel={projectLane?.label ?? project.title}
+          variant="full"
+        />
       </div>
     </DorvellShell>
   );

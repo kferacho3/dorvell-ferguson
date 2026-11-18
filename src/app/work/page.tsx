@@ -1,32 +1,38 @@
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
+import { PhotographyCollections } from "@/components/dorvell/portfolio/PhotographyCollections";
 import { PortfolioExperience } from "@/components/dorvell/portfolio/PortfolioExperience";
+import { toPhotoGalleryImage } from "@/components/dorvell/portfolio/photoGalleryImage";
 import { getPortfolioData } from "@/lib/portfolio-data";
 import { portfolioImages } from "@/lib/photos/getPublicPhotos";
-
-// Legacy scrape artifacts that are not real exhibits.
-const hiddenProjectSlugs = new Set(["home-2", "work", "about"]);
+import {
+  activePortfolioCategories,
+  imageCategories,
+} from "@/lib/portfolio-taxonomy";
 
 export const metadata = {
-  title: "The Work Index",
+  title: "Photography",
   description:
-    "Portraits, concerts, sports, studio work, fashion, events, and photojournalism — Dorvell Ferguson Jr.'s photography explored across cinematic, calm, archive, and story views.",
-  openGraph: {
-    title: "The Work Index — Dorvell Ferguson Jr.",
-    description:
-      "A living index of Dorvell Ferguson Jr.'s visual world — portraits, live music, athletics, fashion, and photojournalism across four gallery modes.",
-  },
+    "Browse portraits, live music, sports, fashion, and photojournalism by Dorvell Ferguson Jr.",
 };
 
 export default function WorkPage() {
-  const { generated, projects } = getPortfolioData();
-  const projectCount = projects.filter((project) => !hiddenProjectSlugs.has(project.slug)).length;
-  // Once curation is finalized, the archive narrows to kept + portfolio-assigned frames.
+  const { generated } = getPortfolioData();
   const archiveImages = portfolioImages(generated.images);
+  const categories = activePortfolioCategories(archiveImages).map(
+    ({ category, label }) => ({ category, label }),
+  );
+  const images = archiveImages.map((image) => ({
+    ...toPhotoGalleryImage(image),
+    categories: imageCategories(image),
+  }));
 
   return (
     <DorvellShell>
-      <div className="route-page work-route">
-        <PortfolioExperience images={archiveImages} projectCount={projectCount} />
+      <div className="bg-[var(--df-bg)]">
+        <div className="mx-auto max-w-[84rem] px-4 pb-16 pt-7 sm:px-8 sm:pt-10 lg:px-12">
+          <PortfolioExperience images={images} categories={categories} />
+          <PhotographyCollections />
+        </div>
       </div>
     </DorvellShell>
   );

@@ -1,120 +1,74 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import type { DorvellImage } from "@/content/dorvell.schema";
-import { getCategoryDef } from "@/lib/portfolio-taxonomy";
-import { ArchiveContactSheet } from "./ArchiveContactSheet";
-import { CalmGallery } from "./CalmGallery";
-import { FeaturedGradientCarousel } from "./FeaturedGradientCarousel";
-import { HorizontalStoryStrips } from "./HorizontalStoryStrips";
-import { PortfolioCategoryChips } from "./PortfolioCategoryChips";
-import { PortfolioCategoryNav } from "./PortfolioCategoryNav";
-import { PortfolioCTA } from "./PortfolioCTA";
-import { PortfolioHero } from "./PortfolioHero";
-import { PortfolioModeProvider, useFilteredImages } from "./PortfolioModeProvider";
-import { PortfolioModeSwitch } from "./PortfolioModeSwitch";
-import { ScrollFormationChapters } from "./ScrollFormationChapters";
-import { SelectedWorkRing } from "./SelectedWorkRing";
-import { usePortfolioFilters, usePortfolioMode } from "./portfolioMode";
+import { useState } from "react";
+import type { DorvellCategory } from "@/content/dorvell.schema";
+import type {
+  ActivePortfolioCategory,
+  PortfolioCategoryFilter,
+} from "@/lib/portfolio-taxonomy";
+import { PhotoGallery, type PhotoGalleryImage } from "./PhotoGallery";
 
-// WebGL room is client-only + loaded on demand (only in Cinematic mode).
-const ImmersiveImageRoom = dynamic(
-  () => import("./ImmersiveImageRoom").then((mod) => mod.ImmersiveImageRoom),
-  { ssr: false, loading: () => <div className="pf-room-skeleton" aria-hidden="true" /> },
-);
-
-function CalmBody({ images }: { images: DorvellImage[] }) {
-  const { category } = usePortfolioFilters();
-  const label = category === "All" ? "the full archive" : getCategoryDef(category).label;
-  return (
-    <section className="pf-section pf-calm" aria-labelledby="pf-calm-title">
-      <div className="pf-container">
-        <div className="pf-section__head">
-          <div>
-            <p className="pf-eyebrow">Calm</p>
-            <h2 id="pf-calm-title">Less interface. More photograph.</h2>
-            <p>
-              {images.length} {images.length === 1 ? "frame" : "frames"} in {label}, laid out clean and
-              quiet — no motion, easy to scan.
-            </p>
-          </div>
-        </div>
-        <CalmGallery images={images} />
-      </div>
-    </section>
-  );
-}
-
-function PortfolioBody() {
-  const { mode } = usePortfolioMode();
-  const filtered = useFilteredImages();
-
-  if (mode === "calm") return <CalmBody images={filtered} />;
-  if (mode === "archive") return <ArchiveContactSheet />;
-  if (mode === "story") {
-    return (
-      <>
-        <section className="pf-section pf-section--stories" aria-labelledby="pf-stories-title">
-          <div className="pf-container">
-            <div className="pf-section__head">
-              <div>
-                <p className="pf-eyebrow">Stories</p>
-                <h2 id="pf-stories-title">Work in context.</h2>
-                <p>Editorial strips per lane — scroll to move through each set, click any frame for the full story.</p>
-              </div>
-            </div>
-            <HorizontalStoryStrips />
-          </div>
-        </section>
-        <section className="pf-section pf-section--chapters" aria-label="Category chapters">
-          <div className="pf-container">
-            <ScrollFormationChapters />
-          </div>
-        </section>
-      </>
-    );
-  }
-
-  // Cinematic (default on desktop) — self-contained immersive sections.
-  return (
-    <>
-      <FeaturedGradientCarousel images={filtered} />
-      <ImmersiveImageRoom images={filtered} />
-      <SelectedWorkRing />
-    </>
-  );
-}
-
-/** Sticky control rail — mode switch + category chips, always reachable. */
-function PortfolioControlBar() {
-  return (
-    <div className="pf-controlbar">
-      <div className="pf-container pf-controlbar__inner">
-        <PortfolioModeSwitch />
-        <PortfolioCategoryChips className="pf-controlbar__chips" />
-      </div>
-    </div>
-  );
-}
+type PortfolioExperienceProps = {
+  images: readonly (PhotoGalleryImage & {
+    categories: readonly DorvellCategory[];
+  })[];
+  categories: readonly Pick<ActivePortfolioCategory, "category" | "label">[];
+};
 
 export function PortfolioExperience({
   images,
-  projectCount,
-}: {
-  images: DorvellImage[];
-  projectCount: number;
-}) {
+  categories,
+}: PortfolioExperienceProps) {
+  const [category, setCategory] = useState<PortfolioCategoryFilter>("All");
+  const filtered =
+    category === "All"
+      ? images
+      : images.filter((image) => image.categories.includes(category));
+  const categoryLabel = categories.find(
+    (option) => option.category === category,
+  )?.label;
+
   return (
-    <PortfolioModeProvider images={images} projectCount={projectCount}>
-      <div className="pf-experience">
-        <PortfolioHero />
-        <PortfolioCategoryNav />
-        <div id="pf-gallery" className="pf-gallery">
-          <PortfolioControlBar />
-          <PortfolioBody />
-        </div>
-        <PortfolioCTA />
+    <div id="pf-gallery">
+      <header className="mb-5 flex flex-wrap items-end justify-between gap-x-12 gap-y-4 sm:mb-7">
+        <h1 className="text-[clamp(2.75rem,7vw,5.75rem)] font-bold leading-[0.96] tracking-tight [font-family:var(--font-display)]">
+          Photography
+        </h1>
+        <label className="flex w-full max-w-sm items-center gap-3 text-sm font-medium sm:w-auto">
+          Category
+          <select
+            value={category}
+            className="min-h-11 min-w-0 flex-1 border border-[var(--df-line-strong)] bg-[var(--df-bg-2)] px-3 text-sm text-[var(--df-text)] sm:min-w-44"
+            onChange={(event) => {
+              const option = categories.find(
+                (entry) => entry.category === event.target.value,
+              );
+              setCategory(option?.category ?? "All");
+            }}
+          >
+            <option value="All">All photography</option>
+            {categories.map((option) => (
+              <option value={option.category} key={option.category}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </header>
+      <p className="sr-only" role="status">
+        {filtered.length.toLocaleString("en-US")}{" "}
+        {filtered.length === 1 ? "photo" : "photos"}
+        {categoryLabel ? ` in ${categoryLabel}` : ""}
+      </p>
+      <div id="archive">
+        <PhotoGallery
+          key={category}
+          images={filtered}
+          label={
+            categoryLabel ? `${categoryLabel} gallery` : "Photography gallery"
+          }
+        />
       </div>
-    </PortfolioModeProvider>
+    </div>
   );
 }

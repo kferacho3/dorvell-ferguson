@@ -1,19 +1,20 @@
-import { ApertureLoader } from "./ApertureLoader";
+import type { ReactNode } from "react";
 import { DorvellFooter } from "./DorvellFooter";
 import { DorvellHeader } from "./DorvellHeader";
 import { FilmViewerProvider } from "./film/FilmViewer";
 
-export function DorvellShell({ children }: { children: React.ReactNode }) {
+type DorvellShellProps = { children: ReactNode };
+
+export function DorvellShell({ children }: DorvellShellProps) {
   return (
-    // The film viewer lives at the shell so the landing hero, the Creative Hub
-    // and any film route all open the same one — no page needs its own copy.
     <FilmViewerProvider>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <ApertureLoader />
       <DorvellHeader />
-      <main id="main">{children}</main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
+        {children}
+      </main>
       <DorvellFooter />
     </FilmViewerProvider>
   );

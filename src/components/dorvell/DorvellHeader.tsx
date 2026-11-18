@@ -3,125 +3,194 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FollowTheWork } from "./social/FollowTheWork";
-import { CreativeNavModeControl } from "./creative/CreativeNavModeControl";
-import "@/styles/site-nav.css";
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/cn";
+import { portfolioLinks, secondaryLinks } from "@/lib/site-navigation";
 
-const navItems = [
-  { label: "Portfolio", href: "/work" },
-  { label: "Modeling", href: "/modeling" },
-  { label: "Creative", href: "/creative" },
-  // Hidden for now — page still exists at /projects.
-  { label: "Projects", href: "/projects", hidden: true },
-  { label: "Services", href: "/services" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-] as const;
+type NavigationLink = (typeof portfolioLinks | typeof secondaryLinks)[number];
 
-function isActiveRoute(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
+const keyboardFocus =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--df-teal)]";
+const navigationLink =
+  "flex min-w-11 items-center text-[var(--df-text-soft)] hover:text-[var(--df-text)] aria-[current]:text-[var(--df-text)]";
+
+function currentLink(pathname: string, href: NavigationLink["href"]) {
+  if (pathname === href) return "page";
+  if (
+    href === "/work" &&
+    (pathname === "/work/portraits" || pathname.startsWith("/work/portraits/"))
+  ) {
+    return undefined;
+  }
+  return pathname.startsWith(`${href}/`) ? "location" : undefined;
 }
 
 export function DorvellHeader() {
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // Direction-aware chrome: the bar condenses once you leave the top, slides
-  // up while scrolling down, and returns on scroll-up. Auto-hide is off under
-  // reduced-motion so the header stays pinned.
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let lastY = window.scrollY;
-    let ticking = false;
+    if (!open) return;
 
-    const update = () => {
-      const y = window.scrollY;
-      setScrolled(y > 8);
-      if (!reduceMotion) {
-        const delta = y - lastY;
-        if (delta > 4 && y > 120) setHidden(true);
-        else if (delta < -4) setHidden(false);
-      }
-      lastY = y;
-      ticking = false;
+    const dismissOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      event.preventDefault();
+      setOpen(false);
+      triggerRef.current?.focus();
     };
 
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        window.requestAnimationFrame(update);
+    const dismissOutside = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        !menuRef.current?.contains(event.target)
+      ) {
+        setOpen(false);
       }
     };
 
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const navClassName = [
-    "site-nav",
-    scrolled ? "is-scrolled" : "",
-    open ? "is-open" : "",
-    hidden && !open ? "is-hidden" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const visibleItems = navItems.filter((item) => !("hidden" in item && item.hidden));
-  const onCreative = pathname === "/creative" || pathname.startsWith("/creative/");
+    document.addEventListener("keydown", dismissOnEscape);
+    document.addEventListener("pointerdown", dismissOutside);
+    return () => {
+      document.removeEventListener("keydown", dismissOnEscape);
+      document.removeEventListener("pointerdown", dismissOutside);
+    };
+  }, [open]);
 
   return (
-    <header className={navClassName}>
-      <Link className="brand-mark" href="/" aria-label="Dorvell Ferguson Jr. home">
-        <span className="brand-mark__seal">
-          <Image src="/dorvell-ferguson-main.png" alt="" width={40} height={40} priority />
-        </span>
-        <span className="brand-mark__copy">
-          <span className="brand-mark__kicker">DF Archive</span>
-          <span className="brand-mark__name">Dorvell Ferguson Jr.</span>
-        </span>
-      </Link>
-      {onCreative ? <CreativeNavModeControl /> : null}
-      <button
-        className="nav-toggle"
-        type="button"
-        aria-label={open ? "Close menu" : "Open menu"}
-        aria-expanded={open}
-        aria-controls="primary-navigation"
-        onClick={() => setOpen((value) => !value)}
-      >
-        <span />
-        <span />
-        <span />
-        <span className="sr-only">Menu</span>
-      </button>
-      <nav id="primary-navigation" className={open ? "nav-links is-open" : "nav-links"} aria-label="Primary">
-        {visibleItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            aria-current={isActiveRoute(pathname, item.href) ? "page" : undefined}
-            onClick={() => setOpen(false)}
-          >
-            {item.label}
-          </Link>
-        ))}
-        <Link className="nav-cta" href="/contact" onClick={() => setOpen(false)}>
-          Book
+    <header className="sticky top-0 z-[80] border-b border-[var(--df-line)] bg-[var(--df-bg)] pt-[env(safe-area-inset-top)]">
+      <div className="relative mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 px-4 md:flex md:min-h-16 md:gap-5 md:px-8 xl:gap-8">
+        <Link
+          href="/"
+          aria-label="Dorvell Ferguson Jr. home"
+          aria-current={pathname === "/" ? "page" : undefined}
+          className={cn(
+            "inline-flex min-h-12 min-w-0 items-center justify-self-start gap-2.5 text-sm font-bold text-[var(--df-text)] md:shrink-0",
+            keyboardFocus,
+          )}
+        >
+          <Image
+            src="/dorvell-ferguson-mark.png"
+            alt=""
+            width={30}
+            height={30}
+            className="shrink-0"
+          />
+          <span>Dorvell Ferguson Jr.</span>
         </Link>
-        {/* Follow group — full text links inside the drawer. Desktop keeps the
-            top bar lean; /social lives here and in the footer. */}
-        <div className="nav-follow">
-          <Link className="nav-follow__hub" href="/social" onClick={() => setOpen(false)}>
-            Follow the work
-          </Link>
-          <FollowTheWork variant="stacked" placement="nav" label="Channels" />
+
+        <div
+          className="md:ml-auto xl:hidden"
+          ref={menuRef}
+          onBlur={(event) => {
+            if (
+              event.relatedTarget &&
+              !event.currentTarget.contains(event.relatedTarget)
+            ) {
+              setOpen(false);
+            }
+          }}
+        >
+          <button
+            type="button"
+            ref={triggerRef}
+            aria-expanded={open}
+            aria-controls="secondary-navigation"
+            onClick={() => setOpen((value) => !value)}
+            className={cn(
+              "flex min-h-11 items-center gap-2 px-2 text-sm font-semibold text-[var(--df-text-soft)] hover:text-[var(--df-text)] aria-expanded:text-[var(--df-text)]",
+              keyboardFocus,
+            )}
+          >
+            Menu
+            <span
+              aria-hidden="true"
+              className="size-2 -translate-y-0.5 rotate-45 border-b border-r border-current"
+            />
+          </button>
+
+          <nav
+            id="secondary-navigation"
+            aria-label="More pages"
+            hidden={!open}
+            className="absolute inset-x-0 top-full max-h-[calc(100dvh-6.125rem-env(safe-area-inset-top,0px))] overflow-y-auto overscroll-contain border border-[var(--df-line)] bg-[var(--df-bg)] px-4 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2 md:left-auto md:right-8 md:w-60 md:max-h-[calc(100dvh-4.0625rem-env(safe-area-inset-top,0px))]"
+          >
+            <ul className="divide-y divide-[var(--df-line)]">
+              {secondaryLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    prefetch={link.href === "/work" ? false : undefined}
+                    aria-current={currentLink(pathname, link.href)}
+                    onClick={() => {
+                      setOpen(false);
+                      if (pathname === link.href) triggerRef.current?.focus();
+                    }}
+                    className={cn(
+                      navigationLink,
+                      "min-h-11 px-2 text-sm font-medium aria-[current]:underline aria-[current]:underline-offset-4",
+                      keyboardFocus,
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-      </nav>
+
+        <nav
+          aria-label="Portfolio"
+          className="col-span-2 -mx-4 border-t border-[var(--df-line)] px-4 md:mx-0 md:border-0 md:px-0 xl:ml-auto"
+        >
+          <ul className="grid grid-cols-3 gap-1 md:flex md:items-center md:gap-2">
+            {portfolioLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  prefetch={false}
+                  aria-current={currentLink(pathname, link.href)}
+                  className={cn(
+                    navigationLink,
+                    "min-h-12 justify-center border-b-2 border-transparent px-1 text-sm font-semibold hover:border-[var(--df-line-strong)] aria-[current]:border-[var(--df-teal)] md:px-3",
+                    keyboardFocus,
+                  )}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav
+          aria-label="More pages"
+          className="hidden border-l border-[var(--df-line)] pl-6 xl:block"
+        >
+          <ul className="flex items-center gap-4 text-sm font-medium">
+            {secondaryLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  prefetch={link.href === "/work" ? false : undefined}
+                  aria-current={currentLink(pathname, link.href)}
+                  className={cn(
+                    navigationLink,
+                    "min-h-11 whitespace-nowrap aria-[current]:underline aria-[current]:underline-offset-4",
+                    link.href === "/contact" &&
+                      "border border-[var(--df-line-strong)] px-4 text-[var(--df-text)] hover:border-[var(--df-text)]",
+                    keyboardFocus,
+                  )}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 }

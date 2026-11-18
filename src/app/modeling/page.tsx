@@ -1,47 +1,48 @@
 import type { Metadata } from "next";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
-import { getPortfolioData } from "@/lib/portfolio-data";
-import { modelingImages } from "@/lib/photos/getPublicPhotos";
-import { imageAlt } from "@/lib/images";
 import { ModelingExperience } from "@/components/modeling/ModelingExperience";
-import { ModelingMotionStrip } from "@/components/dorvell/creative/ModelingMotionStrip";
-import type { ModelingImage } from "@/components/modeling/modelingTypes";
+import { toPhotoGalleryImage } from "@/components/dorvell/portfolio/photoGalleryImage";
+import { modelingImages } from "@/lib/photos/getPublicPhotos";
+import { getPortfolioData } from "@/lib/portfolio-data";
+
+const modelingDescription =
+  "Browse Dorvell Ferguson Jr.'s editorial, fashion, and runway modeling portfolio, including photos and motion studies.";
+
+const modelingLeads = [
+  "fd-d17c518c3d44",
+  "fd-d0d3598a5f43",
+  "fd-c616be4d3d55",
+  "fd-52d257da4be0",
+];
 
 export const metadata: Metadata = {
-  title: "Modeling — The Ferguson Room",
-  description:
-    "A members-only look at the modeling side of Dorvell Ferguson Jr. Private set, editorial form, booking by inquiry.",
+  title: "Modeling",
+  description: modelingDescription,
   openGraph: {
-    title: "Modeling — The Ferguson Room",
-    description: "The modeling side of the lens. Private set, quiet light, booking by inquiry.",
+    title: "Modeling | Dorvell Ferguson Jr.",
+    description: modelingDescription,
   },
 };
 
 export default function ModelingPage() {
   const { generated } = getPortfolioData();
-  const { images, curated } = modelingImages(generated.images);
-
-  const roomImages: ModelingImage[] = images
+  const { images } = modelingImages(generated.images);
+  const gallery = images
     .filter((image) => image.width >= 480)
     .sort((a, b) => a.aspectRatio - b.aspectRatio)
-    .slice(0, 26)
-    .map((image) => ({
-      id: image.id,
-      src: image.localOptimized.md,
-      full: image.localOptimized.lg || image.localOptimized.md,
-      blur: image.blur,
-      width: image.width,
-      height: image.height,
-      aspectRatio: image.aspectRatio,
-      alt: imageAlt(image),
-    }));
+    .slice(0, 26);
+  const leadImages = modelingLeads.flatMap((id) =>
+    gallery.filter((image) => image.id === id),
+  );
+  const remainingImages = gallery.filter(
+    (image) => !modelingLeads.includes(image.id),
+  );
 
   return (
     <DorvellShell>
-      <div className="route-page modeling-route">
-        <ModelingExperience images={roomImages} curated={curated} />
-        <ModelingMotionStrip />
-      </div>
+      <ModelingExperience
+        images={[...leadImages, ...remainingImages].map(toPhotoGalleryImage)}
+      />
     </DorvellShell>
   );
 }
