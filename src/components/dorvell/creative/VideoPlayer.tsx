@@ -1,7 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { cn } from "@/lib/cn";
 import { resolveCreativeAsset } from "@/lib/creative-assets";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
@@ -25,6 +31,7 @@ export type VideoPlayerProps = {
   priority?: boolean;
   startMuted?: boolean;
   className?: string;
+  ambientPauseClassName?: string;
   /** Frame aspect wrapper; pass false when the parent already sets aspect. */
   framed?: boolean;
 };
@@ -46,10 +53,14 @@ export function VideoPlayer({
   priority = false,
   startMuted = true,
   className,
+  ambientPauseClassName,
   framed = true,
 }: VideoPlayerProps) {
   const reducedMotion = usePrefersReducedMotion();
-  const { ref: viewRef, inView } = useInView<HTMLDivElement>({ rootMargin: "220px 0px", threshold: 0.2 });
+  const { ref: viewRef, inView } = useInView<HTMLDivElement>({
+    rootMargin: "220px 0px",
+    threshold: 0.2,
+  });
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [playing, setPlaying] = useState(false);
@@ -61,7 +72,9 @@ export function VideoPlayer({
 
   // desktop gets the near-original HD cut, mobile the compressed one
   const isMobile = useIsMobile();
-  const videoSrc = resolveCreativeAsset(isMobile ? item.mobileSrc : item.mp4Src);
+  const videoSrc = resolveCreativeAsset(
+    isMobile ? item.mobileSrc : item.mp4Src,
+  );
   const poster = resolveCreativeAsset(item.posterSrc);
 
   // pause when the tab is hidden (setState only inside the event callback)
@@ -73,7 +86,8 @@ export function VideoPlayer({
 
   const visible = inView && !pageHidden;
   let shouldPlay: boolean;
-  if (!visible) shouldPlay = false; // always pause offscreen / hidden
+  if (!visible)
+    shouldPlay = false; // always pause offscreen / hidden
   else if (override === "play") shouldPlay = true;
   else if (override === "pause") shouldPlay = false;
   else shouldPlay = mode === "ambient" && active && !reducedMotion; // auto
@@ -145,7 +159,10 @@ export function VideoPlayer({
         video.currentTime = Math.max(0, video.currentTime - step);
         event.preventDefault();
       } else if (event.key === "ArrowRight") {
-        video.currentTime = Math.min(video.duration || item.duration, video.currentTime + step);
+        video.currentTime = Math.min(
+          video.duration || item.duration,
+          video.currentTime + step,
+        );
         event.preventDefault();
       }
     },
@@ -155,12 +172,19 @@ export function VideoPlayer({
   // The clip's true ratio, published to CSS so a frame is always shaped like
   // the film inside it. With this set, `object-fit: contain` produces no bars
   // — the work is never cropped and never letterboxed.
-  const ratioStyle = { "--cw-ar": `${item.width} / ${item.height}` } as CSSProperties;
+  const ratioStyle = {
+    "--cw-ar": `${item.width} / ${item.height}`,
+  } as CSSProperties;
 
   const inner = (
     <div
       ref={viewRef}
-      className={cn("cw-video", fit === "contain" && "is-fit-contain", playing && "is-playing", className)}
+      className={cn(
+        "cw-video",
+        fit === "contain" && "is-fit-contain",
+        playing && "is-playing",
+        className,
+      )}
       style={ratioStyle}
     >
       <Image
@@ -194,7 +218,9 @@ export function VideoPlayer({
                   // ambient clips (controls=false) must not re-render ~4×/second.
                   const video = event.currentTarget;
                   setCurrent(video.currentTime);
-                  setProgress(video.duration ? video.currentTime / video.duration : 0);
+                  setProgress(
+                    video.duration ? video.currentTime / video.duration : 0,
+                  );
                 }
               : undefined
           }
@@ -204,7 +230,12 @@ export function VideoPlayer({
       ) : null}
 
       {!playing ? (
-        <button type="button" className="cw-video__play" onClick={togglePlay} aria-label={`Play ${item.title}`}>
+        <button
+          type="button"
+          className="cw-video__play"
+          onClick={togglePlay}
+          aria-label={`Play ${item.title}`}
+        >
           <span className="cw-video__play-disc">
             <PlayIcon />
           </span>
@@ -215,7 +246,7 @@ export function VideoPlayer({
       {playing && !controls ? (
         <button
           type="button"
-          className="cw-video__ambient-pause"
+          className={cn("cw-video__ambient-pause", ambientPauseClassName)}
           onClick={togglePlay}
           aria-label={`Pause ${item.title}`}
         >
@@ -225,11 +256,21 @@ export function VideoPlayer({
 
       {controls ? (
         <div className="cw-video__controls">
-          <button type="button" className="cw-ctrl" onClick={togglePlay} aria-label={playing ? "Pause" : "Play"}>
+          <button
+            type="button"
+            className="cw-ctrl"
+            onClick={togglePlay}
+            aria-label={playing ? "Pause" : "Play"}
+          >
             {playing ? <PauseIcon /> : <PlayIcon />}
           </button>
           {item.hasAudio ? (
-            <button type="button" className="cw-ctrl" onClick={toggleMute} aria-label={muted ? "Unmute" : "Mute"}>
+            <button
+              type="button"
+              className="cw-ctrl"
+              onClick={toggleMute}
+              aria-label={muted ? "Unmute" : "Mute"}
+            >
               {muted ? <MutedIcon /> : <SoundIcon />}
             </button>
           ) : null}
@@ -247,7 +288,10 @@ export function VideoPlayer({
             onPointerDown={onScrubPointer}
             onKeyDown={onScrubKey}
           >
-            <div className="cw-video__scrub-fill" style={{ transform: `scaleX(${progress})` }} />
+            <div
+              className="cw-video__scrub-fill"
+              style={{ transform: `scaleX(${progress})` }}
+            />
           </div>
         </div>
       ) : null}
@@ -256,7 +300,10 @@ export function VideoPlayer({
 
   if (!framed) return inner;
   return (
-    <div className={cn("cw-frame", `cw-frame--${item.orientation}`)} style={ratioStyle}>
+    <div
+      className={cn("cw-frame", `cw-frame--${item.orientation}`)}
+      style={ratioStyle}
+    >
       {inner}
     </div>
   );

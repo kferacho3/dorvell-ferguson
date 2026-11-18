@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
 import { CreativeExperience } from "@/components/dorvell/creative/CreativeExperience";
-import { filmIndexItems, heroCreativeItem } from "@/content/creative";
+import { heroCreativeItem } from "@/content/creative";
 import { resolveCreativeAsset } from "@/lib/creative-assets";
 
-const feature = filmIndexItems[0] ?? heroCreativeItem;
+const feature = heroCreativeItem;
 const poster = resolveCreativeAsset(feature.posterSrc);
 const description =
   "Watch short films, motion and editing studies, and creative photoshoots by Dorvell Ferguson Jr.";
@@ -36,7 +36,9 @@ export const metadata: Metadata = {
 export default function CreativePage() {
   return (
     <DorvellShell>
-      <CreativeExperience />
+      <div className="creative-route">
+        <CreativeExperience />
+      </div>
     </DorvellShell>
   );
 }

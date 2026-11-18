@@ -28,7 +28,9 @@ export function ModelingContactSheet({ images }: ModelingContactSheetProps) {
     if (!grid) return;
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
-    const items = Array.from(grid.querySelectorAll<HTMLElement>(".modeling-sheet__cell"));
+    const items = Array.from(
+      grid.querySelectorAll<HTMLElement>(".modeling-sheet__cell"),
+    );
     let raf = 0;
     let running = false;
     const pointer = { x: -1, y: -1, tx: -1, ty: -1, inside: false };
@@ -99,9 +101,7 @@ export function ModelingContactSheet({ images }: ModelingContactSheetProps) {
   return (
     <section className="modeling-sheet" aria-labelledby="modeling-sheet-title">
       <header className="modeling-sheet__head">
-        <p className="modeling-kicker">The archive</p>
-        <h2 id="modeling-sheet-title">Contact sheet, kept in the dark.</h2>
-        <p className="modeling-sheet__note">Move across the sheet — frames develop where you look.</p>
+        <h2 id="modeling-sheet-title">Contact sheet</h2>
       </header>
       <ul className="modeling-sheet__grid" ref={gridRef}>
         {cells.map((image) => (
@@ -114,7 +114,9 @@ export function ModelingContactSheet({ images }: ModelingContactSheetProps) {
               sizes="(min-width: 1100px) 16vw, 30vw"
               unoptimized
               loading="lazy"
-              {...(image.blur ? { placeholder: "blur" as const, blurDataURL: image.blur } : {})}
+              {...(image.blur
+                ? { placeholder: "blur" as const, blurDataURL: image.blur }
+                : {})}
             />
           </li>
         ))}

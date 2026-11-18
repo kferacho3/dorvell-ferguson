@@ -10,6 +10,7 @@ import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { usePortfolioData } from "./PortfolioModeProvider";
 import { usePortfolioFilters, usePortfolioMode } from "./portfolioMode";
 import { useHoverTrail } from "./useHoverTrail";
+import { galleryDisclosureSummary } from "./GallerySelect";
 
 /**
  * Section 2 — the elevated category navigator / proof strip. Each card shows a
@@ -35,7 +36,9 @@ export function PortfolioCategoryNav() {
   const trailSrcs = useMemo(
     () =>
       categories.flatMap((def) =>
-        (samples.get(def.category) ?? []).slice(0, 2).map((image) => image.localOptimized.sm),
+        (samples.get(def.category) ?? [])
+          .slice(0, 2)
+          .map((image) => image.localOptimized.sm),
       ),
     [categories, samples],
   );
@@ -47,24 +50,17 @@ export function PortfolioCategoryNav() {
 
   if (categories.length === 0) return null;
 
-  const proof = categories.slice(0, 6).map((def) => def.label).join(" • ");
-
   return (
-    <section className="pf-section pf-catnav" aria-labelledby="pf-catnav-title">
-      <div className="pf-container">
-        <div className="pf-section__head">
-          <div>
-            <p className="pf-eyebrow">The Range</p>
-            <h2 id="pf-catnav-title">Choose a way in.</h2>
-            <p>Every category is a live room. Pick one to filter the whole page, or keep it on All.</p>
-          </div>
-          <p className="pf-proofline">
-            <span>{proof}</span>
-          </p>
-        </div>
-
+    <details className="group min-w-0 open:basis-full">
+      <summary className={galleryDisclosureSummary}>
+        Browse by image
+        <span aria-hidden="true" className="group-open:rotate-180">
+          ⌄
+        </span>
+      </summary>
+      <div className="pf-catnav mt-4">
         <div className="pf-catnav__grid" ref={gridRef}>
-          {categories.map((def, index) => {
+          {categories.map((def) => {
             const frames = samples.get(def.category) ?? [];
             const active = category === def.category;
             return (
@@ -74,9 +70,18 @@ export function PortfolioCategoryNav() {
                 aria-pressed={active}
                 className={cn("pf-catcard", active && "is-active")}
                 style={{ "--lane-accent": def.accent } as CSSProperties}
-                onClick={() => setCategory(active ? "All" : def.category)}
+                onClick={(event) => {
+                  setCategory(active ? "All" : def.category);
+                  event.currentTarget
+                    .closest("details")
+                    ?.removeAttribute("open");
+                  document.getElementById("portfolio-category-filter")?.focus();
+                }}
               >
-                <span className="pf-catcard__frames pf-frame pf-frame--cover" aria-hidden="true">
+                <span
+                  className="pf-catcard__frames pf-frame pf-frame--cover"
+                  aria-hidden="true"
+                >
                   {frames[0] ? (
                     <Image
                       className="pf-catcard__base"
@@ -100,12 +105,9 @@ export function PortfolioCategoryNav() {
                   ) : null}
                 </span>
                 <span className="pf-catcard__body">
-                  <em>{String(index + 1).padStart(2, "0")}</em>
                   <strong>{def.label}</strong>
-                  <small>{def.descriptor}</small>
                   <span className="pf-catcard__count">
                     {def.count} {def.count === 1 ? "frame" : "frames"}
-                    {def.crossLinkHref ? " · also on Modeling" : ""}
                   </span>
                 </span>
               </button>
@@ -113,6 +115,6 @@ export function PortfolioCategoryNav() {
           })}
         </div>
       </div>
-    </section>
+    </details>
   );
 }

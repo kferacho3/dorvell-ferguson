@@ -1,0 +1,243 @@
+/* =====================================================================
+   FEATURED FILM · video-first stage (Creative Hub)
+   Collapsed = ~3/4 stage. Open details retract the stage to ~2/3 and
+   reveal a slim panel. Grid fr tracks carry the size change — no width /
+   height / max-height animation.
+   ===================================================================== */
+
+.cw-featured {
+  border-top: 1px solid var(--cw-line);
+  padding-block: clamp(3.5rem, 8vw, 6.5rem);
+}
+
+.cw-featured__shell {
+  --cw-featured-pad: clamp(1.15rem, 4vw, 3rem);
+  width: min(100% - 2 * var(--cw-featured-pad), 1480px);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 0fr;
+  gap: 0;
+  align-items: start;
+  transition:
+    grid-template-columns 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    gap 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cw-featured--open .cw-featured__shell {
+  /* 3/4 stage · 1/4 details — still ≥ 2/3 video */
+  grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+}
+
+/* Beat creative.css `.cw-featured__stage { max-width: 460px }` on small screens. */
+.cw-featured .cw-featured__stage {
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  display: grid;
+  gap: clamp(0.85rem, 2vw, 1.25rem);
+  justify-items: center;
+  text-align: center;
+}
+
+.cw-featured__chrome {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: center;
+  max-width: 36ch;
+}
+
+.cw-featured__chrome .cw-eyebrow {
+  justify-content: center;
+}
+
+.cw-featured__chrome .cw-eyebrow::before {
+  display: none;
+}
+
+.cw-featured__chrome .cw-eyebrow::after {
+  content: "";
+  width: 1.4rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.cw-featured__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.cw-featured__canvas {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--cw-line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px color-mix(in srgb, var(--cw-teal) 14%, transparent);
+}
+
+.cw-featured--open .cw-featured__canvas {
+  max-width: none;
+}
+
+/* Portrait films keep their shape — never letterboxed into landscape. */
+.cw-featured__canvas:has(.fp--portrait) {
+  aspect-ratio: 4 / 5;
+  max-width: min(560px, 70%);
+  margin-inline: auto;
+}
+
+.cw-featured--open .cw-featured__canvas:has(.fp--portrait) {
+  max-width: min(480px, 100%);
+}
+
+.cw-featured__toolbar {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: center;
+  width: 100%;
+}
+
+.cw-featured__index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: 0;
+}
+
+.cw-featured__actions {
+  justify-content: center;
+}
+
+.cw-featured__actions .cw-btn.is-active {
+  border-color: var(--cw-teal);
+  color: var(--cw-ink);
+  background: color-mix(in srgb, var(--cw-teal) 14%, transparent);
+}
+
+/* Collapsed panel is fully out of flow — no leftover word-wall. */
+.cw-featured__panel {
+  display: none;
+  min-width: 0;
+  min-height: 0;
+}
+
+.cw-featured--open .cw-featured__panel {
+  display: block;
+}
+
+.cw-featured__panel-inner {
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+  width: min(100%, 340px);
+  padding-block: 0.25rem;
+  text-align: left;
+}
+
+.cw-featured__lede {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  line-height: 1.5;
+  color: var(--cw-soft);
+}
+
+.cw-featured__panel .fv-specs {
+  --fv-line: var(--cw-line);
+  --fv-muted: var(--cw-muted);
+  --fv-ink: var(--cw-ink);
+  padding: 0.7rem 0;
+  margin: 0;
+}
+
+.cw-featured__panel .fv-specs--compact .fv-specs__row {
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+}
+
+.cw-featured__fold {
+  margin: 0;
+  border: 1px solid var(--cw-line);
+  border-radius: 12px;
+  padding: 0.65rem 0.85rem;
+  background: color-mix(in srgb, var(--cw-ink) 2.5%, transparent);
+}
+
+.cw-featured__fold summary {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cw-muted);
+  cursor: pointer;
+}
+
+.cw-featured__fold summary:focus-visible {
+  outline: 2px solid var(--cw-teal);
+  outline-offset: 3px;
+}
+
+.cw-featured__fold p {
+  margin: 0.65rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--cw-soft);
+}
+
+.cw-featured__panel-actions {
+  flex-wrap: wrap;
+}
+
+.cw-featured__follow {
+  margin-top: 0.15rem;
+}
+
+.cw-featured__count {
+  margin-left: 0.35rem;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cw-featured__runtime {
+  margin-left: 0.4rem;
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 960px) {
+  .cw-featured__shell,
+  .cw-featured--open .cw-featured__shell {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .cw-featured__panel-inner {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .cw-featured__canvas:has(.fp--portrait),
+  .cw-featured--open .cw-featured__canvas:has(.fp--portrait) {
+    max-width: min(380px, 86vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-featured__shell {
+    transition: none;
+  }
+}

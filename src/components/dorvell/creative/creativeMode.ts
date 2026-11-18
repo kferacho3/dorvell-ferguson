@@ -20,64 +20,15 @@ export type CreativeMode = "cinematic" | "calm";
 export const CREATIVE_MODES: readonly {
   key: CreativeMode;
   label: string;
-  tagline: string;
 }[] = [
-  { key: "cinematic", label: "Cinematic", tagline: "Motion, scenes, atmosphere" },
-  { key: "calm", label: "Calm", tagline: "Quiet, poster-first browsing" },
+  { key: "cinematic", label: "Cinematic" },
+  { key: "calm", label: "Calm" },
 ];
 
 const STORAGE_KEY = "df-creative-mode";
-const DOCK_KEY = "df-creative-mode-docked";
 
 function isMode(value: unknown): value is CreativeMode {
   return value === "cinematic" || value === "calm";
-}
-
-let docked = false;
-let dockInitialized = false;
-const dockListeners = new Set<() => void>();
-
-function emitDock() {
-  for (const listener of dockListeners) listener();
-}
-
-function ensureDockInitialized() {
-  if (dockInitialized || typeof window === "undefined") return;
-  dockInitialized = true;
-  try {
-    // Returning visitors who already picked a mode keep the compact corner chip.
-    docked =
-      window.sessionStorage.getItem(DOCK_KEY) === "1" ||
-      window.localStorage.getItem(STORAGE_KEY) !== null ||
-      window.matchMedia("(max-width: 760px)").matches;
-  } catch {
-    docked = window.matchMedia("(max-width: 760px)").matches;
-  }
-}
-
-export function subscribeCreativeModeDock(listener: () => void): () => void {
-  ensureDockInitialized();
-  dockListeners.add(listener);
-  return () => {
-    dockListeners.delete(listener);
-  };
-}
-
-export function isCreativeModeDocked() {
-  ensureDockInitialized();
-  return docked;
-}
-
-export function dockCreativeModeSwitch() {
-  ensureDockInitialized();
-  if (docked) return;
-  docked = true;
-  try {
-    window.sessionStorage.setItem(DOCK_KEY, "1");
-  } catch {
-    /* session storage unavailable — dock still applies for this page life */
-  }
-  emitDock();
 }
 
 const SERVER_MODE: CreativeMode = "cinematic";
@@ -91,13 +42,17 @@ function emit() {
 }
 
 function prefersCalm(): boolean {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function")
+    return false;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const mobile = window.matchMedia("(max-width: 760px)").matches;
   const saveData =
     typeof navigator !== "undefined" &&
     "connection" in navigator &&
-    Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+    Boolean(
+      (navigator as Navigator & { connection?: { saveData?: boolean } })
+        .connection?.saveData,
+    );
   return reduced || mobile || saveData;
 }
 

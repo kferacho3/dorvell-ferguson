@@ -33,8 +33,11 @@ export function ReelRunway() {
   const [activePanel, setActivePanel] = useState(0);
 
   const enable = mode === "cinematic" && !reducedMotion;
-  const panels = PANELS.map((p) => ({ ...p, item: getCreativeItem(p.slug) })).filter(
-    (p): p is { word: string; slug: string; item: CreativeItem } => Boolean(p.item),
+  const panels = PANELS.map((p) => ({
+    ...p,
+    item: getCreativeItem(p.slug),
+  })).filter((p): p is { word: string; slug: string; item: CreativeItem } =>
+    Boolean(p.item),
   );
 
   useEffect(() => {
@@ -56,7 +59,8 @@ export function ReelRunway() {
         }
         const progress = (center - viewportCenter) / window.innerHeight;
         const word = wordRefs.current[index];
-        if (word) word.style.transform = `translate3d(${progress * -28}%, 0, 0)`;
+        if (word)
+          word.style.transform = `translate3d(${progress * -28}%, 0, 0)`;
       });
       setActivePanel((prev) => (prev === best ? prev : best));
     };
@@ -106,17 +110,19 @@ export function ReelRunway() {
           </span>
 
           <div className="cw-reel__cap">
-            <div>
-              <p className="cw-reel__cap-title">{panel.item.title}</p>
-              <p className="cw-reel__cap-meta">{panel.item.category}</p>
-            </div>
+            <p className="cw-reel__cap-title">{panel.item.title}</p>
             <button
               type="button"
-              className="cw-btn cw-btn--ghost cw-reel__open"
-              onClick={() => open(panel.item, panels.map((p) => p.item))}
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[var(--cw-ink)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--cw-teal)] [&_svg]:size-4"
+              onClick={() =>
+                open(
+                  panel.item,
+                  panels.map((p) => p.item),
+                )
+              }
               aria-label={`Open ${panel.item.title}`}
             >
-              Open <ExpandIcon />
+              Watch <ExpandIcon />
             </button>
           </div>
         </div>

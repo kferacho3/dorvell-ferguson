@@ -1,42 +1,17 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
-import {
-  CREATIVE_MODES,
-  dockCreativeModeSwitch,
-  useCreativeMode,
-  type CreativeMode,
-} from "./creativeMode";
+import { CREATIVE_MODES, useCreativeMode } from "./creativeMode";
 
-/**
- * Cinematic / Calm toggle. Picking a mode from the hero variant smooth-scrolls
- * to the gallery body so the change is unmistakable, then docks the chrome
- * control into the corner so it stops covering the work.
- */
-export function CreativeModeSwitch({
-  className,
-  variant = "bar",
-}: {
-  className?: string;
-  variant?: "hero" | "bar";
-}) {
+export function CreativeModeSwitch() {
   const { mode, setMode } = useCreativeMode();
-  const reducedMotion = usePrefersReducedMotion();
-
-  const onSelect = (next: CreativeMode) => {
-    setMode(next);
-    dockCreativeModeSwitch();
-    if (variant === "hero" && typeof document !== "undefined") {
-      document.getElementById("cw-body")?.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
-        block: "start",
-      });
-    }
-  };
 
   return (
-    <div className={cn("cw-modeswitch", className)} role="group" aria-label="Creative experience mode">
+    <div
+      className="cw-modeswitch !p-0.5"
+      role="group"
+      aria-label="Creative experience mode"
+    >
       {CREATIVE_MODES.map((option) => {
         const active = mode === option.key;
         return (
@@ -44,13 +19,13 @@ export function CreativeModeSwitch({
             key={option.key}
             type="button"
             aria-pressed={active}
-            className={cn("cw-modeswitch__btn", active && "is-active")}
-            onClick={() => onSelect(option.key)}
+            className={cn(
+              "cw-modeswitch__btn !min-h-11 !px-2.5 text-xs font-semibold sm:!px-3",
+              active && "is-active",
+            )}
+            onClick={() => setMode(option.key)}
           >
-            <span className="cw-modeswitch__label">
-              <strong>{option.label}</strong>
-              <small>{option.tagline}</small>
-            </span>
+            {option.label}
           </button>
         );
       })}

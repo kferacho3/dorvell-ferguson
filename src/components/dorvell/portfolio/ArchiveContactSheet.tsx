@@ -13,11 +13,12 @@ import { usePortfolioFilters } from "./portfolioMode";
 export function ArchiveContactSheet() {
   const images = useFilteredImages();
   const { category } = usePortfolioFilters();
-  const scopeLabel = category === "All" ? undefined : getCategoryDef(category).label;
+  const scopeLabel =
+    category === "All" ? undefined : getCategoryDef(category).label;
 
   return (
     <div className="pf-archive" id="pf-archive">
-      <WorkArchive images={images} scopeLabel={scopeLabel} variant="full" />
+      <WorkArchive images={images} scopeLabel={scopeLabel} filterable={false} />
     </div>
   );
 }

@@ -1,24 +1,45 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { DorvellImage } from "@/content/dorvell.schema";
 import { cn } from "@/lib/cn";
 import { blurImageProps, imageAlt } from "@/lib/images";
-import { buildGalleryLanes, galleryLaneDefinitions, laneKeyForImage, type GalleryLaneKey } from "@/lib/gallery-lanes";
+import {
+  buildGalleryLanes,
+  galleryLaneDefinitions,
+  laneKeyForImage,
+  type GalleryLaneKey,
+} from "@/lib/gallery-lanes";
 import { ImageCard } from "./ImageCard";
 import { ImmersiveLightbox } from "./ImmersiveLightbox";
 import { useImageWarmup } from "./useImageWarmup";
+import {
+  GallerySelect,
+  galleryDisclosureSummary,
+} from "./portfolio/GallerySelect";
+import { PhotographyCollections } from "./portfolio/PhotographyCollections";
 
-const modes = ["grid", "focus", "contact", "carousel"] as const;
+const viewModes = [
+  { value: "grid", label: "Grid" },
+  { value: "focus", label: "Focus" },
+  { value: "contact", label: "Contact sheet" },
+  { value: "carousel", label: "Carousel" },
+] as const;
 const GRID_CHUNK = 72;
 const MINIMAP_CAP = 120;
 const FOCUS_RAIL_WINDOW = 40;
 const densityModes = [
-  { key: "tight", label: "50%", detail: "dense scan" },
-  { key: "editorial", label: "75%", detail: "balanced" },
-  { key: "billboard", label: "125%", detail: "large frames" },
+  { value: "tight", label: "Compact" },
+  { value: "editorial", label: "Standard" },
+  { value: "billboard", label: "Large" },
 ] as const;
 type ArchiveFilter = GalleryLaneKey | "All";
 type LightboxOrigin = { x: number; y: number; width: number; height: number };
@@ -29,6 +50,7 @@ type WorkArchiveProps = {
   scopeLabel?: string;
   /** Lane pages: drop the tall heading, flow strip, and dead filter chips. */
   compact?: boolean;
+  filterable?: boolean;
   variant?: "full" | "preview";
 };
 
@@ -37,11 +59,20 @@ function originFromElement(element: Element): LightboxOrigin {
   return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
 }
 
-export function WorkArchive({ images, scopeLabel, compact = false, variant = "full" }: WorkArchiveProps) {
+export function WorkArchive({
+  images,
+  scopeLabel,
+  compact = false,
+  filterable = true,
+  variant = "full",
+}: WorkArchiveProps) {
   const [filter, setFilter] = useState<ArchiveFilter>("All");
-  const [mode, setMode] = useState<(typeof modes)[number]>("grid");
-  const [density, setDensity] = useState<(typeof densityModes)[number]["key"]>("editorial");
-  const [lightboxState, setLightboxState] = useState<LightboxState | null>(null);
+  const [mode, setMode] = useState<(typeof viewModes)[number]["value"]>("grid");
+  const [density, setDensity] =
+    useState<(typeof densityModes)[number]["value"]>("editorial");
+  const [lightboxState, setLightboxState] = useState<LightboxState | null>(
+    null,
+  );
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [pointerMap, setPointerMap] = useState<PointerMap | null>(null);
@@ -52,25 +83,35 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
   const archiveScopeLabel = scopeLabel?.trim();
 
   useEffect(() => {
+    if (!filterable || compact) return;
     const applyHash = (scrollToArchive = false) => {
       const slug = window.location.hash.replace("#", "");
-      const lane = galleryLaneDefinitions.find((definition) => definition.slug === slug);
+      const lane = galleryLaneDefinitions.find(
+        (definition) => definition.slug === slug,
+      );
       if (!lane) return;
       setFilter(lane.key);
 
       if (scrollToArchive && window.location.pathname === "/work") {
         window.requestAnimationFrame(() => {
-          document.getElementById("archive")?.scrollIntoView({ block: "start" });
+          document
+            .getElementById("archive")
+            ?.scrollIntoView({ block: "start" });
         });
       }
     };
 
     const onHashChange = () => applyHash(window.location.pathname === "/work");
     const onHashLinkClick = (event: MouseEvent) => {
-      const target = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href]") : null;
+      const target =
+        event.target instanceof Element
+          ? event.target.closest<HTMLAnchorElement>("a[href]")
+          : null;
       const href = target?.getAttribute("href") ?? "";
       const hash = href.includes("#") ? href.split("#").pop() : "";
-      const lane = galleryLaneDefinitions.find((definition) => definition.slug === hash);
+      const lane = galleryLaneDefinitions.find(
+        (definition) => definition.slug === hash,
+      );
       if (lane) window.setTimeout(() => applyHash(true), 40);
     };
 
@@ -83,16 +124,20 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
       window.removeEventListener("popstate", onHashChange);
       document.removeEventListener("click", onHashLinkClick);
     };
-  }, []);
+  }, [compact, filterable]);
 
   const filtered = useMemo(
-    () => images.filter((image) => filter === "All" || laneKeyForImage(image) === filter),
+    () =>
+      images.filter(
+        (image) => filter === "All" || laneKeyForImage(image) === filter,
+      ),
     [filter, images],
   );
 
   // Evenly sampled minimap entries so the cursor map never renders thousands of buttons.
   const minimapEntries = useMemo(() => {
-    if (filtered.length <= MINIMAP_CAP) return filtered.map((image, index) => ({ image, index }));
+    if (filtered.length <= MINIMAP_CAP)
+      return filtered.map((image, index) => ({ image, index }));
     const step = (filtered.length - 1) / (MINIMAP_CAP - 1);
     return Array.from({ length: MINIMAP_CAP }, (_, sampleIndex) => {
       const index = Math.round(sampleIndex * step);
@@ -108,7 +153,9 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          setVisibleCount((count) => Math.min(count + GRID_CHUNK, filtered.length));
+          setVisibleCount((count) =>
+            Math.min(count + GRID_CHUNK, filtered.length),
+          );
         }
       },
       { rootMargin: "640px 0px" },
@@ -117,25 +164,43 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
     return () => observer.disconnect();
   }, [visibleCount, filtered.length, mode, density]);
 
-  const activeLaneLabel = lanes.find((lane) => lane.key === filter)?.label ?? filter;
-  const filterLabel = filter === "All" ? (archiveScopeLabel ? `the ${archiveScopeLabel} exhibit` : "all galleries") : activeLaneLabel;
-  const mapFilterLabel = filter === "All" ? (archiveScopeLabel ? "Full exhibit" : "All galleries") : activeLaneLabel;
+  const activeLaneLabel =
+    lanes.find((lane) => lane.key === filter)?.label ?? filter;
+  const filterLabel =
+    filter === "All"
+      ? archiveScopeLabel
+        ? `the ${archiveScopeLabel} exhibit`
+        : "all galleries"
+      : activeLaneLabel;
+  const mapFilterLabel =
+    filter === "All"
+      ? archiveScopeLabel
+        ? "Full exhibit"
+        : "All galleries"
+      : activeLaneLabel;
   const frameLabel = filtered.length === 1 ? "frame" : "frames";
-  const archiveTitle =
-    variant === "preview"
-      ? "The archive breathes in four directions."
-      : archiveScopeLabel
-        ? "Exhibit contact sheet."
-        : "Full working archive.";
-  const selectedFocusIndex = filtered.length > 0 ? Math.min(focusIndex ?? 0, filtered.length - 1) : 0;
-  const activePreviewIndex = filtered.length > 0 ? Math.min(previewIndex ?? focusIndex ?? 0, filtered.length - 1) : 0;
+  const archiveTitle = archiveScopeLabel ? "Contact sheet" : "Photo archive";
+  const selectedFocusIndex =
+    filtered.length > 0 ? Math.min(focusIndex ?? 0, filtered.length - 1) : 0;
+  const activePreviewIndex =
+    filtered.length > 0
+      ? Math.min(previewIndex ?? focusIndex ?? 0, filtered.length - 1)
+      : 0;
   const previewImage = filtered[activePreviewIndex];
-  const previewProgress = filtered.length > 1 ? activePreviewIndex / (filtered.length - 1) : 0;
+  const previewProgress =
+    filtered.length > 1 ? activePreviewIndex / (filtered.length - 1) : 0;
   const previewLaneKey = previewImage ? laneKeyForImage(previewImage) : null;
-  const previewLane = previewLaneKey ? galleryLaneDefinitions.find((definition) => definition.key === previewLaneKey) : null;
+  const previewLane = previewLaneKey
+    ? galleryLaneDefinitions.find(
+        (definition) => definition.key === previewLaneKey,
+      )
+    : null;
   const flowFrames = filtered.slice(0, 16);
   const calmPreviewFrames = filtered.slice(0, 6);
-  const focusWarmupUrls = useMemo(() => filtered.slice(0, 18).map((image) => image.localOptimized.md), [filtered]);
+  const focusWarmupUrls = useMemo(
+    () => filtered.slice(0, 18).map((image) => image.localOptimized.md),
+    [filtered],
+  );
   const cursorX = pointerMap?.x ?? 0.5;
   const cursorY = pointerMap?.y ?? 0.5;
 
@@ -150,7 +215,7 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
     setVisibleCount(GRID_CHUNK);
   };
 
-  const selectMode = (nextMode: (typeof modes)[number]) => {
+  const selectMode = (nextMode: (typeof viewModes)[number]["value"]) => {
     setMode(nextMode);
     setFocusIndex(null);
     setPreviewIndex(null);
@@ -161,26 +226,48 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
 
   if (variant === "preview") {
     return (
-      <section className="archive-section archive-preview archive-preview--calm" aria-labelledby="archive-title" id="archive">
+      <section
+        className="archive-section archive-preview archive-preview--calm"
+        aria-labelledby="archive-title"
+        id="archive"
+      >
         <div className="section-heading archive-heading archive-heading--calm">
           <div>
             <p className="eyebrow">Selected Work</p>
             <h2 id="archive-title">Less interface. More photograph.</h2>
-            <p>{filtered.length} selected frames held back for a quieter first pass.</p>
+            <p>
+              {filtered.length} selected frames held back for a quieter first
+              pass.
+            </p>
           </div>
           <Link href="/work">Open full archive</Link>
         </div>
 
-        <div className="archive-preview-gallery" aria-label="Selected portfolio frames">
+        <div
+          className="archive-preview-gallery"
+          aria-label="Selected portfolio frames"
+        >
           {calmPreviewFrames.map((image, index) => {
-            const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
+            const lane = galleryLaneDefinitions.find(
+              (definition) => definition.key === laneKeyForImage(image),
+            );
             return (
               <button
                 aria-label={`Open ${lane?.label ?? image.category} selected image ${index + 1}`}
                 className="archive-preview-card"
                 key={image.id}
-                onClick={(event) => setLightboxState({ index, origin: originFromElement(event.currentTarget) })}
-                style={{ "--lane-accent": lane?.accent ?? "#35e0bb", "--card-index": index } as CSSProperties}
+                onClick={(event) =>
+                  setLightboxState({
+                    index,
+                    origin: originFromElement(event.currentTarget),
+                  })
+                }
+                style={
+                  {
+                    "--lane-accent": lane?.accent ?? "#35e0bb",
+                    "--card-index": index,
+                  } as CSSProperties
+                }
                 type="button"
               >
                 <Image
@@ -208,7 +295,11 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
             index={lightboxState.index}
             origin={lightboxState.origin}
             onClose={() => setLightboxState(null)}
-            onNavigate={(index) => setLightboxState((current) => (current ? { ...current, index } : { index }))}
+            onNavigate={(index) =>
+              setLightboxState((current) =>
+                current ? { ...current, index } : { index },
+              )
+            }
           />
         ) : null}
       </section>
@@ -218,7 +309,10 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
   const remainingCount = Math.max(0, filtered.length - visibleCount);
   const railStart = Math.max(
     0,
-    Math.min(selectedFocusIndex - Math.floor(FOCUS_RAIL_WINDOW / 2), filtered.length - FOCUS_RAIL_WINDOW),
+    Math.min(
+      selectedFocusIndex - Math.floor(FOCUS_RAIL_WINDOW / 2),
+      filtered.length - FOCUS_RAIL_WINDOW,
+    ),
   );
   const focusRailEntries = filtered
     .slice(railStart, railStart + FOCUS_RAIL_WINDOW)
@@ -243,7 +337,6 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
       ) : (
         <div className="section-heading archive-heading">
           <div>
-            <p className="eyebrow">Archive</p>
             <h2 id="archive-title">{archiveTitle}</h2>
             <p>
               {filtered.length} {frameLabel} in {filterLabel}.
@@ -253,80 +346,68 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
       )}
 
       <div className="archive-controls">
-        {compact ? (
-          <nav className="filter-row filter-row--lanes" aria-label="Other portfolio lanes">
-            <Link href="/work" className="filter-row__link">
-              Full archive
-            </Link>
-            {galleryLaneDefinitions.map((lane) => (
-              <Link
-                key={lane.key}
-                href={lane.href}
-                className={cn("filter-row__link", lane.label === archiveScopeLabel && "is-active")}
-                style={{ "--lane-accent": lane.accent } as CSSProperties}
-                aria-current={lane.label === archiveScopeLabel ? "page" : undefined}
-              >
-                {lane.label}
-              </Link>
-            ))}
-          </nav>
-        ) : (
-          <div className="filter-row" aria-label="Filter archive">
-            <button
-              type="button"
-              className={filter === "All" ? "is-active" : ""}
-              onClick={() => selectFilter("All")}
-            >
-              {archiveScopeLabel ? "Full exhibit" : "All galleries"}
-            </button>
-            {lanes.map((lane) => (
-              <button
-                key={lane.key}
-                type="button"
-                className={filter === lane.key ? "is-active" : ""}
-                onClick={() => selectFilter(lane.key)}
-                style={{ "--lane-accent": lane.accent } as CSSProperties}
-              >
-                {lane.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <div className="archive-view-switches">
-          <div className="mode-toggle" aria-label="Archive view mode">
-            {modes.map((nextMode) => (
-              <button
-                key={nextMode}
-                type="button"
-                className={mode === nextMode ? "is-active" : ""}
-                onClick={() => selectMode(nextMode)}
-              >
-                {nextMode}
-              </button>
-            ))}
-          </div>
-          <div className="density-toggle" aria-label="Archive grid density">
-            {densityModes.map((densityMode) => (
-              <button
-                aria-pressed={density === densityMode.key}
-                className={density === densityMode.key ? "is-active" : ""}
-                key={densityMode.key}
-                onClick={() => setDensity(densityMode.key)}
-                type="button"
-                title={densityMode.detail}
-              >
-                <strong>{densityMode.label}</strong>
-                {compact ? null : <span>{densityMode.detail}</span>}
-              </button>
-            ))}
-          </div>
+        <div className="flex w-full flex-wrap items-start gap-3">
+          {compact ? (
+            <PhotographyCollections
+              current={
+                galleryLaneDefinitions.find(
+                  ({ label }) => label === archiveScopeLabel,
+                )?.key
+              }
+            />
+          ) : null}
+          {!compact && filterable ? (
+            <div className="min-w-[10rem] max-w-full">
+              <GallerySelect
+                label="Category"
+                value={filter}
+                options={[
+                  { value: "All", label: "All photos" },
+                  ...lanes
+                    .filter((lane) => lane.images.length > 0)
+                    .map(({ key, label }) => ({ value: key, label })),
+                ]}
+                onChange={selectFilter}
+              />
+            </div>
+          ) : null}
+          <details className="group min-w-0">
+            <summary className={galleryDisclosureSummary}>
+              {filterable ? "View options" : "Archive options"}
+              <span aria-hidden="true" className="group-open:rotate-180">
+                ⌄
+              </span>
+            </summary>
+            <div className="mt-2 grid max-w-full gap-2 min-[360px]:grid-cols-2">
+              <GallerySelect
+                label="Layout"
+                value={mode}
+                options={viewModes}
+                onChange={selectMode}
+              />
+              {mode !== "focus" ? (
+                <GallerySelect
+                  label="Image size"
+                  value={density}
+                  options={densityModes}
+                  onChange={setDensity}
+                />
+              ) : null}
+            </div>
+          </details>
         </div>
       </div>
 
       {!compact && flowFrames.length > 0 && mode !== "focus" ? (
-        <div className="archive-flow-register" key={`${filter}-${mode}-flow`} aria-hidden="true">
+        <div
+          className="archive-flow-register"
+          key={`${filter}-${mode}-flow`}
+          aria-hidden="true"
+        >
           {flowFrames.map((image, index) => {
-            const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
+            const lane = galleryLaneDefinitions.find(
+              (definition) => definition.key === laneKeyForImage(image),
+            );
             const drift = ((index % 5) - 2) * 22;
             return (
               <span
@@ -379,7 +460,10 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
               {...blurImageProps(previewImage)}
             />
             <figcaption>
-              <span>{String(activePreviewIndex + 1).padStart(2, "0")} / {String(filtered.length).padStart(2, "0")}</span>
+              <span>
+                {String(activePreviewIndex + 1).padStart(2, "0")} /{" "}
+                {String(filtered.length).padStart(2, "0")}
+              </span>
               <strong>{previewLane?.label ?? previewImage.category}</strong>
               <em>{previewImage.projectTitle}</em>
             </figcaption>
@@ -395,7 +479,9 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
             </div>
             <div className="archive-map-grid">
               {minimapEntries.map(({ image, index }) => {
-                const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
+                const lane = galleryLaneDefinitions.find(
+                  (definition) => definition.key === laneKeyForImage(image),
+                );
                 const isActive = index === activePreviewIndex;
                 return (
                   <button
@@ -404,11 +490,20 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
                     className={isActive ? "is-active" : ""}
                     key={image.id}
                     onBlur={() => setPreviewIndex(null)}
-                    onClick={(event) => setLightboxState({ index, origin: originFromElement(event.currentTarget) })}
+                    onClick={(event) =>
+                      setLightboxState({
+                        index,
+                        origin: originFromElement(event.currentTarget),
+                      })
+                    }
                     onFocus={() => setPreviewIndex(index)}
                     onMouseEnter={() => setPreviewIndex(index)}
                     onMouseLeave={() => setPreviewIndex(null)}
-                    style={{ "--lane-accent": lane?.accent ?? "#35e0bb" } as CSSProperties}
+                    style={
+                      {
+                        "--lane-accent": lane?.accent ?? "#35e0bb",
+                      } as CSSProperties
+                    }
                     type="button"
                   >
                     <span />
@@ -432,10 +527,13 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
               <span className="archive-hover-map__readout">
                 <strong>{pointerMap ? "Hover lock" : "Scan idle"}</strong>
                 <em>
-                  X{String(Math.round(cursorX * 100)).padStart(2, "0")} / Y{String(Math.round(cursorY * 100)).padStart(2, "0")}
+                  X{String(Math.round(cursorX * 100)).padStart(2, "0")} / Y
+                  {String(Math.round(cursorY * 100)).padStart(2, "0")}
                 </em>
               </span>
-              <span className="archive-hover-map__signal">{previewImage.projectTitle}</span>
+              <span className="archive-hover-map__signal">
+                {previewImage.projectTitle}
+              </span>
             </div>
           </div>
         </div>
@@ -445,13 +543,22 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
         <div
           className="archive-focus-mode"
           key={`${filter}-${mode}`}
-          style={{ "--lane-accent": previewLane?.accent ?? "#35e0bb" } as CSSProperties}
+          style={
+            {
+              "--lane-accent": previewLane?.accent ?? "#35e0bb",
+            } as CSSProperties
+          }
         >
           <div className="archive-focus-stage">
             <button
               aria-label={`Open focused ${previewLane?.label ?? previewImage.category} image`}
               className="archive-focus-image"
-              onClick={(event) => setLightboxState({ index: activePreviewIndex, origin: originFromElement(event.currentTarget) })}
+              onClick={(event) =>
+                setLightboxState({
+                  index: activePreviewIndex,
+                  origin: originFromElement(event.currentTarget),
+                })
+              }
               type="button"
             >
               <Image
@@ -475,14 +582,20 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
           </div>
           <div className="archive-focus-rail" aria-label="Focus gallery">
             {focusRailEntries.map(({ image, index }) => {
-              const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKeyForImage(image));
+              const lane = galleryLaneDefinitions.find(
+                (definition) => definition.key === laneKeyForImage(image),
+              );
               const isSelected = index === selectedFocusIndex;
               const isPreviewing = index === activePreviewIndex;
               return (
                 <button
                   aria-current={isSelected ? "true" : undefined}
                   aria-label={`Focus ${lane?.label ?? image.category} image ${index + 1}`}
-                  className={cn("archive-focus-thumb", isSelected && "is-selected", isPreviewing && "is-previewing")}
+                  className={cn(
+                    "archive-focus-thumb",
+                    isSelected && "is-selected",
+                    isPreviewing && "is-previewing",
+                  )}
                   key={image.id}
                   onBlur={() => setPreviewIndex(null)}
                   onClick={() => {
@@ -493,7 +606,11 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
                   onFocus={() => setPreviewIndex(index)}
                   onPointerEnter={() => setPreviewIndex(index)}
                   onPointerLeave={() => setPreviewIndex(null)}
-                  style={{ "--lane-accent": lane?.accent ?? "#35e0bb" } as CSSProperties}
+                  style={
+                    {
+                      "--lane-accent": lane?.accent ?? "#35e0bb",
+                    } as CSSProperties
+                  }
                   type="button"
                 >
                   <Image
@@ -516,13 +633,21 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
         </div>
       ) : (
         <>
-          <div className={cn("archive-grid", `archive-${mode}`, `archive-density-${density}`)} key={`${filter}-${mode}-${density}`}>
+          <div
+            className={cn(
+              "archive-grid",
+              `archive-${mode}`,
+              `archive-density-${density}`,
+            )}
+            key={`${filter}-${mode}-${density}`}
+          >
             {filtered.slice(0, visibleCount).map((image, index) => (
               <ImageCard
                 key={image.id}
                 image={image}
                 index={index}
                 mode={mode}
+                compact={compact}
                 onOpen={(origin) => setLightboxState({ index, origin })}
                 onPreview={setPreviewIndex}
                 onPointerMap={setPointerMap}
@@ -531,10 +656,18 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
           </div>
           {remainingCount > 0 ? (
             <div className="archive-load-more">
-              <div ref={loadMoreRef} className="archive-load-more__sentinel" aria-hidden="true" />
+              <div
+                ref={loadMoreRef}
+                className="archive-load-more__sentinel"
+                aria-hidden="true"
+              />
               <button
                 type="button"
-                onClick={() => setVisibleCount((count) => Math.min(count + GRID_CHUNK, filtered.length))}
+                onClick={() =>
+                  setVisibleCount((count) =>
+                    Math.min(count + GRID_CHUNK, filtered.length),
+                  )
+                }
               >
                 Show more ({remainingCount} remaining)
               </button>
@@ -553,7 +686,11 @@ export function WorkArchive({ images, scopeLabel, compact = false, variant = "fu
           index={lightboxState.index}
           origin={lightboxState.origin}
           onClose={() => setLightboxState(null)}
-          onNavigate={(index) => setLightboxState((current) => (current ? { ...current, index } : { index }))}
+          onNavigate={(index) =>
+            setLightboxState((current) =>
+              current ? { ...current, index } : { index },
+            )
+          }
         />
       ) : null}
     </section>

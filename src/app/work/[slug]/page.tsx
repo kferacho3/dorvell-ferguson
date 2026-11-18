@@ -1,14 +1,12 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import type { CSSProperties } from "react";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
 import { ProjectExhibitHero } from "@/components/dorvell/ProjectExhibitHero";
 import { WorkArchive } from "@/components/dorvell/WorkArchive";
-import { PhotoGallery } from "@/components/dorvell/portfolio/PhotoGallery";
-import { PhotographyCollections } from "@/components/dorvell/portfolio/PhotographyCollections";
-import { toPhotoGalleryImage } from "@/components/dorvell/portfolio/photoGalleryImage";
-import { galleryLaneDefinitions, laneKeyForImage } from "@/lib/gallery-lanes";
+import { buildGalleryLanes, galleryLaneDefinitions } from "@/lib/gallery-lanes";
 import { getPortfolioData, getProject } from "@/lib/portfolio-data";
 import { portfolioImages } from "@/lib/photos/getPublicPhotos";
+import "@/styles/lane-route.css";
 
 // Legacy scrape artifacts that should never resolve as exhibits.
 const hiddenProjectSlugs = new Set(["home-2", "work", "about"]);
@@ -68,33 +66,32 @@ export default async function ProjectPage({
   // Lane pages first: one URL per category, every frame in that lane.
   const laneDefinition = laneForSlug(slug);
   if (laneDefinition) {
-    const images = portfolioImages(data.generated.images)
-      .filter((image) => laneKeyForImage(image) === laneDefinition.key)
-      .map(toPhotoGalleryImage);
+    const archive = portfolioImages(data.generated.images);
+    const lane = buildGalleryLanes(archive).find(
+      (entry) => entry.key === laneDefinition.key,
+    );
+    const laneImages = lane?.images ?? [];
     return (
       <DorvellShell>
-        <div className="bg-[var(--df-bg)]">
-          <div className="mx-auto max-w-[84rem] px-4 pb-16 pt-7 sm:px-8 sm:pt-10 lg:px-12">
-            <header className="mb-5 flex flex-wrap items-end justify-between gap-x-8 gap-y-2 sm:mb-7">
-              <h1 className="text-[clamp(2.75rem,7vw,5.75rem)] font-bold leading-[0.96] tracking-tight [font-family:var(--font-display)]">
-                {laneDefinition.label}
-              </h1>
-              <Link
-                href="/work"
-                className="inline-flex min-h-11 items-center text-sm font-medium text-[var(--df-text-soft)] underline decoration-[var(--df-line-strong)] underline-offset-4 hover:text-[var(--df-text)]"
-                prefetch={false}
-              >
-                All photography
-              </Link>
-            </header>
-            <div id="archive">
-              <PhotoGallery
-                images={images}
-                label={`${laneDefinition.label} gallery`}
-              />
+        <div className="route-page project-route lane-route">
+          <header
+            className="lane-route__head !flex flex-wrap justify-between !gap-x-4 !pt-6 sm:!pt-8"
+            style={{ "--lane-accent": laneDefinition.accent } as CSSProperties}
+          >
+            <div className="lane-route__title">
+              <h1>{laneDefinition.label}</h1>
             </div>
-            <PhotographyCollections current={laneDefinition.key} />
-          </div>
+            <p className="lane-route__count">
+              {laneImages.length.toLocaleString("en-US")}{" "}
+              {laneImages.length === 1 ? "photo" : "photos"}
+            </p>
+          </header>
+          <WorkArchive
+            images={laneImages}
+            scopeLabel={laneDefinition.label}
+            compact
+            variant="full"
+          />
         </div>
       </DorvellShell>
     );

@@ -22,6 +22,7 @@ export function ImageCard({
   image,
   index,
   mode,
+  compact = false,
   onOpen,
   onPreview,
   onPointerMap,
@@ -29,27 +30,46 @@ export function ImageCard({
   image: DorvellImage;
   index: number;
   mode: string;
+  compact?: boolean;
   onOpen: (origin: LightboxOrigin) => void;
   onPreview?: (index: number | null) => void;
   onPointerMap?: (point: PointerMap | null) => void;
 }) {
   const laneKey = laneKeyForImage(image);
-  const lane = galleryLaneDefinitions.find((definition) => definition.key === laneKey);
+  const lane = galleryLaneDefinitions.find(
+    (definition) => definition.key === laneKey,
+  );
   const setPointerMapFromEvent = (event: PointerEvent<HTMLButtonElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
-    const x = rect.width > 0 ? Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)) : 0.5;
-    const y = rect.height > 0 ? Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height)) : 0.5;
+    const x =
+      rect.width > 0
+        ? Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width))
+        : 0.5;
+    const y =
+      rect.height > 0
+        ? Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height))
+        : 0.5;
     onPointerMap?.({ x, y });
   };
 
   return (
     <button
       className={`image-card lane-${laneKey} mode-${mode}`}
-      style={{ "--lane-accent": lane?.accent ?? "#35e0bb", "--card-index": Math.min(index, 18) } as CSSProperties}
+      style={
+        {
+          "--lane-accent": lane?.accent ?? "#35e0bb",
+          "--card-index": Math.min(index, 18),
+        } as CSSProperties
+      }
       type="button"
       onClick={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
-        onOpen({ x: rect.x, y: rect.y, width: rect.width, height: rect.height });
+        onOpen({
+          x: rect.x,
+          y: rect.y,
+          width: rect.width,
+          height: rect.height,
+        });
       }}
       onBlur={() => {
         onPreview?.(null);
@@ -72,6 +92,7 @@ export function ImageCard({
         onPointerMap?.(null);
       }}
       aria-label={`Open ${lane?.label ?? image.category} image ${index + 1}`}
+      aria-haspopup="dialog"
     >
       <Image
         src={image.localOptimized.md}
@@ -83,11 +104,17 @@ export function ImageCard({
         unoptimized
         {...blurImageProps(image)}
       />
-      <span className="contact-number">DF-{String(index + 1).padStart(3, "0")}</span>
-      <span className="card-meta">
-        <strong>{lane?.label ?? image.category}</strong>
-        <em>{image.projectTitle}</em>
-      </span>
+      {!compact || mode === "contact" ? (
+        <span className="contact-number" aria-hidden="true">
+          DF-{String(index + 1).padStart(3, "0")}
+        </span>
+      ) : null}
+      {!compact ? (
+        <span className="card-meta">
+          <strong>{lane?.label ?? image.category}</strong>
+          <em>{image.projectTitle}</em>
+        </span>
+      ) : null}
     </button>
   );
 }

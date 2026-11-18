@@ -12,36 +12,40 @@ import { usePortfolioFilters } from "./portfolioMode";
 type PortfolioDataContextValue = {
   images: DorvellImage[];
   categories: ActivePortfolioCategory[];
-  projectCount: number;
 };
 
-const PortfolioDataContext = createContext<PortfolioDataContextValue | null>(null);
+const PortfolioDataContext = createContext<PortfolioDataContextValue | null>(
+  null,
+);
 
 export function PortfolioModeProvider({
   images,
-  projectCount,
   children,
 }: {
   images: DorvellImage[];
-  projectCount: number;
   children: ReactNode;
 }) {
   const value = useMemo<PortfolioDataContextValue>(
     () => ({
       images,
       categories: activePortfolioCategories(images),
-      projectCount,
     }),
-    [images, projectCount],
+    [images],
   );
 
-  return <PortfolioDataContext.Provider value={value}>{children}</PortfolioDataContext.Provider>;
+  return (
+    <PortfolioDataContext.Provider value={value}>
+      {children}
+    </PortfolioDataContext.Provider>
+  );
 }
 
 export function usePortfolioData(): PortfolioDataContextValue {
   const value = useContext(PortfolioDataContext);
   if (!value) {
-    throw new Error("usePortfolioData must be used within a PortfolioModeProvider");
+    throw new Error(
+      "usePortfolioData must be used within a PortfolioModeProvider",
+    );
   }
   return value;
 }

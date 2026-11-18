@@ -8,7 +8,11 @@ import { VideoPlayer } from "./VideoPlayer";
 import { CreativeModeSwitch } from "./CreativeModeSwitch";
 import { useCreativeMode } from "./creativeMode";
 
-const MICRO_LABELS = ["Video", "Photo", "Motion", "Styling", "Culture", "Shadow", "Concept"];
+const sections = [
+  { href: "#cw-featured", label: "Films" },
+  { href: "#creative-photoshoots", label: "Photoshoots" },
+  { href: "#cw-archive", label: "Archive" },
+] as const;
 
 /**
  * Section 1 — Cinematic hero / video monolith.
@@ -21,6 +25,7 @@ export function CreativeHeroVideo() {
   const { mode } = useCreativeMode();
   const reducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef<HTMLDivElement | null>(null);
 
   const immersive = mode === "cinematic" && !reducedMotion;
@@ -34,12 +39,16 @@ export function CreativeHeroVideo() {
     const update = () => {
       raf = 0;
       const el = sectionRef.current;
-      if (!el) return;
+      const sticky = stickyRef.current;
+      if (!el || !sticky) return;
       const rect = el.getBoundingClientRect();
-      const total = el.offsetHeight - window.innerHeight;
-      const p = total > 0 ? Math.min(Math.max(-rect.top / total, 0), 1) : 0;
+      const top = Number.parseFloat(window.getComputedStyle(sticky).top);
+      const total = el.offsetHeight - sticky.offsetHeight;
+      const p =
+        total > 0 ? Math.min(Math.max((top - rect.top) / total, 0), 1) : 0;
       el.style.setProperty("--p", String(p));
-      if (progressRef.current) progressRef.current.style.transform = `scaleX(${p})`;
+      if (progressRef.current)
+        progressRef.current.style.transform = `scaleX(${p})`;
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -57,43 +66,64 @@ export function CreativeHeroVideo() {
   return (
     <section
       ref={sectionRef}
-      className={cn("cw-hero", immersive ? "cw-hero--immersive" : "cw-hero--calm")}
+      className={cn(
+        "cw-hero",
+        immersive ? "cw-hero--immersive" : "cw-hero--calm",
+      )}
       aria-label="Creative Worlds — introduction"
     >
-      <div className="cw-hero__sticky">
+      <div
+        ref={stickyRef}
+        className={cn(
+          "cw-hero__sticky",
+          immersive &&
+            "!top-[var(--creative-header)] !h-[calc(100svh-var(--creative-header))] [--creative-header:calc(6.125rem+env(safe-area-inset-top))] md:[--creative-header:calc(4.0625rem+env(safe-area-inset-top))]",
+        )}
+      >
         <div className="cw-hero__media">
           <VideoPlayer
             item={heroCreativeItem}
             mode="ambient"
+            active={immersive}
             priority
             loop
             controls={false}
             framed={false}
+            ambientPauseClassName="!bottom-10 !right-4 !top-auto !size-11"
           />
-          <div className="cw-hero__scrim" aria-hidden="true" />
+          <div
+            className="cw-hero__scrim pointer-events-none"
+            aria-hidden="true"
+          />
         </div>
 
-        <div className="cw-container cw-hero__overlay">
-          <p className="cw-hero__eyebrow">The Creative Index</p>
-          <h1 className="cw-hero__title">
+        <div className="cw-container cw-container--wide absolute inset-x-0 top-3 z-[4] flex flex-wrap items-center justify-between gap-x-4 sm:top-5">
+          <nav
+            aria-label="Videography sections"
+            className="flex flex-wrap gap-x-4 sm:gap-x-6"
+          >
+            {sections.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                className="inline-flex min-h-11 items-center border-b border-transparent text-sm font-semibold text-[var(--cw-ink)] hover:border-current focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--cw-teal)]"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+          <CreativeModeSwitch />
+        </div>
+
+        <div className="cw-container cw-hero__overlay pointer-events-none [@media(max-height:500px)]:!gap-2 [@media(max-height:500px)]:!pb-8">
+          <p className="cw-hero__eyebrow">Videography</p>
+          <h1 className="cw-hero__title [@media(max-height:500px)]:!text-[clamp(2.75rem,14svh,4.8rem)]">
             <span className="cw-hero__word">Creative</span>
             <span className="cw-hero__word cw-hero__word--accent">Worlds</span>
           </h1>
-          <p className="cw-hero__lede">
-            Cinematic shorts, concept shoots, motion studies, and visual experiments by Dorvell Ferguson Jr.
-          </p>
-          <ul className="cw-hero__labels" aria-label="What lives here">
-            {MICRO_LABELS.map((label) => (
-              <li key={label}>{label}</li>
-            ))}
-          </ul>
-          <div className="cw-hero__modeswitch">
-            <CreativeModeSwitch variant="hero" />
-          </div>
         </div>
 
         <div className="cw-hero__foot">
-          <span className="cw-hero__cue">Scroll to enter</span>
           <div className="cw-hero__progress" aria-hidden="true">
             <div ref={progressRef} className="cw-hero__progress-fill" />
           </div>

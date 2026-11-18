@@ -15,11 +15,9 @@ import type { ModelingImage } from "@/components/modeling/modelingTypes";
 
 type ModelingDriftGalleryProps = {
   images: ModelingImage[];
-  title: string;
-  kicker: string;
 };
 
-export function ModelingDriftGallery({ images, title, kicker }: ModelingDriftGalleryProps) {
+export function ModelingDriftGallery({ images }: ModelingDriftGalleryProps) {
   const reducedMotion = usePrefersReducedMotion();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLUListElement>(null);
@@ -31,7 +29,9 @@ export function ModelingDriftGallery({ images, title, kicker }: ModelingDriftGal
     const track = trackRef.current;
     if (!wrapper || !track) return;
 
-    const prints = Array.from(track.querySelectorAll<HTMLElement>(".modeling-drift__print"));
+    const prints = Array.from(
+      track.querySelectorAll<HTMLElement>(".modeling-drift__print"),
+    );
     let raf = 0;
     let current = 0;
     let running = false;
@@ -53,10 +53,15 @@ export function ModelingDriftGallery({ images, title, kicker }: ModelingDriftGal
       raf = requestAnimationFrame(tick);
       if (!running) return;
       const scrollable = metrics.wrapperHeight - window.innerHeight;
-      const progress = scrollable > 0
-        ? Math.min(1, Math.max(0, (window.scrollY - metrics.wrapperTop) / scrollable))
-        : 0;
-      const target = progress * Math.max(0, metrics.trackWidth - metrics.viewWidth);
+      const progress =
+        scrollable > 0
+          ? Math.min(
+              1,
+              Math.max(0, (window.scrollY - metrics.wrapperTop) / scrollable),
+            )
+          : 0;
+      const target =
+        progress * Math.max(0, metrics.trackWidth - metrics.viewWidth);
       current += (target - current) * 0.09;
       track.style.transform = `translate3d(${-current}px, 0, 0)`;
 
@@ -101,8 +106,7 @@ export function ModelingDriftGallery({ images, title, kicker }: ModelingDriftGal
     >
       <div className="modeling-drift__stage">
         <header className="modeling-drift__head">
-          <p className="modeling-kicker">{kicker}</p>
-          <h2 id="modeling-drift-title">{title}</h2>
+          <h2 id="modeling-drift-title">Selected looks</h2>
         </header>
         <ul className="modeling-drift__track" ref={trackRef}>
           {frames.map((image, index) => (
@@ -116,7 +120,9 @@ export function ModelingDriftGallery({ images, title, kicker }: ModelingDriftGal
                   sizes="(min-width: 1100px) 44vw, 82vw"
                   unoptimized
                   loading={index < 2 ? "eager" : "lazy"}
-                  {...(image.blur ? { placeholder: "blur" as const, blurDataURL: image.blur } : {})}
+                  {...(image.blur
+                    ? { placeholder: "blur" as const, blurDataURL: image.blur }
+                    : {})}
                 />
               </div>
               <span className="modeling-drift__index" aria-hidden="true">
