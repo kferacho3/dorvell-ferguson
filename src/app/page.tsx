@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { DorvellShell } from "@/components/dorvell/DorvellShell";
+import { EntryPreviewGate } from "@/components/dorvell/EntryPreviewGate";
 import { filmIndexItems } from "@/content/creative";
 import { resolveCreativeAsset } from "@/lib/creative-assets";
 import { galleryLaneDefinitions } from "@/lib/gallery-lanes";
@@ -19,7 +20,9 @@ type WorkPreview = {
 
 export default function Home() {
   const { generated } = getPortfolioData();
-  const { lead, portrait, modeling } = getHomeImages(generated.images);
+  const { lead, portrait, modeling, entrance } = getHomeImages(
+    generated.images,
+  );
   const film = filmIndexItems[0];
 
   const previews: Record<PortfolioHref, WorkPreview> = {
@@ -39,7 +42,7 @@ export default function Home() {
     },
   };
 
-  return (
+  const homepage = (
     <DorvellShell>
       <div className="bg-[var(--df-bg)]">
         <div className="mx-auto max-w-[84rem] px-4 sm:px-8 lg:px-12">
@@ -182,5 +185,11 @@ export default function Home() {
         </div>
       </div>
     </DorvellShell>
+  );
+
+  return (
+    <EntryPreviewGate previews={entrance} totalFrames={generated.images.length}>
+      {homepage}
+    </EntryPreviewGate>
   );
 }

@@ -95,19 +95,27 @@ export function DorvellHeader() {
           <button
             type="button"
             ref={triggerRef}
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="secondary-navigation"
             onClick={() => setOpen((value) => !value)}
             className={cn(
-              "flex min-h-11 items-center gap-2 px-2 text-sm font-semibold text-[var(--df-text-soft)] hover:text-[var(--df-text)] aria-expanded:text-[var(--df-text)]",
+              "grid size-11 place-items-center text-[var(--df-text)] hover:bg-[var(--df-panel-solid)] aria-expanded:bg-[var(--df-panel-solid)]",
               keyboardFocus,
             )}
           >
-            Menu
-            <span
-              aria-hidden="true"
-              className="size-2 -translate-y-0.5 rotate-45 border-b border-r border-current"
-            />
+            {open ? (
+              <span aria-hidden="true" className="relative block h-4 w-5">
+                <span className="absolute left-0 top-1/2 h-px w-full rotate-45 bg-current" />
+                <span className="absolute left-0 top-1/2 h-px w-full -rotate-45 bg-current" />
+              </span>
+            ) : (
+              <span aria-hidden="true" className="flex w-5 flex-col gap-[5px]">
+                <span className="h-px w-full bg-current" />
+                <span className="h-px w-full bg-current" />
+                <span className="h-px w-full bg-current" />
+              </span>
+            )}
           </button>
 
           <nav
